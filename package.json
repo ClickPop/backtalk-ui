@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "version": "0.1.0",
+  "name": "survey-app-ui",
+  "version": "1.0.0-alpha",
   "private": true,
   "dependencies": {
     "bootstrap": "^5.0.0-alpha1",
@@ -16,13 +16,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "prettier"
-    ]
+    "eject": "react-scripts eject",
+    "prettier": "prettier --write **.{js,jsx,json,md,scss} !build/**.* !node_modules/**.*"
   },
   "browserslist": {
     "production": [
@@ -37,10 +32,21 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-plugin-flowtype": "^4.7.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^2.5.1",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",
-    "prettier": "^2.1.2"
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
   },
   "husky": {
     "hooks": {
@@ -48,7 +54,7 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,md,json}": "prettier --write"
+    "*.{js,jsx}": "eslint --cache --fix",
+    "*.{js,jsx,scss,md,json}": "prettier --write"
   }
 }
