@@ -5,9 +5,9 @@ import App from './App';
 import 'bootstrap';
 import 'popper.js';
 
-ReactDOM.render{
+ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
   document.getElementById('root'),
-};
+);
