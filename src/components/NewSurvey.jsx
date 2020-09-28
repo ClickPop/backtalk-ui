@@ -22,15 +22,15 @@ const NewSurvey = () => {
 
         <div className="row">
           <div className="col-12 mb-4">
-            <label className="d-block" for="survey__questionRespondent">
+            <label className="d-block" htmlFor="survey__questionRespondent">
               <h4>Do you want to know who left your response?</h4>
-              <p class="mb-1">
+              <p className="mb-1">
                 We're not going to do anything sneaky here, just ask them.
               </p>
             </label>
-            <div class="form-check form-switch form-switch-lg">
+            <div className="form-check form-switch form-switch-lg">
               <input
-                class="form-check-input form-check-input-lg"
+                className="form-check-input form-check-input-lg"
                 type="checkbox"
                 id="survey__questionRespondent"
               />
@@ -39,7 +39,7 @@ const NewSurvey = () => {
         </div>
 
         <div className="row">
-          <div class="col-12">
+          <div className="col-12">
             <button type="submit" className="btn btn-primary btn-block">
               Publish
             </button>

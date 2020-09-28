@@ -6,6 +6,8 @@ import Register from './views/Register';
 import FirstSurvey from './views/FirstSurvey';
 import logo from './images/logo-mouth.png';
 import { Navbar } from './components/Nav';
+import { Dashboard } from './views/Dashboard';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 const App = () => {
   return (
@@ -14,10 +16,15 @@ const App = () => {
         <Navbar logo={logo} />
         <div className="app-inner py-4 container-fluid">
           <Switch>
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/surveys/first" component={FirstSurvey} />
-            <Route path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <ProtectedRoute
+              exact
+              path="/surveys/first"
+              component={FirstSurvey}
+            />
+            <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/" component={Home} />
           </Switch>
         </div>
       </Router>
