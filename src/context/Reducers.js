@@ -13,8 +13,8 @@ export const reducer = (state, action) => {
         errors: state.errors.filter((error) => error.id !== payload.id),
         loading: false,
       };
-    case 'LOADING':
-      return { ...state, loading: true };
+    case 'SET_LOADING':
+      return { ...state, loading: payload };
     default:
       throw new Error();
   }

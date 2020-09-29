@@ -34,17 +34,15 @@ const Login = () => {
       dispatch({ type: 'LOGIN', payload: login.data.accessToken });
     } catch (err) {
       console.error(err);
-      if (err.response.status === 422) {
-        err.response.data.errors.forEach((error) => {
-          const id = uuid.v4();
-          dispatch({
-            type: 'SET_ALERT',
-            payload: { id, msg: error.msg },
-          });
-          setTimeout(() => {
-            dispatch({ type: 'REMOVE_ALERT', payload: { id } });
-          }, 5000);
+      if (err.response.status === 422 || err.response.status === 401) {
+        const id = uuid.v4();
+        dispatch({
+          type: 'SET_ALERT',
+          payload: { id, msg: 'Invalid email or password.' },
         });
+        setTimeout(() => {
+          dispatch({ type: 'REMOVE_ALERT', payload: { id } });
+        }, 5000);
       }
     }
   };
