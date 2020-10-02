@@ -10,6 +10,7 @@ import { Dashboard } from './views/Dashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { context } from './context/Context';
 import * as axios from 'axios';
+import { Error404 } from './views/Error404';
 
 const App = () => {
   const { state, dispatch } = useContext(context);
@@ -45,6 +46,7 @@ const App = () => {
             />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
             <Route exact path="/" component={Home} />
+            <Route component={Error404} />
           </Switch>
         </div>
       </Router>
