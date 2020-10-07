@@ -1,8 +1,82 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { context } from '../context/Context';
+import * as axios from 'axios';
+import * as uuid from 'uuid';
+
+const initialState = {
+  email: null,
+  firstName: null,
+  lastName: null,
+  password: null,
+  passwordConfirm: null,
+};
 
 const Register = () => {
+  const { state, dispatch } = useContext(context);
+  const { errors } = state;
+  const [form, setForm] = useState(initialState);
+  const [registered, setRegistered] = useState(false);
+
+  if (state.auth) {
+    return <Redirect to="/dashboard" />;
+  }
+
+  if (registered) {
+    return <Redirect to="/login" />;
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { email, firstName, lastName, password, passwordConfirm } = form;
+    if (password !== passwordConfirm) {
+      const id = uuid.v4();
+      dispatch({
+        type: 'SET_ALERT',
+        payload: { id, msg: 'Passwords do not match.' },
+      });
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ALERT', payload: { id } });
+      }, 5000);
+      return;
+    }
+    try {
+      await axios.post('/api/v1/users/register', {
+        email,
+        name: `${firstName} ${lastName}`,
+        password,
+      });
+      setRegistered(true);
+    } catch (err) {
+      console.error(err);
+      if (err.response.status === 422 || err.response.status === 409) {
+        err.response.data.errors.forEach((error) => {
+          const id = uuid.v4();
+          dispatch({
+            type: 'SET_ALERT',
+            payload: { id, msg: error.msg },
+          });
+          setTimeout(() => {
+            dispatch({ type: 'REMOVE_ALERT', payload: { id } });
+          }, 5000);
+        });
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   return (
     <Fragment>
+      {errors &&
+        errors.map((error) => (
+          <div key={error.msg} className="alert alert-danger">
+            {error.msg}
+          </div>
+        ))}
       <div className="row justify-content-center">
         <section className="col-xl-6 col-md-8 col-sm-10 col-12 py-5">
           <header>
@@ -23,6 +97,7 @@ const Register = () => {
                     name="firstName"
                     placeholder="George"
                     required
+                    onChange={handleChange}
                   />
                 </label>
               </div>
@@ -35,6 +110,7 @@ const Register = () => {
                     name="lastName"
                     placeholder="Washington"
                     required
+                    onChange={handleChange}
                   />
                 </label>
               </div>
@@ -50,6 +126,7 @@ const Register = () => {
                     name="email"
                     placeholder="george.washington@backtalk.io"
                     required
+                    onChange={handleChange}
                   />
                 </label>
               </div>
@@ -64,6 +141,7 @@ const Register = () => {
                     className="form-control mt-1"
                     name="password"
                     placeholder="********"
+                    onChange={handleChange}
                     required
                   />
                 </label>
@@ -75,6 +153,7 @@ const Register = () => {
                     type="password"
                     className="form-control mt-1"
                     name="passwordConfirm"
+                    onChange={handleChange}
                     placeholder="********"
                     required
                   />
@@ -85,7 +164,11 @@ const Register = () => {
             <div className="row">
               <div className="col-12">
                 <p className="my-2 text-center">
-                  <button type="submit" className="btn btn-primary btn-lg w-50">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-lg w-50"
+                    onClick={handleSubmit}
+                  >
                     Sign Me Up!
                   </button>
                 </p>

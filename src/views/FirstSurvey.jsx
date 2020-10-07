@@ -1,7 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import NewSurvey from '../components/NewSurvey';
 
 const FirstSurvey = () => {
+  const [toDashboard, setToDashboard] = useState(false);
+
+  if (toDashboard) {
+    return <Redirect to="/dashboard" />;
+  }
+
   return (
     <Fragment>
       <div className="row justify-content-center">
@@ -10,7 +17,7 @@ const FirstSurvey = () => {
             <h2 className="mb-5">Welcome! Let's create your first survey.</h2>
           </header>
 
-          <NewSurvey />
+          <NewSurvey toDashboard={setToDashboard} />
         </section>
       </div>
     </Fragment>
