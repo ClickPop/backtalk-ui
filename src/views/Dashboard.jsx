@@ -52,6 +52,7 @@ export const Dashboard = () => {
                 <div className="card">
                   <div className="card-header">
                     <h3 className="card-title">{survey.title}</h3>
+                    <small>{`${window.location.host}/survey/${survey.hash}`}</small>
                   </div>
                   <div className="card-body">
                     <p className="card-text">
