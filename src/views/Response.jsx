@@ -5,9 +5,13 @@ import { useParams } from 'react-router-dom';
 const getQuery = (qStr) => {
   if (!/\?(\S+=\S+)+/g.test(qStr)) return null;
   const arr = qStr.slice(1, qStr.length).split('=');
-  const query = {};
+  const query = [];
   for (let i = 0; i < arr.length; i += 2) {
-    query[arr[i]] = arr[i + 1];
+    query.push({
+      key: arr[i],
+      value: arr[i + 1],
+      type: 'query',
+    });
   }
   return query;
 };
@@ -15,7 +19,7 @@ const getQuery = (qStr) => {
 export const Response = ({ history, location }) => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
-  const [response, setResponse] = useState({});
+  const [response, setResponse] = useState({ responses: [] });
   useEffect(() => {
     const getSurvey = async () => {
       try {
@@ -23,21 +27,11 @@ export const Response = ({ history, location }) => {
         setSurvey(res.data.result);
         const queryParams = getQuery(decodeURI(location.search));
         if (!queryParams) return;
-        const questions = await axios.post('/api/v1/question', {
-          questions: Object.keys(queryParams).map((query) => ({
-            surveyId: res.data.result.id,
-            question: {
-              prompt: query,
-              type: 'query',
-            },
-          })),
-        });
-        questions.data.results.forEach((result, i) => {
-          setResponse((r) => ({
-            ...r,
-            [result.question.id]: queryParams[result.question.prompt],
-          }));
-        });
+        setResponse((r) => ({
+          ...r,
+          surveyId: res.data.result.id,
+          responses: [...r.responses, ...queryParams],
+        }));
       } catch (err) {
         console.error(err);
         // TODO add error popup
@@ -47,18 +41,24 @@ export const Response = ({ history, location }) => {
   }, [params.hash, location.search]);
 
   const handleChange = (e) => {
-    setResponse({ ...response, [e.target.name]: e.target.value });
+    setResponse({
+      ...response,
+      responses: response.responses.some((res) => res.id === e.target.name)
+        ? response.responses.map((res) =>
+            res.id === e.target.name ? { ...res, value: e.target.value } : res,
+          )
+        : [
+            ...response.responses,
+            { id: e.target.name, value: e.target.value, type: e.target.type },
+          ],
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const responses = Object.keys(response).map((key) => ({
-        questionId: key,
-        value: response[key],
-      }));
       await axios.post('/api/v1/responses/new', {
-        responses,
+        ...response,
       });
       setResponse({});
       history.push('/');
@@ -81,7 +81,6 @@ export const Response = ({ history, location }) => {
                   <input
                     type="text"
                     name={question.id}
-                    value={response[question.id] ? response[question.id] : ''}
                     onChange={handleChange}
                   />
                 </div>

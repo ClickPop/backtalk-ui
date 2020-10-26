@@ -59,7 +59,7 @@ export const Dashboard = () => {
                       Questions: {survey.questions?.length}
                     </p>
                     <p className="card-text">
-                      Responses: {survey.Sessions?.length}
+                      Responses: {survey.Responses?.length}
                     </p>
                   </div>
                 </div>
