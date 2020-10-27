@@ -1,6 +1,7 @@
 import * as axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import defaultAvatar from '../images/default-avatar.png';
 
 const getQuery = (qStr) => {
   if (!/\?(\S+=\S+)+/g.test(qStr)) return null;
@@ -19,6 +20,7 @@ const getQuery = (qStr) => {
 export const Response = ({ history, location }) => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
+  const [avatar, setAvatar] = useState(defaultAvatar);
   const [cursor, setCursor] = useState(0);
   const [queryResponses, setQueryResponses] = useState([]);
   const [responses, setResponses] = useState([]);
@@ -94,57 +96,71 @@ export const Response = ({ history, location }) => {
   return (
     <div>
       {survey && (
-        <div>
-          <h1>{survey.title}</h1>
-          <div className="d-flex flex-column">
+        <div className="survey-chat no-gutters g-0">
+          <header className="no-gutters survey-chat__header">
+            <figure className="avatar mini rounded-circle border border-primary overflow-hidden bg-light">
+              <img src={avatar} alt="Survey Says" loading="lazy" />
+            </figure>
+            <h1 className="text-center survey-chat__title">{survey.title}</h1>
+          </header>
+
+          <div className="d-flex flex-column survey-chat__feed">
             {survey.questions &&
               survey.questions.map(
                 (question, i) =>
                   question.type !== 'query' &&
                   cursor >= i && (
-                    <div key={question.id}>
-                      <div className="d-flex justify-content-start">
-                        <h2>{question.prompt}</h2>
+                    <div className="survey-chat__set" key={question.id}>
+                      <div className="survey-chat__question">
+                        <h2 className="message">{question.prompt}</h2>
                       </div>
-                      <div className="d-flex justify-content-end">
-                        <h2>
+
+                      <div className="survey-chat__response">
+                        <p className="message">
                           {responses.length > 0 &&
                             i < cursor &&
                             responses[i].value}
-                        </h2>
+                        </p>
                       </div>
                     </div>
                   ),
               )}
+
+            <div
+              className="survey-chat__set"
+              style={{
+                opacity: cursor === survey.questions?.length ? 1 : 0,
+                transition: 'opacity 0.7s ease-in-out 0.5s',
+              }}
+            >
+              <div className="survey-chat__question">
+                <p className="message">Thanks for answering!</p>
+              </div>
+            </div>
           </div>
-          <div
-            style={{
-              opacity: cursor === survey.questions?.length ? 1 : 0,
-              transition: 'opacity 0.7s ease-in-out 0.5s',
-            }}
-          >
-            Thanks for answering!
-          </div>
-          {cursor < survey.questions?.length && (
-            <input
-              type="text"
-              name={cursor}
-              onChange={handleChange}
-              value={currentResponse.value}
-              onKeyPress={handleKeypress}
-              autoFocus
-            />
-          )}
-          {cursor !== survey.questions?.length ? (
-            <button name="submit" onClick={handleSubmit}>
-              Submit
-            </button>
-          ) : (
-            <button>Thanks!</button>
-          )}
-          {cursor > 0 && cursor < survey.questions?.length && (
-            <button onClick={handleBack}>Back</button>
-          )}
+
+          <footer className="survey-chat__footer">
+            {cursor < survey.questions?.length && (
+              <input
+                type="text"
+                name={cursor}
+                onChange={handleChange}
+                value={currentResponse.value}
+                onKeyPress={handleKeypress}
+                autoFocus
+              />
+            )}
+            {cursor !== survey.questions?.length ? (
+              <button name="submit" onClick={handleSubmit}>
+                Submit
+              </button>
+            ) : (
+              <button>Thanks!</button>
+            )}
+            {cursor > 0 && cursor < survey.questions?.length && (
+              <button onClick={handleBack}>Back</button>
+            )}
+          </footer>
         </div>
       )}
     </div>

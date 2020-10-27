@@ -41,7 +41,7 @@ const App = () => {
     <Fragment>
       <Router>
         <Navbar logo={logo} />
-        <div className="app-inner py-4 container-fluid">
+        <div className="app-inner">
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
