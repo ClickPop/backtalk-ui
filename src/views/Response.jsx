@@ -19,7 +19,10 @@ const getQuery = (qStr) => {
 export const Response = ({ history, location }) => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
-  const [response, setResponse] = useState({ responses: [] });
+  const [cursor, setCursor] = useState(0);
+  const [queryResponses, setQueryResponses] = useState([]);
+  const [responses, setResponses] = useState([]);
+  const [currentResponse, setCurrentResponse] = useState({ value: '' });
   useEffect(() => {
     const getSurvey = async () => {
       try {
@@ -27,11 +30,7 @@ export const Response = ({ history, location }) => {
         setSurvey(res.data.result);
         const queryParams = getQuery(decodeURI(location.search));
         if (!queryParams) return;
-        setResponse((r) => ({
-          ...r,
-          surveyId: res.data.result.id,
-          responses: [...r.responses, ...queryParams],
-        }));
+        setQueryResponses((r) => [...r, ...queryParams]);
       } catch (err) {
         console.error(err);
         // TODO add error popup
@@ -40,32 +39,56 @@ export const Response = ({ history, location }) => {
     getSurvey();
   }, [params.hash, location.search]);
 
+  useEffect(() => {
+    const sendSurveys = async () => {
+      if (cursor === survey.questions?.length) {
+        try {
+          await axios.post('/api/v1/responses/new', {
+            surveyId: survey.id,
+            responses: [...responses, ...queryResponses],
+          });
+        } catch (err) {
+          console.error(err);
+          // TODO add error popup
+        }
+      }
+    };
+
+    sendSurveys();
+  }, [cursor, queryResponses, responses, survey.id, survey.questions]);
+
   const handleChange = (e) => {
-    setResponse({
-      ...response,
-      responses: response.responses.some((res) => res.id === e.target.name)
-        ? response.responses.map((res) =>
-            res.id === e.target.name ? { ...res, value: e.target.value } : res,
-          )
-        : [
-            ...response.responses,
-            { id: e.target.name, value: e.target.value, type: e.target.type },
-          ],
+    setCurrentResponse({
+      ...currentResponse,
+      id: e.target.name,
+      value: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post('/api/v1/responses/new', {
-        ...response,
-      });
-      setResponse({});
-      history.push('/');
-    } catch (err) {
-      console.error(err);
-      // TODO add error popup
+    setCursor(cursor + 1);
+    if (responses.find((response) => response.id === currentResponse.id)) {
+      setResponses(
+        responses.map((response) =>
+          response.id === currentResponse.id ? currentResponse : response,
+        ),
+      );
+    } else {
+      setResponses([...responses, currentResponse]);
     }
+    setCurrentResponse({ value: '' });
+  };
+
+  const handleKeypress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
+  const handleBack = (e) => {
+    setCurrentResponse(responses[cursor - 1]);
+    setCursor(cursor - 1);
   };
 
   return (
@@ -73,22 +96,55 @@ export const Response = ({ history, location }) => {
       {survey && (
         <div>
           <h1>{survey.title}</h1>
-          {survey.questions &&
-            survey.questions.map((question) =>
-              question.type !== 'query' ? (
-                <div key={question.id}>
-                  <h2>{question.prompt}</h2>
-                  <input
-                    type="text"
-                    name={question.id}
-                    onChange={handleChange}
-                  />
-                </div>
-              ) : null,
-            )}
-          <button name="submit" onClick={handleSubmit}>
-            Submit
-          </button>
+          <div className="d-flex flex-column">
+            {survey.questions &&
+              survey.questions.map(
+                (question, i) =>
+                  question.type !== 'query' &&
+                  cursor >= i && (
+                    <div key={question.id}>
+                      <div className="d-flex justify-content-start">
+                        <h2>{question.prompt}</h2>
+                      </div>
+                      <div className="d-flex justify-content-end">
+                        <h2>
+                          {responses.length > 0 &&
+                            i < cursor &&
+                            responses[i].value}
+                        </h2>
+                      </div>
+                    </div>
+                  ),
+              )}
+          </div>
+          <div
+            style={{
+              opacity: cursor === survey.questions?.length ? 1 : 0,
+              transition: 'opacity 0.7s ease-in-out 0.5s',
+            }}
+          >
+            Thanks for answering!
+          </div>
+          {cursor < survey.questions?.length && (
+            <input
+              type="text"
+              name={cursor}
+              onChange={handleChange}
+              value={currentResponse.value}
+              onKeyPress={handleKeypress}
+              autoFocus
+            />
+          )}
+          {cursor !== survey.questions?.length ? (
+            <button name="submit" onClick={handleSubmit}>
+              Submit
+            </button>
+          ) : (
+            <button>Thanks!</button>
+          )}
+          {cursor > 0 && cursor < survey.questions?.length && (
+            <button onClick={handleBack}>Back</button>
+          )}
         </div>
       )}
     </div>

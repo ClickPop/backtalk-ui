@@ -5,7 +5,7 @@ export const initialState = {
   auth: false,
   token: null,
   errors: [],
-  loading: false,
+  loading: true,
 };
 
 export const context = createContext(initialState);

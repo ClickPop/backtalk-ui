@@ -5,20 +5,18 @@ import { Redirect } from 'react-router-dom';
 import NewSurvey from '../components/NewSurvey';
 
 export const Dashboard = () => {
-  const { state, dispatch } = useContext(context);
+  const { state } = useContext(context);
   const [surveys, setSurveys] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     const getSurveys = async () => {
       try {
-        dispatch({ type: 'SET_LOADING', payload: true });
         const userSurveys = await axios.get('/api/v1/surveys', {
           headers: { Authorization: `Bearer ${state.token}` },
         });
         if (!cancelled) {
           setSurveys(userSurveys.data.results);
-          dispatch({ type: 'SET_LOADING', payload: false });
         }
       } catch (err) {
         console.error(err);
@@ -28,7 +26,7 @@ export const Dashboard = () => {
     return () => {
       cancelled = true;
     };
-  }, [state.token, dispatch]);
+  }, [state.token]);
 
   if (!state.auth) {
     return <Redirect to="/login" />;
