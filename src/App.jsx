@@ -41,7 +41,9 @@ const App = () => {
   return (
     <Fragment>
       <Router>
-        <Navbar logo={logo} />
+        {!window.location.pathname.match(/\/survey\/.+/) && (
+          <Navbar logo={logo} />
+        )}
         <div className="app-inner">
           <Switch>
             <Route exact path="/login" component={Login} />
