@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { context } from '../context/Context';
 import * as axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import NewSurvey from '../components/NewSurvey';
 
 export const Dashboard = () => {
@@ -49,7 +49,11 @@ export const Dashboard = () => {
               <div className="col-8 mx-auto mt-2 mb-4">
                 <div className="card">
                   <div className="card-header">
-                    <h3 className="card-title">{survey.title}</h3>
+                    <h3 className="card-title">
+                      <Link to={`/responses/${survey.hash}`}>
+                        {survey.title}
+                      </Link>
+                    </h3>
                     <small>{`${window.location.host}/survey/${survey.hash}`}</small>
                   </div>
                   <div className="card-body">

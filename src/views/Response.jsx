@@ -3,6 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import defaultAvatar from '../images/default-avatar.png';
 
+const surveyEnd = (survey, cursor) => {
+  return (
+    (!survey.respondent && cursor > survey.questions?.length - 1) ||
+    (survey.respondent && cursor > survey.questions?.length)
+  );
+};
+
 const getQuery = (qStr) => {
   if (!/\?(\S+=\S+)+/g.test(qStr)) return null;
   const arr = qStr.slice(1, qStr.length).split('=');
@@ -24,10 +31,12 @@ export const Response = ({ history, location }) => {
   const [cursor, setCursor] = useState(0);
   const [queryResponses, setQueryResponses] = useState([]);
   const [responses, setResponses] = useState([]);
+  const [respondent, setRespondent] = useState('');
   const [currentResponse, setCurrentResponse] = useState({ value: '' });
   useEffect(() => {
     const getSurvey = async () => {
       try {
+        console.log('test');
         const res = await axios.get(`/api/v1/surveys/${params.hash}`);
         setSurvey(res.data.result);
         const queryParams = getQuery(decodeURI(location.search));
@@ -43,11 +52,12 @@ export const Response = ({ history, location }) => {
 
   useEffect(() => {
     const sendSurveys = async () => {
-      if (cursor === survey.questions?.length) {
+      if (surveyEnd(survey, cursor)) {
         try {
           await axios.post('/api/v1/responses/new', {
             surveyId: survey.id,
             responses: [...responses, ...queryResponses],
+            respondent: respondent,
           });
         } catch (err) {
           console.error(err);
@@ -57,7 +67,15 @@ export const Response = ({ history, location }) => {
     };
 
     sendSurveys();
-  }, [cursor, queryResponses, responses, survey.id, survey.questions]);
+  }, [
+    cursor,
+    queryResponses,
+    responses,
+    survey.id,
+    survey.questions,
+    respondent,
+    survey,
+  ]);
 
   const handleChange = (e) => {
     setCurrentResponse({
@@ -67,19 +85,25 @@ export const Response = ({ history, location }) => {
     });
   };
 
+  const handleName = (e) => {
+    setRespondent(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setCursor(cursor + 1);
-    if (responses.find((response) => response.id === currentResponse.id)) {
-      setResponses(
-        responses.map((response) =>
-          response.id === currentResponse.id ? currentResponse : response,
-        ),
-      );
-    } else {
-      setResponses([...responses, currentResponse]);
+    if (cursor < survey.questions.length) {
+      if (responses.find((response) => response.id === currentResponse.id)) {
+        setResponses(
+          responses.map((response) =>
+            response.id === currentResponse.id ? currentResponse : response,
+          ),
+        );
+      } else {
+        setResponses([...responses, currentResponse]);
+      }
+      setCurrentResponse({ value: '' });
     }
-    setCurrentResponse({ value: '' });
+    setCursor(cursor + 1);
   };
 
   const handleKeypress = (e) => {
@@ -88,7 +112,7 @@ export const Response = ({ history, location }) => {
     }
   };
 
-  const handleBack = (e) => {
+  const handleBack = () => {
     setCurrentResponse(responses[cursor - 1]);
     setCursor(cursor - 1);
   };
@@ -125,11 +149,22 @@ export const Response = ({ history, location }) => {
                     </div>
                   ),
               )}
-
+            {survey.respondent && cursor >= survey.questions.length && (
+              <div className="survey-chat__set">
+                <div className="survey-chat__question">
+                  <h2 className="message">What can we call you?</h2>
+                </div>
+                {surveyEnd(survey, cursor) && (
+                  <div className="survey-chat__response">
+                    <p className="message">{respondent}</p>
+                  </div>
+                )}
+              </div>
+            )}
             <div
               className="survey-chat__set"
               style={{
-                opacity: cursor === survey.questions?.length ? 1 : 0,
+                opacity: surveyEnd(survey, cursor) ? 1 : 0,
                 transition: 'opacity 0.7s ease-in-out 0.5s',
               }}
             >
@@ -140,24 +175,36 @@ export const Response = ({ history, location }) => {
           </div>
 
           <footer className="survey-chat__footer">
-            {cursor < survey.questions?.length && (
+            {!surveyEnd(survey, cursor) && survey.questions && (
               <input
                 type="text"
-                name={cursor}
-                onChange={handleChange}
-                value={currentResponse.value}
+                name={
+                  cursor < survey.questions.length
+                    ? survey.questions[cursor].id
+                    : 'respondent'
+                }
+                onChange={
+                  survey.respondent && cursor >= survey.questions.length
+                    ? handleName
+                    : handleChange
+                }
+                value={
+                  cursor < survey.questions.length
+                    ? currentResponse.value
+                    : respondent
+                }
                 onKeyPress={handleKeypress}
                 autoFocus
               />
             )}
-            {cursor !== survey.questions?.length ? (
+            {!surveyEnd(survey, cursor) ? (
               <button name="submit" onClick={handleSubmit}>
                 Submit
               </button>
             ) : (
               <button>Thanks!</button>
             )}
-            {cursor > 0 && cursor < survey.questions?.length && (
+            {cursor > 0 && !surveyEnd(survey, cursor) && (
               <button onClick={handleBack}>Back</button>
             )}
           </footer>
