@@ -19,7 +19,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write **.{js,jsx,json,md,scss} !build/**.* !node_modules/**.*"
+    "prettier": "prettier --write **.{js,jsx,json,md,scss} !build/**.* !node_modules/**.*",
+    "docker-up": "docker-compose up -d --build",
+    "docker-down": "docker-compose down"
   },
   "browserslist": {
     "production": [
