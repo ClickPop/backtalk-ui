@@ -16,6 +16,7 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
             dispatch({ type: 'LOGIN', payload: login.data.accessToken });
           }
         } catch (err) {
+          dispatch({ type: 'SET_LOADING', payload: false });
           if (err.response.status === 401) {
           }
         }
@@ -25,13 +26,15 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
     return () => {
       canceled = true;
     };
-  }, [state.auth, dispatch, state.token]);
+  }, [state.auth, dispatch]);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        state.auth ? (
+        state.loading ? (
+          <div>Loading...</div>
+        ) : state.auth ? (
           <Component {...props} />
         ) : (
           <Redirect

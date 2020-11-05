@@ -12,16 +12,20 @@ import { context } from './context/Context';
 import * as axios from 'axios';
 import { Error404 } from './views/Error404';
 import { Response } from './views/Response';
+import { Responses } from './views/Responses';
 
 const App = () => {
   const { state, dispatch } = useContext(context);
   useEffect(() => {
+    let canceled = false;
     const handleRefresh = async () => {
       if (!state.auth) {
         try {
           dispatch({ type: 'SET_LOADING', payload: true });
           const login = await axios.post('/api/v1/auth/refresh_token');
-          dispatch({ type: 'LOGIN', payload: login.data.accessToken });
+          if (!canceled) {
+            dispatch({ type: 'LOGIN', payload: login.data.accessToken });
+          }
         } catch (err) {
           if (err.response.status === 401) {
           }
@@ -29,14 +33,18 @@ const App = () => {
       }
     };
     handleRefresh();
-    // eslint-disable-next-line
-  }, []);
+    return () => {
+      canceled = true;
+    };
+  }, [state.auth, dispatch]);
 
   return (
     <Fragment>
       <Router>
-        <Navbar logo={logo} />
-        <div className="app-inner py-4 container-fluid">
+        {!window.location.pathname.match(/\/survey\/.+/) && (
+          <Navbar logo={logo} />
+        )}
+        <div className="app-inner">
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
@@ -46,6 +54,11 @@ const App = () => {
               component={FirstSurvey}
             />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+            <ProtectedRoute
+              exact
+              path="/responses/:hash"
+              component={Responses}
+            />
             <Route exact path="/" component={Home} />
             <Route path="/survey/:hash" component={Response} />
             <Route component={Error404} />

@@ -1,0 +1,18 @@
+version: '3.5'
+
+networks:
+  app-network:
+    name: app-network
+
+services:
+  ui:
+    container_name: backtalk-ui
+    build:
+      context: .
+    restart: on-failure
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+    volumes:
+      - ./:/usr/src/app

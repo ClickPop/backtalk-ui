@@ -3,12 +3,13 @@ import { context } from '../context/Context';
 import * as axios from 'axios';
 
 const submitSurvey = async (data, token) => {
-  const { title, questions } = data;
+  const { title, questions, respondent } = data;
   const survey = await axios.post(
     '/api/v1/surveys/new',
     {
       title,
       questions,
+      respondent,
     },
     {
       headers: {
@@ -41,19 +42,11 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
     e.preventDefault();
     const survey = {
       title:
-        surveys && surveys.length
-          ? `Survey ${surveys.length + 1}`
-          : 'New Survey',
+        surveys && surveys.length ? `Survey ${surveys.length}` : 'New Survey',
       questions: [{ prompt: form.question, type: 'text' }],
+      respondent: form.respondent,
     };
-    if (form.respondent) {
-      survey.questions.push({
-        prompt: 'Please leave your name, social media handle, or alias.',
-        type: 'text',
-      });
-    }
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
       const newSurvey = await submitSurvey(survey, state.token);
       // const hash = await axios.get(
       //   `/api/v1/surveys/getHash?num=${newSurvey.data.result.id}`,
@@ -65,12 +58,10 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
       if (toDashboard) {
         toDashboard(true);
       }
-      dispatch({ type: 'SET_LOADING', payload: false });
     } catch (err) {
       if (err.response.status === 401) {
         const login = await axios.post('/api/v1/auth/refresh_token');
         dispatch({ type: 'LOGIN', payload: login.data.accessToken });
-        dispatch({ type: 'SET_LOADING', payload: true });
         const newSurvey = await submitSurvey(survey, state.token);
         // const hash = await axios.get(
         //   `/api/v1/surveys/getHash?num=${newSurvey.data.result.id}`,
@@ -82,7 +73,6 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
           toDashboard(true);
         }
         setForm(initialState);
-        dispatch({ type: 'SET_LOADING', payload: false });
       } else {
         console.error(err);
       }
