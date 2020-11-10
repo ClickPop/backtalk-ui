@@ -54,7 +54,11 @@ export const Dashboard = () => {
                         {survey.title}
                       </Link>
                     </h3>
-                    <small>{`${window.location.host}/survey/${survey.hash}`}</small>
+                    <small>
+                      <Link to={`/survey/${survey.hash}`} target="_blank">
+                        {`${window.location.host}/survey/${survey.hash}`}
+                      </Link>
+                    </small>
                   </div>
                   <div className="card-body">
                     <p className="card-text">

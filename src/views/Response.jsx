@@ -118,28 +118,30 @@ export const Response = ({ history, location }) => {
   };
 
   return (
-    <div>
+    <div className="survey">
       {survey && (
-        <div className="survey-chat no-gutters g-0">
+        <div className="container">
+          {/*
           <header className="no-gutters survey-chat__header">
             <figure className="avatar mini rounded-circle border border-primary overflow-hidden bg-light">
               <img src={avatar} alt="Survey Says" loading="lazy" />
             </figure>
             <h1 className="text-center survey-chat__title">{survey.title}</h1>
           </header>
+          */}
 
-          <div className="d-flex flex-column survey-chat__feed">
+          <div className="d-flex flex-column survey__feed">
             {survey.questions &&
               survey.questions.map(
                 (question, i) =>
                   question.type !== 'query' &&
                   cursor >= i && (
-                    <div className="survey-chat__set" key={question.id}>
-                      <div className="survey-chat__question">
+                    <div className="survey__set" key={question.id}>
+                      <div className="survey__question">
                         <h2 className="message">{question.prompt}</h2>
                       </div>
 
-                      <div className="survey-chat__response">
+                      <div className="survey__response">
                         <p className="message">
                           {responses.length > 0 &&
                             i < cursor &&
@@ -150,63 +152,71 @@ export const Response = ({ history, location }) => {
                   ),
               )}
             {survey.respondent && cursor >= survey.questions.length && (
-              <div className="survey-chat__set">
-                <div className="survey-chat__question">
+              <div className="survey__set">
+                <div className="survey__question">
                   <h2 className="message">What can we call you?</h2>
                 </div>
                 {surveyEnd(survey, cursor) && (
-                  <div className="survey-chat__response">
+                  <div className="survey__response">
                     <p className="message">{respondent}</p>
                   </div>
                 )}
               </div>
             )}
             <div
-              className="survey-chat__set"
+              className="survey__set"
               style={{
                 opacity: surveyEnd(survey, cursor) ? 1 : 0,
                 transition: 'opacity 0.7s ease-in-out 0.5s',
               }}
             >
-              <div className="survey-chat__question">
+              <div className="survey__question">
                 <p className="message">Thanks for answering!</p>
               </div>
             </div>
           </div>
 
-          <footer className="survey-chat__footer">
-            {!surveyEnd(survey, cursor) && survey.questions && (
-              <input
-                type="text"
-                name={
-                  cursor < survey.questions.length
-                    ? survey.questions[cursor].id
-                    : 'respondent'
-                }
-                onChange={
-                  survey.respondent && cursor >= survey.questions.length
-                    ? handleName
-                    : handleChange
-                }
-                value={
-                  cursor < survey.questions.length
-                    ? currentResponse.value
-                    : respondent
-                }
-                onKeyPress={handleKeypress}
-                autoFocus
-              />
-            )}
-            {!surveyEnd(survey, cursor) ? (
-              <button name="submit" onClick={handleSubmit}>
-                Submit
-              </button>
-            ) : (
-              <button>Thanks!</button>
-            )}
-            {cursor > 0 && !surveyEnd(survey, cursor) && (
-              <button onClick={handleBack}>Back</button>
-            )}
+          <footer className="survey__footer">
+            <div className="container">
+              <div className="survey__answer">
+                {!surveyEnd(survey, cursor) && survey.questions && (
+                  <input
+                    type="text"
+                    name={
+                      cursor < survey.questions.length
+                        ? survey.questions[cursor].id
+                        : 'respondent'
+                    }
+                    onChange={
+                      survey.respondent && cursor >= survey.questions.length
+                        ? handleName
+                        : handleChange
+                    }
+                    value={
+                      cursor < survey.questions.length
+                        ? currentResponse.value
+                        : respondent
+                    }
+                    onKeyPress={handleKeypress}
+                    autoFocus
+                  />
+                )}
+                {!surveyEnd(survey, cursor) ? (
+                  <button
+                    className="btn btn-primary"
+                    name="submit"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </button>
+                ) : (
+                  <button>Thanks!</button>
+                )}
+                {cursor > 0 && !surveyEnd(survey, cursor) && (
+                  <button onClick={handleBack}>Back</button>
+                )}
+              </div>
+            </div>
           </footer>
         </div>
       )}
