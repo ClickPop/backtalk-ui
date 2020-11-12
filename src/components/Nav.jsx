@@ -4,7 +4,9 @@ import { Button } from './Button';
 import { context } from '../context/Context';
 
 const NavItem = ({ pathname, text, className }) => {
-  return <Button to={{ pathname }} className={className} text={text}></Button>;
+  return (
+    <Button pathname={pathname} className={className} text={text}></Button>
+  );
 };
 
 const Navbar = ({ logo }) => {

@@ -37,44 +37,46 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="row p-2">
-      {surveys && surveys.length < 1 && !state.loading && (
-        <Redirect to="/surveys/first" />
-      )}
-      <div className="col-7">
-        {surveys &&
-          !state.loading &&
-          surveys.map((survey) => (
-            <div key={survey.id} className="row">
-              <div className="col-8 mx-auto mt-2 mb-4">
-                <div className="card">
-                  <div className="card-header">
-                    <h3 className="card-title">
-                      <Link to={`/responses/${survey.hash}`}>
-                        {survey.title}
-                      </Link>
-                    </h3>
-                    <small>
-                      <Link to={`/survey/${survey.hash}`} target="_blank">
-                        {`${window.location.host}/survey/${survey.hash}`}
-                      </Link>
-                    </small>
-                  </div>
-                  <div className="card-body">
-                    <p className="card-text">
-                      Questions: {survey.questions?.length}
-                    </p>
-                    <p className="card-text">
-                      Responses: {survey.Responses?.length}
-                    </p>
+    <div class="container">
+      <div className="row p-2">
+        {surveys && surveys.length < 1 && !state.loading && (
+          <Redirect to="/surveys/first" />
+        )}
+        <div className="col-7">
+          {surveys &&
+            !state.loading &&
+            surveys.map((survey) => (
+              <div key={survey.id} className="row">
+                <div className="col-8 mx-auto mt-2 mb-4">
+                  <div className="card">
+                    <div className="card-header">
+                      <h3 className="card-title">
+                        <Link to={`/responses/${survey.hash}`}>
+                          {survey.title}
+                        </Link>
+                      </h3>
+                      <small>
+                        <Link to={`/survey/${survey.hash}`} target="_blank">
+                          {`${window.location.host}/survey/${survey.hash}`}
+                        </Link>
+                      </small>
+                    </div>
+                    <div className="card-body">
+                      <p className="card-text">
+                        Questions: {survey.questions?.length}
+                      </p>
+                      <p className="card-text">
+                        Responses: {survey.Responses?.length}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-      </div>
-      <div className="col-5">
-        <NewSurvey surveys={surveys} setSurveys={setSurveys} />
+            ))}
+        </div>
+        <div className="col-5">
+          <NewSurvey surveys={surveys} setSurveys={setSurveys} />
+        </div>
       </div>
     </div>
   );
