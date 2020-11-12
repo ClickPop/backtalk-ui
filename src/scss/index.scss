@@ -1,7 +1,6 @@
-@import 'bootstrap', 'components/nav';
+@import 'bootstrap', 'components/fonts', 'components/variables',
+  'components/typography', 'components/nav', 'components/survey';
 
 #root {
   min-height: 100vh;
 }
-
-@import 'survey/survey';

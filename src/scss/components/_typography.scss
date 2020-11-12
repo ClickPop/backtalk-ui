@@ -1,0 +1,28 @@
+body {
+  color: $base-font-color;
+  font-size: $base-font-size;
+}
+
+// Paragraph Styles
+p {
+  line-height: 1.6;
+}
+
+.lead {
+  font-weight: 400;
+}
+
+// Headline Styles
+@for $i from 1 through 6 {
+  h#{$i},
+  .display-#{$i} {
+    font-family: $headline-font;
+    font-weight: 700;
+  }
+}
+
+.display {
+  &-1 {
+    font-size: 4.5rem;
+  }
+}
