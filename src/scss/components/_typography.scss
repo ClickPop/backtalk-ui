@@ -9,6 +9,7 @@ p {
 }
 
 .lead {
+  font-size: 1.25rem;
   font-weight: 400;
 }
 
@@ -23,6 +24,16 @@ p {
 
 .display {
   &-1 {
-    font-size: 4.5rem;
+    font-size: 3rem;
+
+    @media screen and (min-width: $screen-md) {
+      font-size: 4.5rem;
+    }
+  }
+
+  &-6 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: $base-line-height;
   }
 }

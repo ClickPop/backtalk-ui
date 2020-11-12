@@ -22,11 +22,8 @@ const Navbar = ({ logo }) => {
       <div
         className={state.navbar == 'public' ? 'container' : 'container-fluid'}
       >
-        <Link
-          className="navbar-brand"
-          to={{ pathname: path }}
-          title="Survey Says"
-        >
+        <Link className="navbar-brand d-flex" to={{ pathname: path }}>
+          <span class="h4 pt-3 pr-1">Backtalk</span>
           <img
             src={logo}
             className="navbar-logo"
@@ -59,12 +56,12 @@ const Navbar = ({ logo }) => {
                 <NavItem
                   pathname={'/login'}
                   text={'Login'}
-                  className={'nav-link'}
+                  className={'btn btn-white'}
                 />
                 <NavItem
                   pathname={'/register'}
                   text={'Sign Up'}
-                  className={'btn'}
+                  className={'btn btn-primary'}
                 />
               </>
             )}
