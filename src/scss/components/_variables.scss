@@ -1,12 +1,30 @@
 // Colors
-//// Greyscale
 $black: #000000;
 $grey-100: #33334a;
 $white: #ffffff;
 
 $base-font-color: $grey-100;
 
-//// Survey Colors
+// typography
+$base-font-size: 16px;
+$base-line-height: 1.5;
+
+$base-sans: 'Inter', arial;
+$headline-font: $base-sans;
+$body-font: $base-sans;
+
+// Borders and Shadows
+$survey-border-radius: 0.5rem;
+$survey-box-shadow: rgba(55, 65, 80, 0.1) 0 4px 12px,
+  rgba(55, 65, 80, 0.08) 0 6px 18px;
+
+// Screen Sizes
+$screen-sm: 576px;
+$screen-md: 768px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+
+// Survey Variables
 $survey-grey-100: #f3f6fb;
 $survey-white: #ffffff;
 $survey-blue-50: #1a233b;
@@ -15,25 +33,4 @@ $survey-bg: $survey-grey-100;
 $survey-bot-bg: $survey-white;
 $survey-human-bg: $survey-blue-50;
 
-// Borders and Shadows
-$survey-border-radius: 0.5rem;
-$survey-box-shadow: rgba(55, 65, 80, 0.1) 0 4px 12px,
-  rgba(55, 65, 80, 0.08) 0 6px 18px;
-
-// typography
-$base-font-size: 16px;
-
-$base-sans: 'Inter', arial;
-
-$headline-font: $base-sans;
-$body-font: $base-sans;
-
-$survey-font-size: 16px;
-
-$base-line-height: 1.5;
-
-// Screen Sizes
-$screen-sm: 576px;
-$screen-md: 768px;
-$screen-lg: 992px;
-$screen-xl: 1200px;
+$survey-font-size: $base-font-size;
