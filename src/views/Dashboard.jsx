@@ -55,14 +55,29 @@ export const Dashboard = () => {
                 <div className="col-12">
                   <div className="card mb-4">
                     <div className="card-body">
-                      <h5 className="card-title">{survey.title}</h5>
+                      <h5 className="card-title">
+                        <Link
+                          to={`/responses/${survey.hash}`}
+                          className="text-decoration-none"
+                        >
+                          {survey.title}
+                        </Link>
+                      </h5>
                       <p className="mb-0">
-                        <Link to={`/responses/${survey.hash}`}>
-                          {survey.Responses?.length} responses
-                        </Link>{' '}
+                        {survey.Responses.length ? (
+                          <Link
+                            to={`/responses/${survey.hash}`}
+                            className="text-decoration-none"
+                          >
+                            {survey.Responses.length} responses
+                          </Link>
+                        ) : (
+                          'No responses yet'
+                        )}{' '}
                         |{' '}
                         <Link
                           to={`/survey/${survey.hash}`}
+                          className="text-decoration-none"
                           target="_blank"
                         >{`${window.location.host}/survey/${survey.hash}`}</Link>
                       </p>

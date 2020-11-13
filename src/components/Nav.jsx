@@ -4,12 +4,8 @@ import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import { context } from '../context/Context';
 
-const NavItem = ({ pathname, text, className, onClick }) => {
-  return (
-    <li className="nav-item" onClick={onClick}>
-      <Button pathname={pathname} className={className} text={text} />
-    </li>
-  );
+const NavItem = ({ pathname, text, className }) => {
+  return <Button pathname={pathname} className={className} text={text} />;
 };
 
 const Navbar = ({ logo }) => {
@@ -32,13 +28,10 @@ const Navbar = ({ logo }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-light bg-primary">
-      <div className={state.auth ? 'container' : 'container-fluid'}>
-        <Link
-          className="navbar-brand"
-          to={{ pathname: path }}
-          title="Survey Says"
-        >
+    <nav className="navbar navbar-expand-sm navbar-light">
+      <div className={state.navbar === 'public' ? 'container' : 'container'}>
+        <Link className="navbar-brand d-flex" to={{ pathname: path }}>
+          <span class="h4 pt-3 pr-1">Backtalk</span>
           <img
             src={logo}
             className="navbar-logo"
