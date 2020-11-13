@@ -19,6 +19,12 @@ p {
   .display-#{$i} {
     font-family: $headline-font;
     font-weight: 700;
+
+    &.card-title {
+      a {
+        color: $base-font-color;
+      }
+    }
   }
 }
 
