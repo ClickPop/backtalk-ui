@@ -59,7 +59,7 @@ export const Response = ({ history, location }) => {
 
   useEffect(() => {
     const sendSurveys = async () => {
-      const resp = JSON.parse(localStorage.getItem('resp'));
+      const resp = JSON.parse(localStorage.getItem(params.hash));
       const cur = localStorage.getItem('cur');
       setResponseId(resp?.id);
       setCursor(cur || 0);
@@ -71,7 +71,10 @@ export const Response = ({ history, location }) => {
             respondent: respondent,
           });
           setResponseId(response.data.result.id);
-          localStorage.setItem('resp', JSON.stringify(response.data.result));
+          localStorage.setItem(
+            params.hash,
+            JSON.stringify(response.data.result),
+          );
         } catch (err) {
           console.error(err);
           // TODO add error popup
@@ -83,9 +86,9 @@ export const Response = ({ history, location }) => {
             responses: [...responses, ...queryResponses],
             respondent: respondent,
           });
-          localStorage.setItem('resp', JSON.stringify(res.data.result));
+          localStorage.setItem(params.hash, JSON.stringify(res.data.result));
           if (surveyEnd(survey, cursor)) {
-            localStorage.removeItem('resp');
+            localStorage.removeItem(params.hash);
             localStorage.removeItem('cur');
           }
         } catch (err) {
@@ -105,6 +108,7 @@ export const Response = ({ history, location }) => {
     respondent,
     survey,
     responseId,
+    params.hash,
   ]);
 
   const handleChange = (e) => {

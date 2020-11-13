@@ -4,8 +4,15 @@ import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import { context } from '../context/Context';
 
-const NavItem = ({ pathname, text, className }) => {
-  return <Button pathname={pathname} className={className} text={text} />;
+const NavItem = ({ pathname, text, className, onClick }) => {
+  return (
+    <Button
+      pathname={pathname}
+      className={className}
+      text={text}
+      onClick={onClick}
+    />
+  );
 };
 
 const Navbar = ({ logo }) => {
@@ -31,7 +38,7 @@ const Navbar = ({ logo }) => {
     <nav className="navbar navbar-expand-sm navbar-light">
       <div className={state.navbar === 'public' ? 'container' : 'container'}>
         <Link className="navbar-brand d-flex" to={{ pathname: path }}>
-          <span class="h4 pt-3 pr-1">Backtalk</span>
+          <span className="h4 pt-3 pr-1">Backtalk</span>
           <img
             src={logo}
             className="navbar-logo"
