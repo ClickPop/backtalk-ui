@@ -58,7 +58,7 @@ const Login = () => {
       <div className="row justify-content-center">
         <section className="col-xl-4 col-md-6 col-sm-8 col-12 py-5">
           <header>
-            <h2 className="h5 mb-4">Welcome back, let's get you logged in!</h2>
+            <h2 className="h5 mb-4">Welcome back! Let's get you logged in.</h2>
           </header>
 
           <form>
