@@ -149,9 +149,9 @@ export const Response = ({ history, location }) => {
   };
 
   return (
-    <div className="survey">
+    <div className="survey d-flex py-4">
       {survey && (
-        <div className="container">
+        <div className="container survey__container">
           {/*
           <header className="no-gutters survey-chat__header">
             <figure className="avatar mini rounded-circle border border-primary overflow-hidden bg-light">
