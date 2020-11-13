@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import NewSurvey from '../components/NewSurvey';
 
@@ -10,7 +10,7 @@ const FirstSurvey = () => {
   }
 
   return (
-    <Fragment>
+    <div className="container">
       <div className="row justify-content-center">
         <section className="col-xl-6 col-md-8 col-sm-10 col-12 py-5">
           <header>
@@ -20,7 +20,7 @@ const FirstSurvey = () => {
           <NewSurvey toDashboard={setToDashboard} />
         </section>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

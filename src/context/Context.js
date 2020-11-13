@@ -6,6 +6,7 @@ export const initialState = {
   token: null,
   errors: [],
   loading: true,
+  navbar: '',
 };
 
 export const context = createContext(initialState);

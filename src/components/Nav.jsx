@@ -1,10 +1,11 @@
+import * as axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { context } from '../context/Context';
 
-const NavItem = ({ pathname, text, className }) => {
+const NavItem = ({ pathname, text, className, onClick }) => {
   return (
-    <li className="nav-item">
+    <li className="nav-item" onClick={onClick}>
       <Link to={{ pathname }} className={className}>
         {text}
       </Link>
@@ -13,7 +14,7 @@ const NavItem = ({ pathname, text, className }) => {
 };
 
 const Navbar = ({ logo }) => {
-  const { state } = useContext(context);
+  const { state, dispatch } = useContext(context);
   const [path, setPath] = useState('/');
 
   useEffect(() => {
@@ -22,9 +23,18 @@ const Navbar = ({ logo }) => {
     }
   }, [state.auth]);
 
+  const handleLogout = async () => {
+    if (state.auth) {
+      const res = await axios.post('/api/v1/auth/logout');
+      if (res.data.logout) {
+        dispatch({ type: 'LOGOUT', payload: null });
+      }
+    }
+  };
+
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
-      <div className="container-fluid">
+    <nav className="navbar navbar-expand-sm navbar-light bg-primary">
+      <div className={state.auth ? 'container' : 'container-fluid'}>
         <Link
           className="navbar-brand"
           to={{ pathname: path }}
@@ -49,20 +59,24 @@ const Navbar = ({ logo }) => {
           <span className="navbar-toggler-icon"> </span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          {!state.auth && (
-            <ul className="navbar-nav justify-content-end ml-auto">
-              <NavItem
-                pathname={'/login'}
-                text={'Login'}
-                className={'nav-link text-light'}
-              />
-              <NavItem
-                pathname={'/register'}
-                text={'Sign Up'}
-                className={'btn btn-outline-light'}
-              />
-            </ul>
-          )}
+          <ul className="navbar-nav justify-content-end ml-auto">
+            {!state.auth ? (
+              <>
+                <NavItem
+                  pathname={'/login'}
+                  text={'Login'}
+                  className={'btn btn-white'}
+                />
+                <NavItem
+                  pathname={'/register'}
+                  text={'Sign Up'}
+                  className={'btn btn-primary'}
+                />
+              </>
+            ) : (
+              <NavItem onClick={handleLogout} text={'Logout'} className="btn" />
+            )}
+          </ul>
         </div>
       </div>
     </nav>

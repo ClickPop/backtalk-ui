@@ -1,53 +1,7 @@
-@import 'bootstrap';
+@import 'bootstrap', 'components/fonts', 'components/variables',
+  'components/typography', 'components/nav', 'components/survey';
 
 #root {
   min-height: 100vh;
+  overflow: auto;
 }
-
-.navbar-brand {
-  .navbar-logo {
-    width: auto;
-    height: 3rem;
-  }
-}
-
-.form-control {
-  &::placeholder {
-    color: $gray-400;
-    font-style: italic;
-  }
-}
-
-.form-switch-lg {
-  font-size: 1.5em;
-  display: flex;
-  min-height: auto;
-
-  .form-check-input {
-    height: 1.5em;
-    width: 2.5em;
-  }
-}
-
-.avatar {
-  overflow: hidden;
-  background-color: $secondary;
-  border-radius: 50%;
-  border: 2px solid $primary;
-
-  &.mini {
-    width: 50px;
-    height: auto;
-    border-width: 1px;
-  }
-
-  img {
-    display: block;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: auto;
-  }
-}
-
-@import 'includes/survey-chat';

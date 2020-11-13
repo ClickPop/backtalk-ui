@@ -4,7 +4,7 @@ import Home from './views/Home';
 import Login from './views/Login';
 import Register from './views/Register';
 import FirstSurvey from './views/FirstSurvey';
-import logo from './images/logo-mouth.png';
+import logo from './images/bktk-logo.svg';
 import { Navbar } from './components/Nav';
 import { Dashboard } from './views/Dashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';

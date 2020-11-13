@@ -15,6 +15,8 @@ export const reducer = (state, action) => {
       };
     case 'SET_LOADING':
       return { ...state, loading: payload };
+    case 'SET_NAVBAR':
+      return { ...state, navbar: payload };
     default:
       throw new Error();
   }
