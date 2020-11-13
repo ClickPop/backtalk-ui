@@ -33,13 +33,10 @@ const Navbar = ({ logo }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-light bg-primary">
-      <div className={state.auth ? 'container' : 'container-fluid'}>
-        <Link
-          className="navbar-brand"
-          to={{ pathname: path }}
-          title="Survey Says"
-        >
+    <nav className="navbar navbar-expand-sm navbar-light">
+      <div className={state.navbar == 'public' ? 'container' : 'container'}>
+        <Link className="navbar-brand d-flex" to={{ pathname: path }}>
+          <span class="h4 pt-3 pr-1">Backtalk</span>
           <img
             src={logo}
             className="navbar-logo"
