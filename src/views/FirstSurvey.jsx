@@ -10,17 +10,19 @@ const FirstSurvey = () => {
   }
 
   return (
-    <Fragment>
-      <div className="row justify-content-center">
-        <section className="col-xl-6 col-md-8 col-sm-10 col-12 py-5">
-          <header>
-            <h2 className="mb-5">Welcome! Let's create your first survey.</h2>
-          </header>
+    <div className="container">
+      <Fragment>
+        <div className="row justify-content-center">
+          <section className="col-xl-6 col-md-8 col-sm-10 col-12 py-5">
+            <header>
+              <h2 className="mb-5">Welcome! Let's create your first survey.</h2>
+            </header>
 
-          <NewSurvey toDashboard={setToDashboard} />
-        </section>
-      </div>
-    </Fragment>
+            <NewSurvey toDashboard={setToDashboard} />
+          </section>
+        </div>
+      </Fragment>
+    </div>
   );
 };
 
