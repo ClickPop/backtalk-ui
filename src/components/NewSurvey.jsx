@@ -41,8 +41,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const survey = {
-      title:
-        surveys && surveys.length ? `Survey ${surveys.length}` : 'New Survey',
+      title: form.question,
       questions: [{ prompt: form.question, type: 'text' }],
       respondent: form.respondent,
     };
@@ -85,7 +84,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
         <div className="row">
           <div className="col-12 mb-5">
             <label className="w-100">
-              <h1 class="h5">What question do you want to ask?</h1>
+              <h1 className="h5">What question do you want to ask?</h1>
               <input
                 type="text"
                 className="form-control mt-1"
@@ -101,7 +100,9 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
         <div className="row">
           <div className="col-12 mb-4">
             <label className="d-block" htmlFor="survey__questionRespondent">
-              <h1 class="h5">Do you want to know who left your response?</h1>
+              <h1 className="h5">
+                Do you want to know who left your response?
+              </h1>
               <p className="mb-1">
                 We're not going to do anything sneaky here, just ask them.
               </p>

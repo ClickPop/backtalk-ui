@@ -1,7 +1,7 @@
 import * as axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import defaultAvatar from '../images/default-avatar.png';
+// import defaultAvatar from '../images/default-avatar.png';
 
 const surveyEnd = (survey, cursor) => {
   return (
@@ -27,19 +27,26 @@ const getQuery = (qStr) => {
 export const Response = ({ history, location }) => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
-  const [avatar, setAvatar] = useState(defaultAvatar);
+  // const [avatar, setAvatar] = useState(defaultAvatar);
   const [cursor, setCursor] = useState(0);
   const [queryResponses, setQueryResponses] = useState([]);
   const [responses, setResponses] = useState([]);
   const [respondent, setRespondent] = useState('');
+  const [responseId, setResponseId] = useState(null);
   const [currentResponse, setCurrentResponse] = useState({ value: '' });
+
   useEffect(() => {
     const getSurvey = async () => {
       try {
-        console.log('test');
-        const res = await axios.get(`/api/v1/surveys/${params.hash}`);
-        setSurvey(res.data.result);
+        const surv = await axios.get(`/api/v1/surveys/${params.hash}`);
+        setSurvey(surv.data.result);
         const queryParams = getQuery(decodeURI(location.search));
+        const resp = JSON.parse(localStorage.getItem('resp'));
+        if (resp) {
+          setResponses([
+            ...resp.data.filter((response) => response.type !== 'query'),
+          ]);
+        }
         if (!queryParams) return;
         setQueryResponses((r) => [...r, ...queryParams]);
       } catch (err) {
@@ -52,13 +59,35 @@ export const Response = ({ history, location }) => {
 
   useEffect(() => {
     const sendSurveys = async () => {
-      if (surveyEnd(survey, cursor)) {
+      const resp = JSON.parse(localStorage.getItem('resp'));
+      const cur = localStorage.getItem('cur');
+      setResponseId(resp?.id);
+      setCursor(cur || 0);
+      if (cursor < 1 && !resp?.id) {
         try {
-          await axios.post('/api/v1/responses/new', {
+          const response = await axios.post('/api/v1/responses/new', {
             surveyId: survey.id,
             responses: [...responses, ...queryResponses],
             respondent: respondent,
           });
+          setResponseId(response.data.result.id);
+          localStorage.setItem('resp', JSON.stringify(response.data.result));
+        } catch (err) {
+          console.error(err);
+          // TODO add error popup
+        }
+      } else if (cursor > 0 && responseId) {
+        try {
+          const res = await axios.patch('/api/v1/responses/update', {
+            responseId: responseId,
+            responses: [...responses, ...queryResponses],
+            respondent: respondent,
+          });
+          localStorage.setItem('resp', JSON.stringify(res.data.result));
+          if (surveyEnd(survey, cursor)) {
+            localStorage.removeItem('resp');
+            localStorage.removeItem('cur');
+          }
         } catch (err) {
           console.error(err);
           // TODO add error popup
@@ -75,6 +104,7 @@ export const Response = ({ history, location }) => {
     survey.questions,
     respondent,
     survey,
+    responseId,
   ]);
 
   const handleChange = (e) => {
@@ -104,6 +134,7 @@ export const Response = ({ history, location }) => {
       setCurrentResponse({ value: '' });
     }
     setCursor(cursor + 1);
+    localStorage.setItem('cur', cursor + 1);
   };
 
   const handleKeypress = (e) => {

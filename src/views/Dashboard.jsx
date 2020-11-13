@@ -37,7 +37,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <div class="container">
+    <div className="container">
       <div className="row p-2">
         {surveys && surveys.length < 1 && !state.loading && (
           <Redirect to="/surveys/first" />

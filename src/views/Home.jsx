@@ -19,7 +19,19 @@ const Home = () => {
       <div className="row my-5 pb-5">
         <div className="col-12 col-lg-8 col-xl-6 offset-lg-2 offset-xl-3 text-center">
           <h1 className="display-1 mb-4">
-            Get answers, in a <small>✨</small>snap<small>✨</small>.
+            Get answers, in a span{' '}
+            <small>
+              <span role="img" aria-label="twinkle">
+                ✨
+              </span>
+            </small>
+            snap
+            <small>
+              <span role="img" aria-label="twinkle">
+                ✨
+              </span>
+            </small>
+            .
           </h1>
           <p className="display-6">
             People connect through conversations. Backtalk lets you create

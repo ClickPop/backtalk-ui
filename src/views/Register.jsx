@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { context } from '../context/Context';
 import * as axios from 'axios';
@@ -70,7 +70,7 @@ const Register = () => {
   };
 
   return (
-    <Fragment>
+    <div className="container">
       {errors &&
         errors.map((error) => (
           <div key={error.msg} className="alert alert-danger">
@@ -177,7 +177,7 @@ const Register = () => {
           </form>
         </section>
       </div>
-    </Fragment>
+    </div>
   );
 };
 
