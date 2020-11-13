@@ -1,14 +1,13 @@
 import * as axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from './Button';
 import { context } from '../context/Context';
 
 const NavItem = ({ pathname, text, className, onClick }) => {
   return (
     <li className="nav-item" onClick={onClick}>
-      <Link to={{ pathname }} className={className}>
-        {text}
-      </Link>
+      <Button pathname={pathname} className={className} text={text} />
     </li>
   );
 };
