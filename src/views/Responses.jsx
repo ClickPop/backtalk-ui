@@ -1,5 +1,6 @@
 import * as axios from 'axios';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
+import Moment from 'react-moment';
 import { useParams } from 'react-router-dom';
 import { context } from '../context/Context';
 
@@ -39,43 +40,42 @@ export const Responses = () => {
   };
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-6">
-        <div>
-          {responses.map((response) => (
-            <div className="card m-3 p-3" key={response.id}>
-              <div className="d-flex justify-content-between">
-                <h2 className="card-title">
-                  {response.respondent || 'Anonymous'}
-                </h2>
-                <button
-                  className="btn btn-primary"
-                  onClick={(e) => handleExpand(response.id)}
-                >
-                  {expanded[response.id] ? '^' : 'v'}
-                </button>
-              </div>
-              {expanded[response.id] && (
-                <div className="card-text">
+    <div className="container">
+      <div className="row">
+        <div className="col-12 col-lg-8 offset-lg-2">
+          <div>
+            {responses.map((response) => (
+              <div className="card mb-4 px-3 py-2" key={response.id}>
+                <div className="card-body">
                   {response.data &&
                     response.data.map(
                       (r) =>
                         r && (
                           <div key={r.id || r.key}>
-                            <b>
-                              {questions.find((q) => q.id === r.id)?.prompt ||
-                                r.key}
-                              :
-                            </b>{' '}
-                            {r.value}
+                            <Fragment>
+                              <p className="text-secondary font-weight-bold">
+                                <Moment format="hh:mma on ddd MMM D, YYYY">
+                                  {response.createdAt}
+                                </Moment>
+                                <br />
+                              </p>
+                              <p className="mb-1">
+                                {questions.find((q) => q.id === r.id)?.prompt ||
+                                  r.key}
+                              </p>
+                              <h5 className="card-title mb-3">{r.value}</h5>
+                            </Fragment>{' '}
                           </div>
                         ),
                     )}
-                  timestamp: {response.createdAt}
+                  <p className="mb-0">
+                    &ndash; {response.respondent || 'Anonymous'}
+                    <br />
+                  </p>
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

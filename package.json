@@ -6,10 +6,12 @@
     "axios": "^0.20.0",
     "bootstrap": "^5.0.0-alpha1",
     "classnames": "^2.2.6",
+    "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-moment": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "uuid": "^8.3.0"
