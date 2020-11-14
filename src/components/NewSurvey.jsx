@@ -58,7 +58,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
         toDashboard(true);
       }
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err?.response?.status === 401) {
         const login = await axios.post('/api/v1/auth/refresh_token');
         dispatch({ type: 'LOGIN', payload: login.data.accessToken });
         const newSurvey = await submitSurvey(survey, state.token);

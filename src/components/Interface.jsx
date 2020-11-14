@@ -1,3 +1,0 @@
-import React from 'react';
-
-// Interface components (like Button, Link, etc) should go in here...
