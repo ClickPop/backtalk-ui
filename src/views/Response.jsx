@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom';
 
 const surveyEnd = (survey, cursor) => {
   return (
-    (!survey.respondent && cursor > survey.questions?.length - 1) ||
-    (survey.respondent && cursor > survey.questions?.length)
+    (!survey?.respondent && cursor > survey?.questions?.length - 1) ||
+    (survey?.respondent && cursor > survey?.questions?.length)
   );
 };
 
@@ -32,7 +32,10 @@ export const Response = ({ location }) => {
   const [queryResponses, setQueryResponses] = useState([]);
   const [name, setName] = useState('');
   const [responseId, setResponseId] = useState(null);
-  const [currentResponse, setCurrentResponse] = useState({ value: '' });
+  const [currentResponse, setCurrentResponse] = useState({
+    value: '',
+    type: 'text',
+  });
   const survey = useRef(null);
   const hash = useRef(params.hash);
   const search = useRef(location.search);
@@ -117,11 +120,10 @@ export const Response = ({ location }) => {
       resp = responses.map((response) =>
         response.id === currentResponse.id ? currentResponse : response,
       );
-    } else {
+    } else if (currentResponse.id) {
       resp = [...responses, currentResponse];
     }
     setResponses(resp);
-    console.log(cursor, responseId, survey);
     try {
       if (responseId) {
         const res = await axios.patch('/api/v1/responses/update', {
@@ -142,7 +144,7 @@ export const Response = ({ location }) => {
       console.error(err);
       // TODO add error popup
     }
-    setCurrentResponse({ value: '' });
+    setCurrentResponse({ value: '', type: 'text' });
     if (surveyEnd(survey.current, cursor + 1)) {
       localStorage.removeItem(hash.current);
       localStorage.removeItem(`cur:${hash.current}`);
@@ -177,7 +179,7 @@ export const Response = ({ location }) => {
           */}
 
           <div className="d-flex flex-column survey__feed">
-            {survey.current.questions &&
+            {survey?.current?.questions &&
               survey.current.questions.map(
                 (question, i) =>
                   question.type !== 'query' &&
@@ -186,7 +188,6 @@ export const Response = ({ location }) => {
                       <div className="survey__question">
                         <h2 className="message">{question.prompt}</h2>
                       </div>
-
                       <div className="survey__response">
                         <p className="message">
                           {responses.length > 0 &&
@@ -197,7 +198,7 @@ export const Response = ({ location }) => {
                     </div>
                   ),
               )}
-            {survey.current.respondent &&
+            {survey?.current?.respondent &&
               cursor >= survey.current.questions.length && (
                 <div className="survey__set">
                   <div className="survey__question">
@@ -225,31 +226,33 @@ export const Response = ({ location }) => {
 
           <div className="survey__footer">
             <div className="survey__answer">
-              <div class="input-group">
-                {!surveyEnd(survey, cursor) && survey.questions && (
-                  <input
-                    type="text"
-                    name={
-                      cursor < survey.questions.length
-                        ? survey.questions[cursor].id
-                        : 'respondent'
-                    }
-                    onChange={
-                      survey.respondent && cursor >= survey.questions.length
-                        ? handleName
-                        : handleChange
-                    }
-                    value={
-                      cursor < survey.questions.length
-                        ? currentResponse.value
-                        : respondent
-                    }
-                    onKeyPress={handleKeypress}
-                    className="form-control"
-                    autoFocus
-                  />
-                )}
-                {!surveyEnd(survey, cursor) ? (
+              <div className="input-group">
+                {!surveyEnd(survey?.current, cursor) &&
+                  survey?.current?.questions && (
+                    <input
+                      type="text"
+                      name={
+                        cursor < survey?.current.questions.length
+                          ? survey?.current.questions[cursor].id
+                          : 'respondent'
+                      }
+                      onChange={
+                        survey?.current.respondent &&
+                        cursor >= survey?.current.questions.length
+                          ? handleName
+                          : handleChange
+                      }
+                      value={
+                        cursor < survey?.current.questions.length
+                          ? currentResponse.value
+                          : name
+                      }
+                      onKeyPress={handleKeypress}
+                      className="form-control"
+                      autoFocus
+                    />
+                  )}
+                {!surveyEnd(survey.current, cursor) ? (
                   <button
                     className="btn btn-primary px-3"
                     name="submit"

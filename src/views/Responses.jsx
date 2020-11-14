@@ -46,7 +46,7 @@ export const Responses = () => {
                     response.data.map(
                       (r) =>
                         r && (
-                          <div key={r.id || r.key}>
+                          <div key={`${response.id + r.id}`}>
                             <Fragment>
                               <p className="text-secondary font-weight-bold">
                                 <Moment format="hh:mma on ddd MMM D, YYYY">

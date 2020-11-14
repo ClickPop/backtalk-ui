@@ -30,6 +30,7 @@ const Navbar = ({ logo }) => {
       const res = await axios.post('/api/v1/auth/logout');
       if (res.data.logout) {
         dispatch({ type: 'LOGOUT', payload: null });
+        setPath('/');
       }
     }
   };
