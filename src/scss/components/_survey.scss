@@ -5,8 +5,8 @@
 
   &__container {
     background: $survey-bg;
-    border-radius: $survey-border-radius * 2;
-    box-shadow: $survey-box-shadow;
+    border-radius: $base-border-radius * 2;
+    box-shadow: $base-box-shadow;
     max-width: 500px;
     max-height: 600px;
   }
@@ -23,9 +23,9 @@
   }
 
   &__answer {
-    background-color: $survey-white;
-    border-radius: $survey-border-radius;
-    box-shadow: $survey-box-shadow;
+    background-color: $white;
+    border-radius: $base-border-radius;
+    box-shadow: $base-box-shadow;
     display: flex;
     justify-content: space-between;
     margin: 1rem 00;

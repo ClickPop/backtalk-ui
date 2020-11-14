@@ -1,7 +1,9 @@
 @import 'bootstrap', 'components/fonts', 'components/variables',
-  'components/typography', 'components/nav', 'components/survey';
+  'components/typography', 'components/nav', 'components/card',
+  'components/survey';
 
 #root {
+  background: $base-bg-color;
   min-height: 100vh;
   overflow: auto;
 }

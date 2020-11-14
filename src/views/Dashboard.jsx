@@ -53,7 +53,7 @@ export const Dashboard = () => {
             surveys.map((survey) => (
               <div key={survey.id} className="row">
                 <div className="col-12">
-                  <div className="card mb-4">
+                  <div className="card card--hover p-3 mb-4">
                     <div className="card-body">
                       <h5 className="card-title">
                         <Link
