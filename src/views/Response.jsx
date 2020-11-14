@@ -149,9 +149,9 @@ export const Response = ({ history, location }) => {
   };
 
   return (
-    <div className="survey d-flex py-4">
+    <div className="survey d-flex py-md-4">
       {survey && (
-        <div className="container survey__container">
+        <div className="container p-0 d-flex flex-column survey__container">
           {/*
           <header className="no-gutters survey-chat__header">
             <figure className="avatar mini rounded-circle border border-primary overflow-hidden bg-light">
@@ -207,9 +207,9 @@ export const Response = ({ history, location }) => {
             </div>
           </div>
 
-          <footer className="survey__footer">
-            <div className="container">
-              <div className="survey__answer">
+          <div className="survey__footer">
+            <div className="survey__answer">
+              <div class="input-group">
                 {!surveyEnd(survey, cursor) && survey.questions && (
                   <input
                     type="text"
@@ -229,26 +229,29 @@ export const Response = ({ history, location }) => {
                         : respondent
                     }
                     onKeyPress={handleKeypress}
+                    className="form-control"
                     autoFocus
                   />
                 )}
                 {!surveyEnd(survey, cursor) ? (
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary px-3"
                     name="submit"
                     onClick={handleSubmit}
                   >
-                    Submit
+                    &raquo;
                   </button>
                 ) : (
-                  <button>Thanks!</button>
+                  <div className="text-center">
+                    Make a survey of your own with <a href="#">Backtalk</a>
+                  </div>
                 )}
                 {cursor > 0 && !surveyEnd(survey, cursor) && (
                   <button onClick={handleBack}>Back</button>
                 )}
               </div>
             </div>
-          </footer>
+          </div>
         </div>
       )}
     </div>
