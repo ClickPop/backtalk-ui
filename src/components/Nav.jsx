@@ -31,9 +31,9 @@ const Navbar = ({ logo }) => {
 
   return (
     <nav className="navbar navbar-expand-sm navbar-light">
-      <div className={state.navbar == 'public' ? 'container' : 'container'}>
+      <div>
         <Link className="navbar-brand d-flex" to={{ pathname: path }}>
-          <span class="h4 pt-3 pr-1">Backtalk</span>
+          <span className="h4 pt-3 pr-1">Backtalk</span>
           <img
             src={logo}
             className="navbar-logo"
