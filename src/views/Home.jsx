@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { context } from '../context/Context';
-
 const Home = () => {
   const { state, dispatch } = useContext(context);
 
@@ -19,7 +18,7 @@ const Home = () => {
       <div className="row my-5 pb-5">
         <div className="col-12 col-lg-8 col-xl-6 offset-lg-2 offset-xl-3 text-center">
           <h1 className="display-1 mb-4">
-            Get answers, in a span{' '}
+            Get answers, in a
             <small>
               <span role="img" aria-label="twinkle">
                 ✨
@@ -48,7 +47,7 @@ const Home = () => {
       <div className="row">
         <div className="col-12 col-md-6">
           <h2>Ask questions like a human.</h2>
-          <p class="lead">
+          <p className="lead">
             Designed to be conversational, so your audience can talk to you like
             you're both people (which you are).
           </p>

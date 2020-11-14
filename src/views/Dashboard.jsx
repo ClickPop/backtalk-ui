@@ -64,7 +64,7 @@ export const Dashboard = () => {
                         </Link>
                       </h5>
                       <p className="mb-0">
-                        {survey.Responses.length ? (
+                        {survey?.Responses?.length ? (
                           <Link
                             to={`/responses/${survey.hash}`}
                             className="text-decoration-none"

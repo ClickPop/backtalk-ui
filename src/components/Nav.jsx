@@ -4,9 +4,14 @@ import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import { context } from '../context/Context';
 
-const NavItem = ({ pathname, text, className }) => {
+const NavItem = ({ pathname, text, className, onClick }) => {
   return (
-    <Button pathname={pathname} className={className} text={text}></Button>
+    <Button
+      pathname={pathname}
+      className={className}
+      text={text}
+      onClick={onClick}
+    />
   );
 };
 
