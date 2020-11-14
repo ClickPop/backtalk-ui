@@ -36,8 +36,8 @@ const Navbar = ({ logo }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-light">
-      <div>
+    <div className="container">
+      <nav className="navbar navbar-expand-sm navbar-light">
         <Link className="navbar-brand d-flex" to={{ pathname: path }}>
           <span className="h4 pt-3 pr-1">Backtalk</span>
           <img
@@ -78,8 +78,8 @@ const Navbar = ({ logo }) => {
             )}
           </ul>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 };
 
