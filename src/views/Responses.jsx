@@ -8,7 +8,6 @@ export const Responses = () => {
   const params = useParams();
   const [responses, setResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [expanded, setExpanded] = useState({});
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -34,10 +33,6 @@ export const Responses = () => {
     };
     getResponses();
   }, [params.hash, state.token]);
-
-  const handleExpand = (id) => {
-    setExpanded({ ...expanded, [id]: !expanded[id] });
-  };
 
   return (
     <div className="container">

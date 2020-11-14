@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 // import defaultAvatar from '../images/default-avatar.png';
 
@@ -24,67 +24,89 @@ const getQuery = (qStr) => {
   return query;
 };
 
-export const Response = ({ history, location }) => {
+export const Response = ({ location }) => {
   const params = useParams();
-  const [survey, setSurvey] = useState({});
   // const [avatar, setAvatar] = useState(defaultAvatar);
   const [cursor, setCursor] = useState(0);
-  const [queryResponses, setQueryResponses] = useState([]);
   const [responses, setResponses] = useState([]);
+  const [queryResponses, setQueryResponses] = useState([]);
   const [respondent, setRespondent] = useState('');
+  const [name, setName] = useState('');
   const [responseId, setResponseId] = useState(null);
   const [currentResponse, setCurrentResponse] = useState({ value: '' });
-
+  const survey = useRef(null);
+  const hash = useRef(params.hash);
+  const search = useRef(location.search);
+  const response = useMemo(() => {
+    return {
+      responseId: responseId,
+      responses: [...responses, ...queryResponses],
+      respondent: respondent,
+    };
+  }, [responses, respondent, responseId, queryResponses]);
   useEffect(() => {
+    const cur = localStorage.getItem('cur');
+    setCursor(cur || 0);
     const getSurvey = async () => {
       try {
-        const surv = await axios.get(`/api/v1/surveys/${params.hash}`);
-        setSurvey(surv.data.result);
-        const queryParams = getQuery(decodeURI(location.search));
+        const surv = await axios.get(`/api/v1/surveys/${hash.current}`);
+        survey.current = surv.data.result;
+        const queryParams = getQuery(decodeURI(search.current));
         const resp = JSON.parse(localStorage.getItem('resp'));
-        if (resp) {
-          setResponses([
-            ...resp.data.filter((response) => response.type !== 'query'),
-          ]);
+        let r = [];
+        if (queryParams) {
+          setQueryResponses([...queryParams]);
+          r = queryParams;
         }
-        if (!queryParams) return;
-        setQueryResponses((r) => [...r, ...queryParams]);
+        if (resp) {
+          try {
+            const res = await axios.patch('/api/v1/responses/update', {
+              responseId: resp.id,
+              responses: [...resp.data, ...r],
+              respondent: resp.respondent,
+            });
+            setResponseId(res.data.result.id);
+            setResponses((r) => [
+              ...r,
+              ...res.data.result.data.filter((r) => r.type !== 'query'),
+            ]);
+            setQueryResponses((r) => [
+              ...r,
+              ...res.data.result.data.filter((r) => r.type === 'query'),
+            ]);
+            localStorage.setItem('resp', JSON.stringify(res.data.result));
+          } catch (err) {
+            console.error(err);
+            // TODO add error popup
+          }
+        } else {
+          try {
+            const res = await axios.post('/api/v1/responses/new', {
+              surveyId: surv.data.result.id,
+              responses: r,
+            });
+            setResponseId(res.data.result.id);
+            localStorage.setItem('resp', JSON.stringify(res.data.result));
+          } catch (err) {
+            console.error(err);
+            // TODO add error popup
+          }
+        }
       } catch (err) {
         console.error(err);
         // TODO add error popup
       }
     };
     getSurvey();
-  }, [params.hash, location.search]);
+  }, []);
 
   useEffect(() => {
     const sendSurveys = async () => {
-      const resp = JSON.parse(localStorage.getItem('resp'));
-      const cur = localStorage.getItem('cur');
-      setResponseId(resp?.id);
-      setCursor(cur || 0);
-      if (cursor < 1 && !resp?.id) {
+      if (cursor > 0 && response.responseId) {
         try {
-          const response = await axios.post('/api/v1/responses/new', {
-            surveyId: survey.id,
-            responses: [...responses, ...queryResponses],
-            respondent: respondent,
-          });
-          setResponseId(response.data.result.id);
-          localStorage.setItem('resp', JSON.stringify(response.data.result));
-        } catch (err) {
-          console.error(err);
-          // TODO add error popup
-        }
-      } else if (cursor > 0 && responseId) {
-        try {
-          const res = await axios.patch('/api/v1/responses/update', {
-            responseId: responseId,
-            responses: [...responses, ...queryResponses],
-            respondent: respondent,
-          });
+          const res = await axios.patch('/api/v1/responses/update', response);
           localStorage.setItem('resp', JSON.stringify(res.data.result));
-          if (surveyEnd(survey, cursor)) {
+          if (surveyEnd(survey.current, cursor)) {
             localStorage.removeItem('resp');
             localStorage.removeItem('cur');
           }
@@ -94,18 +116,8 @@ export const Response = ({ history, location }) => {
         }
       }
     };
-
     sendSurveys();
-  }, [
-    cursor,
-    queryResponses,
-    responses,
-    survey.id,
-    survey.questions,
-    respondent,
-    survey,
-    responseId,
-  ]);
+  }, [cursor, response]);
 
   const handleChange = (e) => {
     setCurrentResponse({
@@ -116,12 +128,12 @@ export const Response = ({ history, location }) => {
   };
 
   const handleName = (e) => {
-    setRespondent(e.target.value);
+    setName(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (cursor < survey.questions.length) {
+    if (cursor < survey.current.questions.length) {
       if (responses.find((response) => response.id === currentResponse.id)) {
         setResponses(
           responses.map((response) =>
@@ -132,6 +144,8 @@ export const Response = ({ history, location }) => {
         setResponses([...responses, currentResponse]);
       }
       setCurrentResponse({ value: '' });
+    } else {
+      setRespondent(name);
     }
     setCursor(cursor + 1);
     localStorage.setItem('cur', cursor + 1);
@@ -150,7 +164,7 @@ export const Response = ({ history, location }) => {
 
   return (
     <div className="survey d-flex py-4">
-      {survey && (
+      {survey.current && (
         <div className="container survey__container">
           {/*
           <header className="no-gutters survey-chat__header">
@@ -162,8 +176,8 @@ export const Response = ({ history, location }) => {
           */}
 
           <div className="d-flex flex-column survey__feed">
-            {survey.questions &&
-              survey.questions.map(
+            {survey.current.questions &&
+              survey.current.questions.map(
                 (question, i) =>
                   question.type !== 'query' &&
                   cursor >= i && (
@@ -182,22 +196,23 @@ export const Response = ({ history, location }) => {
                     </div>
                   ),
               )}
-            {survey.respondent && cursor >= survey.questions.length && (
-              <div className="survey__set">
-                <div className="survey__question">
-                  <h2 className="message">What can we call you?</h2>
-                </div>
-                {surveyEnd(survey, cursor) && (
-                  <div className="survey__response">
-                    <p className="message">{respondent}</p>
+            {survey.current.respondent &&
+              cursor >= survey.current.questions.length && (
+                <div className="survey__set">
+                  <div className="survey__question">
+                    <h2 className="message">What can we call you?</h2>
                   </div>
-                )}
-              </div>
-            )}
+                  {surveyEnd(survey.current, cursor) && (
+                    <div className="survey__response">
+                      <p className="message">{respondent}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             <div
               className="survey__set"
               style={{
-                opacity: surveyEnd(survey, cursor) ? 1 : 0,
+                opacity: surveyEnd(survey.current, cursor) ? 1 : 0,
                 transition: 'opacity 0.7s ease-in-out 0.5s',
               }}
             >
@@ -210,29 +225,31 @@ export const Response = ({ history, location }) => {
           <footer className="survey__footer">
             <div className="container">
               <div className="survey__answer">
-                {!surveyEnd(survey, cursor) && survey.questions && (
-                  <input
-                    type="text"
-                    name={
-                      cursor < survey.questions.length
-                        ? survey.questions[cursor].id
-                        : 'respondent'
-                    }
-                    onChange={
-                      survey.respondent && cursor >= survey.questions.length
-                        ? handleName
-                        : handleChange
-                    }
-                    value={
-                      cursor < survey.questions.length
-                        ? currentResponse.value
-                        : respondent
-                    }
-                    onKeyPress={handleKeypress}
-                    autoFocus
-                  />
-                )}
-                {!surveyEnd(survey, cursor) ? (
+                {!surveyEnd(survey.current, cursor) &&
+                  survey.current.questions && (
+                    <input
+                      type="text"
+                      name={
+                        cursor < survey.current.questions.length
+                          ? survey.current.questions[cursor].id
+                          : 'respondent'
+                      }
+                      onChange={
+                        survey.current.respondent &&
+                        cursor >= survey.current.questions.length
+                          ? handleName
+                          : handleChange
+                      }
+                      value={
+                        cursor < survey.current.questions.length
+                          ? currentResponse.value
+                          : name
+                      }
+                      onKeyPress={handleKeypress}
+                      autoFocus
+                    />
+                  )}
+                {!surveyEnd(survey.current, cursor) ? (
                   <button
                     className="btn btn-primary"
                     name="submit"
@@ -243,7 +260,7 @@ export const Response = ({ history, location }) => {
                 ) : (
                   <button>Thanks!</button>
                 )}
-                {cursor > 0 && !surveyEnd(survey, cursor) && (
+                {cursor > 0 && !surveyEnd(survey.current, cursor) && (
                   <button onClick={handleBack}>Back</button>
                 )}
               </div>
