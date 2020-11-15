@@ -46,7 +46,7 @@ export const Dashboard = () => {
           <h2 className="mb-4">New Survey</h2>
           <NewSurvey surveys={surveys} setSurveys={setSurveys} />
         </div>
-        <div className="col-12 order-sm-1 col-sm-6 col-lg-8">
+        <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <h1 className="mb-4">Your Surveys</h1>
           {surveys &&
             !state.loading &&
