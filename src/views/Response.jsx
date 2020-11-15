@@ -122,7 +122,10 @@ export const Response = ({ location }) => {
       );
     } else if (currentResponse.id) {
       resp = [...responses, currentResponse];
+    } else {
+      resp = responses;
     }
+
     setResponses(resp);
     try {
       if (responseId) {
