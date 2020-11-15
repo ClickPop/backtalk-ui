@@ -222,7 +222,10 @@ export const Response = ({ location }) => {
               }}
             >
               <div className="survey__question">
-                <p className="message">Thanks for answering!</p>
+                <h2 className="message">
+                  Thanks for answering! You can make a survey of your own in
+                  just a few seconds with <a href="/">Backtalk</a>
+                </h2>
               </div>
             </div>
           </div>
@@ -265,8 +268,13 @@ export const Response = ({ location }) => {
                     &raquo;
                   </button>
                 ) : (
-                  <div className="text-center">
-                    Make a survey of your own with <a href="/">Backtalk</a>
+                  <div
+                    className="text-center display-6"
+                    style={{ width: '100%' }}
+                  >
+                    <span role="img" aria-label="happy face">
+                      😂
+                    </span>
                   </div>
                 )}
                 {cursor > 0 && !surveyEnd(survey.current, cursor) && (

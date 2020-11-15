@@ -11,7 +11,7 @@
       border-radius: $base-border-radius * 2;
       box-shadow: $base-box-shadow;
       height: 100vh;
-      max-height: 500px;
+      max-height: 600px;
       width: 400px;
     }
   }
@@ -37,13 +37,17 @@
   &__response {
     display: flex;
     margin: 1em;
+
     .message {
+      border-radius: 0.75rem;
+      box-shadow: rgba(0, 0, 20, 0.1) 0 3px 4px;
       flex: 1 1 0.333;
-      padding: 10px;
       font-size: 1em;
       font-weight: normal;
+      line-height: 1.4;
       margin: 0;
-      max-width: 80%;
+      max-width: 90%;
+      padding: 1rem;
 
       &:empty {
         display: none;
@@ -52,14 +56,12 @@
   }
 
   &__question .message {
-    background-color: $gray-400;
+    background-color: $white;
     color: $body-color;
-    border-radius: 15px 15px 15px 0;
   }
 
   &__response .message {
     background-color: $primary;
-    border-radius: 15px 15px 0 15px;
     color: $white;
     margin-left: auto;
   }

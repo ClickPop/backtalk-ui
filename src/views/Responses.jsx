@@ -43,25 +43,18 @@ export const Responses = () => {
             {responses.map((response) => (
               <div className="card mb-4" key={response.id}>
                 <div className="card-body mx-3 my-2">
+                  <p className="text-secondary">
+                    <strong>
+                      <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
+                      <Moment format="h:mm a">{response.createdAt}</Moment>
+                    </strong>
+                  </p>
                   {response.data &&
                     response.data.map(
                       (r) =>
                         r && (
                           <div key={`${response.id + r.id}`}>
                             <Fragment>
-                              <p className="text-secondary">
-                                <strong>
-                                  <Moment format="MMM D, YYYY">
-                                    {response.createdAt}
-                                  </Moment>
-                                </strong>
-                                &nbsp;
-                                <span class="text-muted">
-                                  <Moment format="h:mm a">
-                                    {response.createdAt}
-                                  </Moment>
-                                </span>
-                              </p>
                               <p className="mb-1">
                                 {questions.find((q) => q.id === r.id)?.prompt ||
                                   r.key}
@@ -72,12 +65,9 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || 'Anonymous'}
-                    <br />
+                    &ndash; {response.respondent || 'Anonymous'} from{' '}
+                    <Location data={response.geo} />
                   </p>
-                </div>
-                <div className="card-footer text-muted">
-                  <Location className="mb-0 text-right" data={response.geo} />
                 </div>
               </div>
             ))}
