@@ -43,25 +43,18 @@ export const Responses = () => {
             {responses.map((response) => (
               <div className="card mb-4" key={response.id}>
                 <div className="card-body mx-3 my-2">
+                  <p className="text-secondary">
+                    <strong>
+                      <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
+                      <Moment format="h:mm a">{response.createdAt}</Moment>
+                    </strong>
+                  </p>
                   {response.data &&
                     response.data.map(
                       (r) =>
                         r && (
                           <div key={`${response.id + r.id}`}>
                             <Fragment>
-                              <p className="text-secondary">
-                                <strong>
-                                  <Moment format="MMM D, YYYY">
-                                    {response.createdAt}
-                                  </Moment>
-                                </strong>
-                                &nbsp;
-                                <span class="text-muted">
-                                  <Moment format="h:mm a">
-                                    {response.createdAt}
-                                  </Moment>
-                                </span>
-                              </p>
                               <p className="mb-1">
                                 {questions.find((q) => q.id === r.id)?.prompt ||
                                   r.key}
