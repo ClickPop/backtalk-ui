@@ -1,6 +1,7 @@
 import * as axios from 'axios';
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
+import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
 import { context } from '../context/Context';
 
@@ -40,19 +41,26 @@ export const Responses = () => {
         <div className="col-12 col-lg-8 offset-lg-2">
           <div>
             {responses.map((response) => (
-              <div className="card mb-4 px-3 py-2" key={response.id}>
-                <div className="card-body">
+              <div className="card mb-4" key={response.id}>
+                <div className="card-body mx-3 my-2">
                   {response.data &&
                     response.data.map(
                       (r) =>
                         r && (
                           <div key={`${response.id + r.id}`}>
                             <Fragment>
-                              <p className="text-secondary font-weight-bold">
-                                <Moment format="hh:mma on ddd MMM D, YYYY">
-                                  {response.createdAt}
-                                </Moment>
-                                <br />
+                              <p className="text-secondary">
+                                <strong>
+                                  <Moment format="MMM D, YYYY">
+                                    {response.createdAt}
+                                  </Moment>
+                                </strong>
+                                &nbsp;
+                                <span class="text-muted">
+                                  <Moment format="h:mm a">
+                                    {response.createdAt}
+                                  </Moment>
+                                </span>
                               </p>
                               <p className="mb-1">
                                 {questions.find((q) => q.id === r.id)?.prompt ||
@@ -67,6 +75,9 @@ export const Responses = () => {
                     &ndash; {response.respondent || 'Anonymous'}
                     <br />
                   </p>
+                </div>
+                <div className="card-footer text-muted">
+                  <Location className="mb-0 text-right" data={response.geo} />
                 </div>
               </div>
             ))}

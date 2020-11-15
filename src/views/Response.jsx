@@ -122,7 +122,10 @@ export const Response = ({ location }) => {
       );
     } else if (currentResponse.id) {
       resp = [...responses, currentResponse];
+    } else {
+      resp = responses;
     }
+
     setResponses(resp);
     try {
       if (responseId) {
@@ -255,6 +258,7 @@ export const Response = ({ location }) => {
                 {!surveyEnd(survey.current, cursor) ? (
                   <button
                     className="btn btn-primary px-3"
+                    type="button"
                     name="submit"
                     onClick={handleSubmit}
                   >
@@ -262,11 +266,13 @@ export const Response = ({ location }) => {
                   </button>
                 ) : (
                   <div className="text-center">
-                    Make a survey of your own with <a href="#">Backtalk</a>
+                    Make a survey of your own with <a href="/">Backtalk</a>
                   </div>
                 )}
                 {cursor > 0 && !surveyEnd(survey.current, cursor) && (
-                  <button onClick={handleBack}>Back</button>
+                  <button type="button" onClick={handleBack}>
+                    Back
+                  </button>
                 )}
               </div>
             </div>
