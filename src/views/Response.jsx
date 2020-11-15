@@ -236,6 +236,7 @@ export const Response = ({ location }) => {
                 {!surveyEnd(survey?.current, cursor) &&
                   survey?.current?.questions && (
                     <input
+                      autoFocus="true"
                       type="text"
                       name={
                         cursor < survey?.current.questions.length
@@ -255,7 +256,6 @@ export const Response = ({ location }) => {
                       }
                       onKeyPress={handleKeypress}
                       className="form-control"
-                      autoFocus
                     />
                   )}
                 {!surveyEnd(survey.current, cursor) ? (
