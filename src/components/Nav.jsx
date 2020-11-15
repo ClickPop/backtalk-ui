@@ -30,13 +30,14 @@ const Navbar = ({ logo }) => {
       const res = await axios.post('/api/v1/auth/logout');
       if (res.data.logout) {
         dispatch({ type: 'LOGOUT', payload: null });
+        setPath('/');
       }
     }
   };
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-light">
-      <div className={state.navbar === 'public' ? 'container' : 'container'}>
+    <div className="container">
+      <nav className="navbar navbar-expand-sm navbar-light">
         <Link className="navbar-brand d-flex" to={{ pathname: path }}>
           <span className="h4 pt-3 pr-1">Backtalk</span>
           <img
@@ -77,8 +78,8 @@ const Navbar = ({ logo }) => {
             )}
           </ul>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 };
 
