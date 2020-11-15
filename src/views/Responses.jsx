@@ -72,12 +72,10 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || 'Anonymous'}
+                    &ndash; {response.respondent || 'Anonymous'} from{' '}
+                    <Location className="mb-0 text-right" data={response.geo} />
                     <br />
                   </p>
-                </div>
-                <div className="card-footer text-muted">
-                  <Location className="mb-0 text-right" data={response.geo} />
                 </div>
               </div>
             ))}
