@@ -64,6 +64,13 @@ export const Dashboard = () => {
                         </Link>
                       </h5>
                       <p className="mb-0">
+                        <span
+                          role="img"
+                          aria-label="speech bubble"
+                          style={{ marginRight: '0.25rem' }}
+                        >
+                          💬
+                        </span>
                         {survey?.Responses?.length ? (
                           <Link
                             to={`/responses/${survey.hash}`}
@@ -73,8 +80,15 @@ export const Dashboard = () => {
                           </Link>
                         ) : (
                           'No responses yet'
-                        )}{' '}
-                        |{' '}
+                        )}
+                        <br />
+                        <span
+                          role="img"
+                          aria-label="link"
+                          style={{ marginRight: '0.25rem' }}
+                        >
+                          🔗
+                        </span>
                         <Link
                           to={`/survey/${survey.hash}`}
                           className="text-decoration-none"
