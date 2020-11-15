@@ -23,12 +23,12 @@ const Location = ({ data, className }) => {
   return (
     <Fragment>
       {locationString && (
-        <p className={className}>
+        <span className={className}>
           <span role="img" aria-label="Location: ">
             📍
           </span>{' '}
           {locationString}
-        </p>
+        </span>
       )}
     </Fragment>
   );

@@ -73,8 +73,7 @@ export const Responses = () => {
                     )}
                   <p className="mb-0">
                     &ndash; {response.respondent || 'Anonymous'} from{' '}
-                    <Location className="mb-0 text-right" data={response.geo} />
-                    <br />
+                    <Location data={response.geo} />
                   </p>
                 </div>
               </div>
