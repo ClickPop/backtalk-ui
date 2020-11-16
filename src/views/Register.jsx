@@ -74,7 +74,7 @@ const Register = () => {
     <div className="container">
       {errors &&
         errors.map((error) => (
-          <div key={error.msg} className="alert alert-danger">
+          <div key={error.id} className="alert alert-danger">
             {error.msg}
           </div>
         ))}
