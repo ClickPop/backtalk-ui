@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { context } from '../context/Context';
+import screenshot from '../images/survey-screenshot.jpg';
 const Home = () => {
   const { state, dispatch } = useContext(context);
 
@@ -41,6 +42,12 @@ const Home = () => {
             pathname="/register"
             text="Creat a survey!"
           ></Button>
+          <img
+            src={screenshot}
+            className="my-2"
+            alt="Example survey asking how can we make your experience better?"
+            loading="lazy"
+          />
         </div>
       </div>
 
