@@ -44,55 +44,10 @@ const Home = () => {
           ></Button>
           <img
             src={screenshot}
-            className="my-2"
+            className="img-fluid my-2"
             alt="Example survey asking how can we make your experience better?"
             loading="lazy"
           />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12 col-md-6">
-          <h2>Ask questions like a human.</h2>
-          <p className="lead">
-            Designed to be conversational, so your audience can talk to you like
-            you're both people (which you are).
-          </p>
-        </div>
-        <div className="col-12 col-md-6"></div>
-      </div>
-
-      <div className="row">
-        <div className="col-12 col-md-6">
-          <h2>Evolve your surveys as you learn.</h2>
-          <p>Update your surveys without even having to log in.</p>
-        </div>
-        <div className="col-12 col-md-6"></div>
-      </div>
-
-      <div className="row">
-        <div className="col-12 col-md-6">
-          <h2>Get acquainted with your audience.</h2>
-          <p>
-            Clear and simple reporting gives you access to answers without any
-            confusing clutter.
-          </p>
-        </div>
-        <div className="col-12 col-md-6"></div>
-      </div>
-
-      <div className="row">
-        <div className="col-12 col-md-6 offset-md-3 text-center">
-          <h2>It's as simple as:</h2>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
-          <h3>Create</h3>
-          <h3>Share</h3>
-          <h3>Learn</h3>
-          <h3>Adapt</h3>
         </div>
       </div>
     </div>
