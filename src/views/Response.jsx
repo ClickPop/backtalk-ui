@@ -1,6 +1,7 @@
 import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { Scrollbars } from 'react-custom-scrollbars';
 // import defaultAvatar from '../images/default-avatar.png';
 
 const surveyEnd = (survey, cursor) => {
@@ -189,61 +190,81 @@ export const Response = ({ location }) => {
           */}
 
           <div className="d-flex flex-column survey__feed">
-            {survey?.current?.questions &&
-              survey.current.questions.map(
-                (question, i) =>
-                  question.type !== 'query' &&
-                  cursor >= i && (
-                    <div className="survey__set" key={question.id}>
-                      <div className="survey__question">
-                        <h2 className="message">{question.prompt}</h2>
+            <Scrollbars>
+              {survey?.current?.questions &&
+                survey.current.questions.map(
+                  (question, i) =>
+                    question.type !== 'query' &&
+                    cursor >= i && (
+                      <div className="survey__set" key={question.id}>
+                        <div className="survey__question">
+                          <h2 className="message">{question.prompt}</h2>
+                        </div>
+                        <div className="survey__response">
+                          <p className="message">
+                            {responses.length > 0 &&
+                              i < cursor &&
+                              responses[i].value}
+                          </p>
+                        </div>
                       </div>
+                    ),
+                )}
+              {survey?.current?.respondent &&
+                cursor >= survey.current.questions.length && (
+                  <div className="survey__set">
+                    <div className="survey__question">
+                      <h2 className="message">
+                        Thanks! Would you please leave an email address or
+                        twitter or Instagram handle so we can get in touch?
+                        <br />
+                        <br />
+                        <em>nbd if you don't want to.</em>
+                      </h2>
+                    </div>
+                    {surveyEnd(survey.current, cursor) && (
                       <div className="survey__response">
-                        <p className="message">
-                          {responses.length > 0 &&
-                            i < cursor &&
-                            responses[i].value}
-                        </p>
+                        <p className="message">{name}</p>
                       </div>
-                    </div>
-                  ),
-              )}
-            {survey?.current?.respondent &&
-              cursor >= survey.current.questions.length && (
-                <div className="survey__set">
-                  <div className="survey__question">
-                    <h2 className="message">What can we call you?</h2>
+                    )}
                   </div>
-                  {surveyEnd(survey.current, cursor) && (
-                    <div className="survey__response">
-                      <p className="message">{name}</p>
-                    </div>
-                  )}
+                )}
+              <div
+                className="survey__set"
+                style={{
+                  height: surveyEnd(survey.current, cursor) ? 'auto' : 0,
+                  opacity: surveyEnd(survey.current, cursor) ? 1 : 0,
+                  overflow: 'hidden',
+                  transition: 'opacity 0.7s ease-in-out 0.5s',
+                }}
+              >
+                <div className="survey__question">
+                  <h2 className="message">
+                    Thanks for answering! You can make a survey of your own in
+                    just a few seconds with <a href="/">Backtalk</a>
+                  </h2>
                 </div>
-              )}
-            <div
-              className="survey__set"
-              style={{
-                opacity: surveyEnd(survey.current, cursor) ? 1 : 0,
-                transition: 'opacity 0.7s ease-in-out 0.5s',
-              }}
-            >
-              <div className="survey__question">
-                <h2 className="message">
-                  Thanks for answering! You can make a survey of your own in
-                  just a few seconds with <a href="/">Backtalk</a>
-                </h2>
               </div>
-            </div>
+            </Scrollbars>
           </div>
 
           <div className="survey__footer">
             <div className="survey__answer">
+              {cursor > 0 && !surveyEnd(survey.current, cursor) && (
+                <button
+                  type="button"
+                  className="btn btn-light px-3"
+                  onClick={handleBack}
+                >
+                  &laquo;
+                </button>
+              )}
               <div className="input-group">
                 {!surveyEnd(survey?.current, cursor) &&
                   survey?.current?.questions && (
                     <input
                       autoFocus="true"
+                      autocomplete="off"
                       type="text"
                       name={
                         cursor < survey?.current.questions.length
@@ -283,11 +304,6 @@ export const Response = ({ location }) => {
                       😂
                     </span>
                   </div>
-                )}
-                {cursor > 0 && !surveyEnd(survey.current, cursor) && (
-                  <button type="button" onClick={handleBack}>
-                    Back
-                  </button>
                 )}
               </div>
             </div>
