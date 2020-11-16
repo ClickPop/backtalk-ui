@@ -55,8 +55,12 @@
   }
 
   &__question .message {
-    background-color: $survey-bg;
+    background-color: $white;
     color: $body-color;
+
+    @media screen and (min-width: $screen-md) {
+      background-color: $survey-bg;
+    }
   }
 
   &__response .message {
