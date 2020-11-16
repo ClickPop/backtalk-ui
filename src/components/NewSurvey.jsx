@@ -104,7 +104,8 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
                 Do you want to know who left your response?
               </h1>
               <p className="mb-1">
-                We're not going to do anything sneaky here, just ask them.
+                If you turn this on we'll just ask for the best place to reach
+                them.
               </p>
             </label>
             <div className="form-check form-switch form-switch-lg">
