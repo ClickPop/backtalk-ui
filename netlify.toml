@@ -2,6 +2,6 @@
   publish = 'build/'
   command = 'yarn build'
 [context.production]
-  enviromnent = {NODE_ENV = 'production', REACT_APP_BASE_URL = 'https://api.backtalk.io'}
+  environment = {NODE_ENV = 'production', REACT_APP_BASE_URL = 'https://api.backtalk.io'}
 [context.develop]
-  enviromnent = {NODE_ENV = 'production', REACT_APP_BASE_URL = 'https://develop.api.backtalk.io'}
+  environment = {NODE_ENV = 'production', REACT_APP_BASE_URL = 'https://develop.api.backtalk.io'}
