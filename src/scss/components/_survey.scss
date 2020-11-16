@@ -7,7 +7,7 @@
     height: 100vh;
 
     @media screen and (min-width: $screen-md) {
-      // background: $white;
+      background: $white;
       border-radius: $base-border-radius * 2;
       box-shadow: $base-box-shadow;
       height: 100vh;
@@ -17,7 +17,6 @@
   }
 
   &__feed {
-    overflow-y: scroll;
     flex: 1;
   }
 
@@ -40,7 +39,7 @@
 
     .message {
       border-radius: 0.75rem;
-      box-shadow: rgba(0, 0, 20, 0.1) 0 3px 4px;
+      box-shadow: rgba(0, 0, 20, 0.15) 0 2px 3px;
       flex: 1 1 0.333;
       font-size: 1em;
       font-weight: normal;
@@ -56,7 +55,7 @@
   }
 
   &__question .message {
-    background-color: $white;
+    background-color: $survey-bg;
     color: $body-color;
   }
 
