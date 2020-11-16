@@ -14,6 +14,9 @@ import { Error404 } from './views/Error404';
 import { Response } from './views/Response';
 import { Responses } from './views/Responses';
 
+if (process.env.NODE_ENV === 'production')
+  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+
 const App = () => {
   const { state, dispatch } = useContext(context);
   useEffect(() => {
