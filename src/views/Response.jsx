@@ -262,10 +262,9 @@ export const Response = ({ location }) => {
               <div className="input-group">
                 {!surveyEnd(survey?.current, cursor) &&
                   survey?.current?.questions && (
-                    <input
+                    <textarea
                       autoFocus={true}
                       autocomplete="off"
-                      type="text"
                       name={
                         cursor < survey?.current.questions.length
                           ? survey?.current.questions[cursor].id
@@ -284,7 +283,8 @@ export const Response = ({ location }) => {
                       }
                       onKeyPress={handleKeypress}
                       className="form-control"
-                    />
+                      cols="1"
+                    ></textarea>
                   )}
                 {!surveyEnd(survey.current, cursor) ? (
                   <button
