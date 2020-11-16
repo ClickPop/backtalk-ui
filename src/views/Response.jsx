@@ -263,7 +263,7 @@ export const Response = ({ location }) => {
                 {!surveyEnd(survey?.current, cursor) &&
                   survey?.current?.questions && (
                     <input
-                      autoFocus="true"
+                      autoFocus={true}
                       autocomplete="off"
                       type="text"
                       name={
