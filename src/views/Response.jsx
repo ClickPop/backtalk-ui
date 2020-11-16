@@ -207,7 +207,13 @@ export const Response = ({ location }) => {
                 cursor >= survey.current.questions.length && (
                   <div className="survey__set">
                     <div className="survey__question">
-                      <h2 className="message">What can we call you?</h2>
+                      <h2 className="message">
+                        Thanks! Would you please leave an email address or
+                        twitter or Instagram handle so we can get in touch?
+                        <br />
+                        <br />
+                        <em>nbd if you don't want to.</em>
+                      </h2>
                     </div>
                     {surveyEnd(survey.current, cursor) && (
                       <div className="survey__response">
@@ -219,7 +225,9 @@ export const Response = ({ location }) => {
               <div
                 className="survey__set"
                 style={{
+                  height: surveyEnd(survey.current, cursor) ? 'auto' : 0,
                   opacity: surveyEnd(survey.current, cursor) ? 1 : 0,
+                  overflow: 'hidden',
                   transition: 'opacity 0.7s ease-in-out 0.5s',
                 }}
               >
