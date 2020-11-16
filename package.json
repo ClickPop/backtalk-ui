@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.20.0",
-    "bootstrap": "^5.0.0-alpha1",
+    "bootstrap": "^5.0.0-alpha3",
     "classnames": "^2.2.6",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",

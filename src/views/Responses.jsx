@@ -41,7 +41,7 @@ export const Responses = () => {
         <div className="col-12 col-lg-8 offset-lg-2">
           <div>
             {responses.map((response) => (
-              <div className="card mb-4" key={response.id}>
+              <div className="card mb-4 response-preview" key={response.id}>
                 <div className="card-body mx-3 my-2">
                   <p className="text-secondary">
                     <strong>
@@ -69,6 +69,7 @@ export const Responses = () => {
                     <Location data={response.geo} />
                   </p>
                 </div>
+                <button type="button" class="btn btn-inline response-preview__delete"><span role="img" aria-label="Delete" title="Delete">🗑</span></button>
               </div>
             ))}
           </div>

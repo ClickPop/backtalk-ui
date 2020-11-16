@@ -7,3 +7,14 @@
   min-height: 100vh;
   overflow: auto;
 }
+
+.response-preview {
+  &__delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    padding: 10px;
+  }
+}
