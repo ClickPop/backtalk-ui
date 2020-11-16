@@ -156,6 +156,7 @@ export const Response = ({ location }) => {
       localStorage.setItem(`cur:${hash.current}`, cursor + 1);
     }
     setCursor(cursor + 1);
+    scrollResponse();
   };
 
   const handleKeypress = (e) => {
@@ -167,7 +168,13 @@ export const Response = ({ location }) => {
   const handleBack = () => {
     setCurrentResponse(responses[cursor - 1]);
     setCursor(cursor - 1);
+    scrollResponse();
   };
+
+  const scrollResponse = () => {
+    const feed = document.querySelector('.survey__feed');
+    feed.scroll({top: feed.scrollHeight, behavior: 'smooth'});
+  }
 
   return (
     <div className="survey d-flex py-md-4">
