@@ -17,6 +17,8 @@ import { Responses } from './views/Responses';
 if (process.env.NODE_ENV === 'production')
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
+axios.defaults.withCredentials = true;
+
 const App = () => {
   const { state, dispatch } = useContext(context);
   useEffect(() => {
