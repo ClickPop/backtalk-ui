@@ -17,17 +17,21 @@ export const Modal = ({ children, show, handleModal, title }) => {
             className="position-absolute w-100 h-100"
             style={{ backgroundColor: 'lightgrey', opacity: '0.4' }}
           ></div>
-          <div className="card w-50 mx-auto my-5" style={{ zIndex: 15 }}>
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h6 className="card-title">{title}</h6>
-              <button
-                className="btn btn-sm btn-secondary flex-shrink"
-                onClick={() => handleModal(false)}
-              >
-                X
-              </button>
+          <div className="modal" role="dialog" style={{ display: 'inherit' }}>
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h6 className="card-title">{title}</h6>
+                  <button
+                    className="btn btn-sm btn-secondary flex-shrink"
+                    onClick={() => handleModal(false)}
+                  >
+                    X
+                  </button>
+                </div>
+                <div className="modal-body">{children}</div>
+              </div>
             </div>
-            <div className="card-body">{children}</div>
           </div>
         </div>,
         document.getElementById('portal'),
