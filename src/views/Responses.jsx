@@ -3,6 +3,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
+import { Trash2 } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -98,7 +99,7 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || anonymousNickname() } from{' '}
+                    &ndash; {response.respondent || anonymousNickname()} from{' '}
                     <Location data={response.geo} />
                   </p>
                 </div>
@@ -107,9 +108,7 @@ export const Responses = () => {
                   className="btn btn-inline response-preview__delete"
                   onClick={() => handleModal(true, response.id)}
                 >
-                  <span role="img" aria-label="Delete" title="Delete">
-                    🗑
-                  </span>
+                  <Trash2 size={18} />
                 </button>
               </div>
             ))}
