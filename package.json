@@ -1,6 +1,6 @@
 {
   "name": "backtalk-ui",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "private": true,
   "dependencies": {
     "axios": "^0.20.0",
@@ -12,6 +12,7 @@
     "react": "^16.13.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
+    "react-feather": "^2.0.9",
     "react-moment": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
