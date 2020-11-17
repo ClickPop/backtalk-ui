@@ -75,7 +75,7 @@ export const Responses = () => {
             {responses.map((response) => (
               <div className="card mb-4 response-preview" key={response.id}>
                 <div className="card-body mx-3 my-2">
-                  <p className="text-secondary">
+                  <p className="text-muted">
                     <strong>
                       <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
                       <Moment format="h:mm a">{response.createdAt}</Moment>
@@ -87,13 +87,15 @@ export const Responses = () => {
                         r && (
                           <div key={`${response.id + r.id}`}>
                             <Fragment>
-                              <p className="mb-1">
+                              <p className="mt-4 mb-1 response__question">
                                 {decodeHtml(
                                   questions.find((q) => q.id === r.id)
                                     ?.prompt || r.key,
                                 )}
                               </p>
-                              <h5 className="card-title mb-3">{r.value}</h5>
+                              <div className="mb-4 pb-2 response__answer">
+                                {r.value}
+                              </div>
                             </Fragment>{' '}
                           </div>
                         ),

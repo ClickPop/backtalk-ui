@@ -25,7 +25,7 @@ const Location = ({ data, className }) => {
     <Fragment>
       {locationString && (
         <span className={className}>
-          <MapPin size={18} /> {locationString}
+          <MapPin size={16} className="text-success" /> {locationString}
         </span>
       )}
     </Fragment>
