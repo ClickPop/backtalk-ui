@@ -256,7 +256,7 @@ export const Response = ({ location }) => {
             </Scrollbars>
           </div>
 
-          <div className="survey__footer">
+          <div className="survey__footer px-2 px-md-0">
             <div className="survey__answer">
               {cursor > 0 && !surveyEnd(survey.current, cursor) && (
                 <button

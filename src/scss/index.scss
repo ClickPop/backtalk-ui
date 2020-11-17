@@ -2,9 +2,12 @@
   'components/typography', 'components/nav', 'components/card',
   'components/survey';
 
+body {
+  background: $base-bg-color;
+}
+
 #root {
   background: $base-bg-color;
-  min-height: 100vh;
   overflow: auto;
 }
 
