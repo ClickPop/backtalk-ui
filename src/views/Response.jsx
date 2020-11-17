@@ -12,15 +12,16 @@ const surveyEnd = (survey, cursor) => {
 };
 
 const getQuery = (qStr) => {
-  if (!/\?(\S+=\S+)+/g.test(qStr)) return null;
+  if (!/\?([^&]+=[^&]+&?)+/g.test(qStr)) return null;
   const arr = qStr.slice(1, qStr.length).split('=');
   const query = [];
   for (let i = 0; i < arr.length; i += 2) {
-    query.push({
-      key: arr[i],
-      value: arr[i + 1],
-      type: 'query',
-    });
+    if (arr[i] !== 'fbclid')
+      query.push({
+        key: arr[i],
+        value: arr[i + 1],
+        type: 'query',
+      });
   }
   return query;
 };
@@ -52,7 +53,7 @@ export const Response = ({ location }) => {
         const queryParams = getQuery(decodeURI(search.current));
         const resp = JSON.parse(localStorage.getItem(hash.current));
         let r = queryParams ? queryParams : [];
-        setQueryResponses(queryParams.filter((q) => q.key !== 'fbclid') || []);
+        setQueryResponses(queryParams || []);
         if (resp) {
           resp.data = [...resp.data, ...r];
           try {
@@ -76,9 +77,7 @@ export const Response = ({ location }) => {
               ...res.data.result.data.filter((r) => r.type !== 'query'),
             ]);
             setQueryResponses((r) =>
-              res.data.result.data.filter(
-                (r) => r.type === 'query' && r.key !== 'fbclid',
-              ),
+              res.data.result.data.filter((r) => r.type === 'query'),
             );
             localStorage.setItem(hash.current, JSON.stringify(res.data.result));
           } catch (err) {
