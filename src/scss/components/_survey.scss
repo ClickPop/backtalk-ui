@@ -4,7 +4,7 @@
 
   &__container {
     background: $survey-bg;
-    height: 100vh;
+    height: 60vh;
 
     @media screen and (min-width: $screen-md) {
       background: $white;
@@ -22,6 +22,8 @@
 
   &__answer {
     background-color: $white;
+    border-radius: $base-border-radius;
+    box-shadow: $base-box-shadow;
     display: flex;
     padding: 1rem;
     width: 100%;
@@ -29,6 +31,7 @@
     @media screen and (min-width: $screen-md) {
       border-radius: 0 0 $base-border-radius $base-border-radius;
       border-top: 1px solid $grey-800;
+      box-shadow: none;
     }
   }
 
