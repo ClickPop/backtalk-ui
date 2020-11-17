@@ -2,7 +2,7 @@ const anonymousNicknamesList = [
   'An internet friend',
   'Someone awesome',
   'A neat person',
-  'Anonymous & bonhomous',
+  'Anonymous, bonhomous pal',
   'One cool cat',
   'A nifty pal',
   'Amazing human',
