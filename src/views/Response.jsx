@@ -76,7 +76,9 @@ export const Response = ({ location }) => {
               ...res.data.result.data.filter((r) => r.type !== 'query'),
             ]);
             setQueryResponses((r) =>
-              res.data.result.data.filter((r) => r.type === 'query'),
+              res.data.result.data.filter(
+                (r) => r.type === 'query' && r.key !== 'fbclid',
+              ),
             );
             localStorage.setItem(hash.current, JSON.stringify(res.data.result));
           } catch (err) {
