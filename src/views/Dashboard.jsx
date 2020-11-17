@@ -119,11 +119,11 @@ export const Dashboard = () => {
                           className="btn btn-inline response-preview__delete"
                           onClick={() => handleModal(true, survey.id)}
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={18} className="text-muted" />
                         </button>
                       </div>
                       <div className="mb-2 d-flex align-items-center">
-                        <MessageCircle size={18} className="mr-2" />
+                        <MessageCircle size={18} className="mr-2 text-muted" />
                         {survey?.Responses?.length ? (
                           <Link
                             to={`/responses/${survey.hash}`}
@@ -136,7 +136,7 @@ export const Dashboard = () => {
                         )}
                       </div>
                       <div className="d-flex align-items-center">
-                        <ExternalLink size={18} className="mr-2" />
+                        <ExternalLink size={18} className="mr-2 text-muted" />
                         <Link
                           to={`/survey/${survey.hash}`}
                           className="text-decoration-none"

@@ -108,7 +108,7 @@ export const Responses = () => {
                   className="btn btn-inline response-preview__delete"
                   onClick={() => handleModal(true, response.id)}
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={18} className="text-muted" />
                 </button>
               </div>
             ))}
