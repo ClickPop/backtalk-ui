@@ -3,6 +3,9 @@ const anonymousNicknamesList = [
   'Someone awesome',
   'A neat person',
   'Anonymous & bonhomous',
+  'One cool cat',
+  'A nifty pal',
+  'Amazing human',
 ];
 
 export default () => {
