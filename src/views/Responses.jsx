@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
+import anonymousNickname from '../helpers/anonymousNickname';
 
 export const Responses = () => {
   const params = useParams();
@@ -97,7 +98,7 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || 'Someone Awesome'} from{' '}
+                    &ndash; {response.respondent || anonymousNickname() } from{' '}
                     <Location data={response.geo} />
                   </p>
                 </div>
