@@ -12,15 +12,16 @@ const surveyEnd = (survey, cursor) => {
 };
 
 const getQuery = (qStr) => {
-  if (!/\?(\S+=\S+)+/g.test(qStr)) return null;
+  if (!/\?([^&]+=[^&]+&?)+/g.test(qStr)) return null;
   const arr = qStr.slice(1, qStr.length).split('=');
   const query = [];
   for (let i = 0; i < arr.length; i += 2) {
-    query.push({
-      key: arr[i],
-      value: arr[i + 1],
-      type: 'query',
-    });
+    if (arr[i] !== 'fbclid')
+      query.push({
+        key: arr[i],
+        value: arr[i + 1],
+        type: 'query',
+      });
   }
   return query;
 };
@@ -40,6 +41,8 @@ export const Response = ({ location }) => {
   const survey = useRef(null);
   const hash = useRef(params.hash);
   const search = useRef(location.search);
+  const textAreaRef = useRef(null);
+  const [textAreaHeight, setTextAreaHeight] = useState('auto');
   useEffect(() => {
     const cur = localStorage.getItem(`cur:${hash.current}`);
     setCursor(cur || 0);
@@ -102,7 +105,12 @@ export const Response = ({ location }) => {
     getSurvey();
   }, []);
 
+  useEffect(() => {
+    setTextAreaHeight(`${textAreaRef.current?.scrollHeight}px`);
+  }, [currentResponse.value]);
+
   const handleChange = (e) => {
+    setTextAreaHeight('auto');
     setCurrentResponse({
       ...currentResponse,
       id: e.target.name,
@@ -160,7 +168,7 @@ export const Response = ({ location }) => {
   };
 
   const handleKeypress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       handleSubmit(e);
     }
   };
@@ -173,8 +181,8 @@ export const Response = ({ location }) => {
 
   const scrollResponse = () => {
     const feed = document.querySelector('.survey__feed');
-    feed.scroll({top: feed.scrollHeight, behavior: 'smooth'});
-  }
+    feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
+  };
 
   return (
     <div className="survey d-flex py-md-4">
@@ -201,11 +209,11 @@ export const Response = ({ location }) => {
                           <h2 className="message">{question.prompt}</h2>
                         </div>
                         <div className="survey__response">
-                          <p className="message">
+                          <pre className="message">
                             {responses.length > 0 &&
                               i < cursor &&
                               responses[i].value}
-                          </p>
+                          </pre>
                         </div>
                       </div>
                     ),
@@ -262,29 +270,39 @@ export const Response = ({ location }) => {
               <div className="input-group">
                 {!surveyEnd(survey?.current, cursor) &&
                   survey?.current?.questions && (
-                    <input
-                      autoFocus={true}
-                      autocomplete="off"
-                      type="text"
-                      name={
-                        cursor < survey?.current.questions.length
-                          ? survey?.current.questions[cursor].id
-                          : 'respondent'
-                      }
-                      onChange={
-                        survey?.current.respondent &&
-                        cursor >= survey?.current.questions.length
-                          ? handleName
-                          : handleChange
-                      }
-                      value={
-                        cursor < survey?.current.questions.length
-                          ? currentResponse.value
-                          : name
-                      }
-                      onKeyPress={handleKeypress}
-                      className="form-control"
-                    />
+                    <>
+                      {cursor < survey?.current.questions.length && (
+                        <textarea
+                          autoFocus={true}
+                          autoCorrect="off"
+                          name={survey?.current.questions[cursor].id}
+                          onChange={handleChange}
+                          value={currentResponse.value}
+                          onKeyPress={handleKeypress}
+                          className="form-control"
+                          ref={textAreaRef}
+                          rows={1}
+                          style={{
+                            height: textAreaHeight,
+                            maxHeight: '5rem',
+                            resize: 'none',
+                          }}
+                        />
+                      )}
+                      {survey?.current.respondent &&
+                        cursor >= survey?.current.questions.length && (
+                          <input
+                            autoFocus={true}
+                            autoComplete="off"
+                            type="text"
+                            name="respondent"
+                            onChange={handleName}
+                            value={name}
+                            onKeyPress={handleKeypress}
+                            className="form-control"
+                          />
+                        )}
+                    </>
                   )}
                 {!surveyEnd(survey.current, cursor) ? (
                   <button

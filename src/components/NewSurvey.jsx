@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { context } from '../context/Context';
 import * as axios from 'axios';
+import * as uuid from 'uuid';
 
 const submitSurvey = async (data, token) => {
   const { title, questions, respondent } = data;
@@ -72,6 +73,17 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
           toDashboard(true);
         }
         setForm(initialState);
+      } else if (err?.response?.status === 422) {
+        const id = uuid.v4();
+        let msg;
+        err.response.data.errors.forEach((e) => {
+          if (e.msg.includes('Prompt') && e.msg.includes('3 characters'))
+            msg = 'Invalid Prompt';
+          dispatch({ type: 'SET_ALERT', payload: { id, msg } });
+          setTimeout(() => {
+            dispatch({ type: 'REMOVE_ALERT', payload: { id } });
+          }, 4000);
+        });
       } else {
         console.error(err);
       }
@@ -80,6 +92,12 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
 
   return (
     <Fragment>
+      {state.errors &&
+        state.errors.map((error) => (
+          <div key={error.msg} className="alert alert-danger">
+            {error.msg}
+          </div>
+        ))}
       <form>
         <div className="row">
           <div className="col-12 mb-5">
