@@ -22,7 +22,12 @@ export const Responses = () => {
         const res = await axios.get(`/api/v1/responses/${params.hash}`, {
           headers: { Authorization: `Bearer ${state.token}` },
         });
-        setResponses(res.data.results);
+        setResponses(
+          res.data.results.sort(
+            (a, b) =>
+              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+          ),
+        );
         setQuestions(res.data.questions);
         setQuestions([
           ...res.data.questions,
@@ -98,7 +103,7 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || anonymousNickname() } from{' '}
+                    &ndash; {response.respondent || anonymousNickname()} from{' '}
                     <Location data={response.geo} />
                   </p>
                 </div>
