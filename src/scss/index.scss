@@ -1,0 +1,23 @@
+@import 'bootstrap', 'components/fonts', 'components/variables',
+  'components/typography', 'components/nav', 'components/card',
+  'components/survey';
+
+body {
+  background: $base-bg-color;
+}
+
+#root {
+  background: $base-bg-color;
+  overflow: auto;
+}
+
+.response-preview {
+  &__delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    padding: 10px;
+  }
+}

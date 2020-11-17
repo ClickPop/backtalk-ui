@@ -1,0 +1,45 @@
+body {
+  color: $base-font-color;
+  font-size: $base-font-size;
+}
+
+// Paragraph Styles
+p {
+  line-height: 1.6;
+}
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+// Headline Styles
+@for $i from 1 through 6 {
+  h#{$i},
+  .display-#{$i} {
+    font-family: $headline-font;
+    font-weight: 700;
+
+    &.card-title {
+      a {
+        color: $base-font-color;
+      }
+    }
+  }
+}
+
+.display {
+  &-1 {
+    font-size: 3rem;
+
+    @media screen and (min-width: $screen-md) {
+      font-size: 4.5rem;
+    }
+  }
+
+  &-6 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: $base-line-height;
+  }
+}

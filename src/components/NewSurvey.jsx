@@ -1,14 +1,16 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { context } from '../context/Context';
 import * as axios from 'axios';
+import * as uuid from 'uuid';
 
 const submitSurvey = async (data, token) => {
-  const { title, questions } = data;
+  const { title, questions, respondent } = data;
   const survey = await axios.post(
     '/api/v1/surveys/new',
     {
       title,
       questions,
+      respondent,
     },
     {
       headers: {
@@ -40,20 +42,11 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const survey = {
-      title:
-        surveys && surveys.length
-          ? `Survey ${surveys.length + 1}`
-          : 'New Survey',
+      title: form.question,
       questions: [{ prompt: form.question, type: 'text' }],
+      respondent: form.respondent,
     };
-    if (form.respondent) {
-      survey.questions.push({
-        prompt: 'Please leave your name, social media handle, or alias.',
-        type: 'text',
-      });
-    }
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
       const newSurvey = await submitSurvey(survey, state.token);
       // const hash = await axios.get(
       //   `/api/v1/surveys/getHash?num=${newSurvey.data.result.id}`,
@@ -65,12 +58,10 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
       if (toDashboard) {
         toDashboard(true);
       }
-      dispatch({ type: 'SET_LOADING', payload: false });
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err?.response?.status === 401) {
         const login = await axios.post('/api/v1/auth/refresh_token');
         dispatch({ type: 'LOGIN', payload: login.data.accessToken });
-        dispatch({ type: 'SET_LOADING', payload: true });
         const newSurvey = await submitSurvey(survey, state.token);
         // const hash = await axios.get(
         //   `/api/v1/surveys/getHash?num=${newSurvey.data.result.id}`,
@@ -82,7 +73,17 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
           toDashboard(true);
         }
         setForm(initialState);
-        dispatch({ type: 'SET_LOADING', payload: false });
+      } else if (err?.response?.status === 422) {
+        const id = uuid.v4();
+        let msg;
+        err.response.data.errors.forEach((e) => {
+          if (e.msg.includes('Prompt') && e.msg.includes('3 characters'))
+            msg = 'Invalid Prompt';
+          dispatch({ type: 'SET_ALERT', payload: { id, msg } });
+          setTimeout(() => {
+            dispatch({ type: 'REMOVE_ALERT', payload: { id } });
+          }, 4000);
+        });
       } else {
         console.error(err);
       }
@@ -91,11 +92,17 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
 
   return (
     <Fragment>
+      {state.errors &&
+        state.errors.map((error) => (
+          <div key={error.msg} className="alert alert-danger">
+            {error.msg}
+          </div>
+        ))}
       <form>
         <div className="row">
-          <div className="col-12 mb-4">
+          <div className="col-12 mb-5">
             <label className="w-100">
-              <h4>What question do you want to ask?</h4>
+              <h1 className="h5">What question do you want to ask?</h1>
               <input
                 type="text"
                 className="form-control mt-1"
@@ -111,9 +118,12 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
         <div className="row">
           <div className="col-12 mb-4">
             <label className="d-block" htmlFor="survey__questionRespondent">
-              <h4>Do you want to know who left your response?</h4>
+              <h1 className="h5">
+                Do you want to know who left your response?
+              </h1>
               <p className="mb-1">
-                We're not going to do anything sneaky here, just ask them.
+                If you turn this on we'll just ask for the best place to reach
+                them.
               </p>
             </label>
             <div className="form-check form-switch form-switch-lg">

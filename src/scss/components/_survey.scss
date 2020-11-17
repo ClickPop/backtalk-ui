@@ -1,0 +1,75 @@
+.survey {
+  background-color: $survey-bg;
+  font-size: $survey-font-size;
+
+  &__container {
+    background: $survey-bg;
+    height: 60vh;
+
+    @media screen and (min-width: $screen-md) {
+      background: $white;
+      border-radius: $base-border-radius * 2;
+      box-shadow: $base-box-shadow;
+      height: 100vh;
+      max-height: 600px;
+      width: 400px;
+    }
+  }
+
+  &__feed {
+    flex: 1;
+  }
+
+  &__answer {
+    background-color: $white;
+    border-radius: $base-border-radius;
+    box-shadow: $base-box-shadow;
+    display: flex;
+    padding: 1rem;
+    width: 100%;
+
+    @media screen and (min-width: $screen-md) {
+      border-radius: 0 0 $base-border-radius $base-border-radius;
+      border-top: 1px solid $grey-800;
+      box-shadow: none;
+    }
+  }
+
+  &__question,
+  &__response {
+    display: flex;
+    margin: 1em;
+
+    .message {
+      border-radius: 0.75rem;
+      box-shadow: rgba(0, 0, 20, 0.15) 0 2px 3px;
+      flex: 1 1 0.333;
+      font-family: $body-font;
+      font-size: 1em;
+      font-weight: 400;
+      line-height: 1.4;
+      margin: 0;
+      max-width: 90%;
+      padding: 1rem;
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+
+  &__question .message {
+    background-color: $white;
+    color: $body-color;
+
+    @media screen and (min-width: $screen-md) {
+      background-color: $survey-bg;
+    }
+  }
+
+  &__response .message {
+    background-color: $primary;
+    color: $white;
+    margin-left: auto;
+  }
+}

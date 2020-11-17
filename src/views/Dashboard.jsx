@@ -1,34 +1,66 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { context } from '../context/Context';
 import * as axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import NewSurvey from '../components/NewSurvey';
+import { Modal } from '../components/Modal';
+
+const decodeHtml = (html) => {
+  var txt = document.createElement('textarea');
+  txt.innerHTML = html;
+  return txt.value;
+};
 
 export const Dashboard = () => {
-  const { state, dispatch } = useContext(context);
+  const { state } = useContext(context);
   const [surveys, setSurveys] = useState(null);
+  const [show, setShow] = useState(false);
+  const [deleteResponse, setDeleteResponse] = useState(null);
+  const [deleted, setDeleted] = useState(false);
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await axios({
+        method: 'delete',
+        url: '/api/v1/surveys/delete',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: id,
+        },
+      });
+      setDeleted(res.data.deleted);
+      handleModal(false);
+    } catch (err) {
+      console.error(err);
+      //TODO add error popup
+    }
+  };
+
+  const handleModal = (display, id) => {
+    setDeleteResponse(display ? id : null);
+    setShow(display);
+  };
 
   useEffect(() => {
     let cancelled = false;
     const getSurveys = async () => {
       try {
-        dispatch({ type: 'SET_LOADING', payload: true });
         const userSurveys = await axios.get('/api/v1/surveys', {
           headers: { Authorization: `Bearer ${state.token}` },
         });
         if (!cancelled) {
           setSurveys(userSurveys.data.results);
-          dispatch({ type: 'SET_LOADING', payload: false });
         }
       } catch (err) {
         console.error(err);
       }
     };
     getSurveys();
+    if (deleted) setDeleted(false);
     return () => {
       cancelled = true;
     };
-  }, [state.token, dispatch]);
+  }, [state.token, deleted]);
 
   if (!state.auth) {
     return <Redirect to="/login" />;
@@ -39,35 +71,101 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="row p-2">
-      {surveys && surveys.length < 1 && !state.loading && (
-        <Redirect to="/surveys/first" />
-      )}
-      <div className="col-7">
-        {surveys &&
-          !state.loading &&
-          surveys.map((survey) => (
-            <div key={survey.id} className="row">
-              <div className="col-8 mx-auto mt-2 mb-4">
-                <div className="card">
-                  <div className="card-header">
-                    <h3 className="card-title">{survey.title}</h3>
-                  </div>
-                  <div className="card-body">
-                    <p className="card-text">
-                      Questions: {survey.questions?.length}
-                    </p>
-                    <p className="card-text">
-                      Responses: {survey.Sessions?.length}
-                    </p>
+    <div className="container">
+      <div className="row">
+        {surveys && surveys.length < 1 && !state.loading && (
+          <Redirect to="/surveys/first" />
+        )}
+        <Modal
+          show={show}
+          handleModal={handleModal}
+          title="Are you sure you want to delete this survey?"
+        >
+          <div className="d-flex justify-content-around">
+            <button
+              className="btn btn-lg btn-success"
+              onClick={() => handleDelete(deleteResponse)}
+            >
+              Yes
+            </button>
+            <button
+              className="btn btn-lg btn-danger"
+              onClick={() => handleModal(false)}
+            >
+              No
+            </button>
+          </div>
+        </Modal>
+        <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
+          <h2 className="mb-4">New Survey</h2>
+          <NewSurvey surveys={surveys} setSurveys={setSurveys} />
+        </div>
+        <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
+          <h1 className="mb-4">Your Surveys</h1>
+          {surveys &&
+            !state.loading &&
+            surveys.map((survey) => (
+              <div key={survey.id} className="row">
+                <div className="col-12">
+                  <div className="card card--hover p-3 mb-4">
+                    <div className="card-body">
+                      <div className="d-flex justify-content-between">
+                        <h5 className="card-title">
+                          <Link
+                            to={`/responses/${survey.hash}`}
+                            className="text-decoration-none"
+                          >
+                            {decodeHtml(survey.title)}
+                          </Link>
+                        </h5>
+                        <button
+                          type="button"
+                          className="btn btn-inline response-preview__delete"
+                          onClick={() => handleModal(true, survey.id)}
+                        >
+                          <span role="img" aria-label="Delete" title="Delete">
+                            🗑
+                          </span>
+                        </button>
+                      </div>
+                      <p className="mb-0">
+                        <span
+                          role="img"
+                          aria-label="speech bubble"
+                          style={{ marginRight: '0.25rem' }}
+                        >
+                          💬
+                        </span>
+                        {survey?.Responses?.length ? (
+                          <Link
+                            to={`/responses/${survey.hash}`}
+                            className="text-decoration-none"
+                          >
+                            {survey.Responses.length} responses
+                          </Link>
+                        ) : (
+                          'No responses yet'
+                        )}
+                        <br />
+                        <span
+                          role="img"
+                          aria-label="link"
+                          style={{ marginRight: '0.25rem' }}
+                        >
+                          🔗
+                        </span>
+                        <Link
+                          to={`/survey/${survey.hash}`}
+                          className="text-decoration-none"
+                          target="_blank"
+                        >{`${window.location.host}/survey/${survey.hash}`}</Link>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-      </div>
-      <div className="col-5">
-        <NewSurvey surveys={surveys} setSurveys={setSurveys} />
+            ))}
+        </div>
       </div>
     </div>
   );

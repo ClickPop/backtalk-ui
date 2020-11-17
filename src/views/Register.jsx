@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { context } from '../context/Context';
 import * as axios from 'axios';
@@ -16,14 +16,9 @@ const Register = () => {
   const { state, dispatch } = useContext(context);
   const { errors } = state;
   const [form, setForm] = useState(initialState);
-  const [registered, setRegistered] = useState(false);
 
   if (state.auth) {
     return <Redirect to="/dashboard" />;
-  }
-
-  if (registered) {
-    return <Redirect to="/login" />;
   }
 
   const handleSubmit = async (e) => {
@@ -41,12 +36,18 @@ const Register = () => {
       return;
     }
     try {
-      await axios.post('/api/v1/users/register', {
+      const reg = await axios.post('/api/v1/users/register', {
         email,
         name: `${firstName} ${lastName}`,
         password,
       });
-      setRegistered(true);
+      if (reg.data.registered) {
+        const login = await axios.post('/api/v1/auth/login', {
+          email,
+          password,
+        });
+        dispatch({ type: 'LOGIN', payload: login.data.accessToken });
+      }
     } catch (err) {
       console.error(err);
       if (err.response.status === 422 || err.response.status === 409) {
@@ -70,10 +71,10 @@ const Register = () => {
   };
 
   return (
-    <Fragment>
+    <div className="container">
       {errors &&
         errors.map((error) => (
-          <div key={error.msg} className="alert alert-danger">
+          <div key={error.id} className="alert alert-danger">
             {error.msg}
           </div>
         ))}
@@ -177,7 +178,7 @@ const Register = () => {
           </form>
         </section>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

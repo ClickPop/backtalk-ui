@@ -5,7 +5,8 @@ export const initialState = {
   auth: false,
   token: null,
   errors: [],
-  loading: false,
+  loading: true,
+  navbar: '',
 };
 
 export const context = createContext(initialState);

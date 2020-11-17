@@ -1,15 +1,18 @@
 {
-  "name": "survey-app-ui",
-  "version": "1.0.0-alpha",
+  "name": "backtalk-ui",
+  "version": "1.0.0-alpha.1",
   "private": true,
   "dependencies": {
     "axios": "^0.20.0",
-    "bootstrap": "^5.0.0-alpha1",
+    "bootstrap": "^5.0.0-alpha3",
     "classnames": "^2.2.6",
+    "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
+    "react-moment": "^1.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "uuid": "^8.3.0"
@@ -18,8 +21,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "eslint src/**/*.js src/**/*.jsx",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write **.{js,jsx,json,md,scss} !build/**.* !node_modules/**.*"
+    "prettier": "prettier --write **.{js,jsx,json,md,scss} !build/**.* !node_modules/**.*",
+    "docker-up": "docker-compose up -d --build",
+    "docker-down": "docker-compose down"
   },
   "browserslist": {
     "production": [

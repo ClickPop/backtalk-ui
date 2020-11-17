@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import classNames from 'classnames';
 import * as axios from 'axios';
 import { Redirect } from 'react-router-dom';
@@ -48,17 +48,17 @@ const Login = () => {
   };
 
   return (
-    <Fragment>
+    <div className="container">
       {errors &&
         errors.map((error) => (
-          <div key={error.msg} className="alert alert-danger">
+          <div key={error.id} className="alert alert-danger">
             {error.msg}
           </div>
         ))}
       <div className="row justify-content-center">
         <section className="col-xl-4 col-md-6 col-sm-8 col-12 py-5">
           <header>
-            <h2 className="h5 mb-4">Welcome back, let's get you logged in!</h2>
+            <h2 className="h5 mb-4">Welcome back! Let's get you logged in.</h2>
           </header>
 
           <form>
@@ -101,7 +101,7 @@ const Login = () => {
           </form>
         </section>
       </div>
-    </Fragment>
+    </div>
   );
 };
 
