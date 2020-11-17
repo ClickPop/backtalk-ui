@@ -6,6 +6,34 @@ import { useParams } from 'react-router-dom';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 
+const exportCSV = (data) => {
+  const keys = [];
+  const csv = [];
+  data.forEach((record) => {
+    Object.keys(record).forEach((key) => {
+      if (!keys.includes(key)) {
+        keys.push(key);
+      }
+    });
+    csv.push(jsonToCSV(record));
+  });
+  return [keys.join(','), ...csv].join('\r\n');
+};
+
+const jsonToCSV = (json) => {
+  return Object.keys(json)
+    .map((key) => {
+      let returnVal = json[key];
+      if (typeof returnVal === 'object') {
+        returnVal = JSON.stringify(json[key]);
+      }
+      return /[,\r\n]/.test(`${returnVal}`)
+        ? `"${returnVal.replace(/"/g, '')}"`
+        : `${returnVal}`;
+    })
+    .join(',');
+};
+
 export const Responses = () => {
   const params = useParams();
   const [responses, setResponses] = useState([]);
@@ -63,10 +91,42 @@ export const Responses = () => {
     setShow(display);
   };
 
+  const handleCSV = () => {
+    const csv = exportCSV(responses);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) {
+      // IE 10+
+      navigator.msSaveBlob(blob, 'exported.csv');
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        // feature detection
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'exported.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-12 col-lg-8 offset-lg-2">
+          {responses && (
+            <div className="d-flex justify-content-end m-3">
+              <button className="btn btn-sm btn-primary" onClick={handleCSV}>
+                Export to CSV{' '}
+                <span role="img" aria-label="csv">
+                  💻
+                </span>
+              </button>
+            </div>
+          )}
           <div>
             {responses.map((response) => (
               <div className="card mb-4 response-preview" key={response.id}>
