@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { context } from '../context/Context';
 import * as axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
+import { Trash2, ExternalLink, MessageCircle } from 'react-feather';
 import NewSurvey from '../components/NewSurvey';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -118,19 +119,11 @@ export const Dashboard = () => {
                           className="btn btn-inline response-preview__delete"
                           onClick={() => handleModal(true, survey.id)}
                         >
-                          <span role="img" aria-label="Delete" title="Delete">
-                            🗑
-                          </span>
+                          <Trash2 size={18} />
                         </button>
                       </div>
-                      <p className="mb-0">
-                        <span
-                          role="img"
-                          aria-label="speech bubble"
-                          style={{ marginRight: '0.25rem' }}
-                        >
-                          💬
-                        </span>
+                      <div className="mb-2 d-flex align-items-center">
+                        <MessageCircle size={18} className="mr-2" />
                         {survey?.Responses?.length ? (
                           <Link
                             to={`/responses/${survey.hash}`}
@@ -141,20 +134,15 @@ export const Dashboard = () => {
                         ) : (
                           'No responses yet'
                         )}
-                        <br />
-                        <span
-                          role="img"
-                          aria-label="link"
-                          style={{ marginRight: '0.25rem' }}
-                        >
-                          🔗
-                        </span>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <ExternalLink size={18} className="mr-2" />
                         <Link
                           to={`/survey/${survey.hash}`}
                           className="text-decoration-none"
                           target="_blank"
                         >{`${window.location.host}/survey/${survey.hash}`}</Link>
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div>
