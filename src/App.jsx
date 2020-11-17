@@ -30,7 +30,7 @@ const insertVersionMeta = async () => {
     const apiDetails = await axios.get('/');
     let metaAPI = document.createElement('meta');
     metaAPI.setAttribute('property', 'backtalk:api:version');
-    metaAPI.content = apiDetails.version || 'unknown';
+    metaAPI.content = apiDetails.api.version || 'unknown';
     document.getElementsByTagName('head')[0].appendChild(metaAPI);
   }
 }

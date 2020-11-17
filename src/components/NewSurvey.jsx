@@ -22,7 +22,8 @@ const submitSurvey = async (data, token) => {
 };
 
 const initialState = {
-  question: '',
+  title: null,
+  question: null,
   respondent: false,
 };
 
@@ -32,7 +33,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
-    setForm({ ...form, question: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleToggle = (e) => {
@@ -42,7 +43,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const survey = {
-      title: form.question,
+      title: form.title || form.question,
       questions: [{ prompt: form.question, type: 'text' }],
       respondent: form.respondent,
     };
@@ -101,12 +102,23 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
       <form>
         <div className="row">
           <div className="col-12 mb-5">
+            <label className="w-100 mb-3">
+              <h1 className="h5">What would you like to call your survey?</h1>
+              <input
+                type="text"
+                className="form-control mt-1"
+                name="title"
+                placeholder="Survey Title"
+                required
+                onChange={handleChange}
+              />
+            </label>
             <label className="w-100">
               <h1 className="h5">What question do you want to ask?</h1>
               <input
                 type="text"
                 className="form-control mt-1"
-                name="new-question"
+                name="question"
                 placeholder="Would you rather be a cat or a dog?"
                 required
                 onChange={handleChange}
