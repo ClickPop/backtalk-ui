@@ -65,7 +65,7 @@ const App = () => {
     return () => {
       canceled = true;
     };
-  }, [state.auth, dispatch]);
+  }, [state.auth, dispatch, metaAdded]);
 
   return (
     <Fragment>
