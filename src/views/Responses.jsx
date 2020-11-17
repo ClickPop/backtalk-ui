@@ -5,6 +5,7 @@ import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
+import decodeHtml from '../helpers/decodeHtml';
 
 export const Responses = () => {
   const params = useParams();
@@ -85,8 +86,10 @@ export const Responses = () => {
                           <div key={`${response.id + r.id}`}>
                             <Fragment>
                               <p className="mb-1">
-                                {questions.find((q) => q.id === r.id)?.prompt ||
-                                  r.key}
+                                {decodeHtml(
+                                  questions.find((q) => q.id === r.id)
+                                    ?.prompt || r.key,
+                                )}
                               </p>
                               <h5 className="card-title mb-3">{r.value}</h5>
                             </Fragment>{' '}

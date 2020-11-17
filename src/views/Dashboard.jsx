@@ -4,12 +4,7 @@ import * as axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import NewSurvey from '../components/NewSurvey';
 import { Modal } from '../components/Modal';
-
-const decodeHtml = (html) => {
-  var txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
-};
+import decodeHtml from '../helpers/decodeHtml';
 
 export const Dashboard = () => {
   const { state } = useContext(context);
