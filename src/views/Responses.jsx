@@ -31,6 +31,7 @@ export const Responses = () => {
               return keys;
             }, []),
         ]);
+        console.log(res.data.results[0]);
       } catch (error) {
         console.error(error);
         //TODO add error popup
@@ -93,7 +94,7 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || 'Anonymous'} from{' '}
+                    &ndash; {response.respondent || 'Someone Awesome'} from{' '}
                     <Location data={response.geo} />
                   </p>
                 </div>
