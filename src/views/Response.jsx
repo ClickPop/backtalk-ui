@@ -13,7 +13,10 @@ const surveyEnd = (survey, cursor) => {
 
 const getQuery = (qStr) => {
   if (!/\?([^&]+=[^&]+&?)+/g.test(qStr)) return null;
-  const arr = qStr.slice(1, qStr.length).split('=');
+  const arr = qStr
+    .slice(1, qStr.length)
+    .split(/([^&;=]+)/g)
+    .filter((e) => e && !'=&;'.includes(e));
   const query = [];
   for (let i = 0; i < arr.length; i += 2) {
     if (arr[i] !== 'fbclid')

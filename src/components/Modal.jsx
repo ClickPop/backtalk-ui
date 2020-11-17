@@ -6,7 +6,7 @@ export const Modal = ({ children, show, handleModal, title }) => {
     ? createPortal(
         <div
           style={{
-            position: 'absolute',
+            position: 'fixed',
             width: '100vw',
             height: '100vh',
             top: '0px',
@@ -14,7 +14,7 @@ export const Modal = ({ children, show, handleModal, title }) => {
           }}
         >
           <div
-            className="position-absolute w-100 h-100"
+            className="position-fixed w-100 h-100"
             style={{ backgroundColor: 'lightgrey', opacity: '0.4' }}
           ></div>
           <div className="modal" role="dialog" style={{ display: 'inherit' }}>
