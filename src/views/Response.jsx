@@ -52,7 +52,7 @@ export const Response = ({ location }) => {
         const queryParams = getQuery(decodeURI(search.current));
         const resp = JSON.parse(localStorage.getItem(hash.current));
         let r = queryParams ? queryParams : [];
-        setQueryResponses(queryParams || []);
+        setQueryResponses(queryParams.filter((q) => q.key !== 'fbclid') || []);
         if (resp) {
           resp.data = [...resp.data, ...r];
           try {
