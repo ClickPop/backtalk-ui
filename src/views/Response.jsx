@@ -2,6 +2,7 @@ import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Scrollbars } from 'react-custom-scrollbars';
+import decodeHtml from '../helpers/decodeHtml';
 // import defaultAvatar from '../images/default-avatar.png';
 
 const surveyEnd = (survey, cursor) => {
@@ -209,7 +210,9 @@ export const Response = ({ location }) => {
                     cursor >= i && (
                       <div className="survey__set" key={question.id}>
                         <div className="survey__question">
-                          <h2 className="message">{question.prompt}</h2>
+                          <h2 className="message">
+                            {decodeHtml(question.prompt)}
+                          </h2>
                         </div>
                         <div className="survey__response">
                           <pre className="message">
