@@ -1,6 +1,6 @@
 {
   "name": "backtalk-ui",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "private": true,
   "dependencies": {
     "axios": "^0.20.0",
