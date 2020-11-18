@@ -158,9 +158,10 @@ export const Responses = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-12 col-lg-8 offset-lg-2">
+        <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
+          <h2 className="mb-4">Survey Settings</h2>
           {responses && (
-            <div className="d-flex justify-content-end mb-3">
+            <div className="mb-5">
               <button
                 className="btn btn-sm btn-secondary d-flex"
                 onClick={handleCSV}
@@ -169,6 +170,25 @@ export const Responses = () => {
               </button>
             </div>
           )}
+          <h3>URL Questions</h3>
+          <p>
+            You can dynamically add new questions and answers to links you share
+            by adding <span className="text-monospace">?question=answer</span>{' '}
+            paramaters to your survey share URLs.
+          </p>
+          <div className="form-group">
+            <label for="q1" className="mb-2">
+              <strong>069</strong>
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="q1"
+              aria-describedby="q1"
+            />
+          </div>
+        </div>
+        <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div>
             {responses.map((response) => (
               <div
