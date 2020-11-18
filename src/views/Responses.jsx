@@ -130,7 +130,7 @@ export const Responses = () => {
         // Browsers that support HTML5 download attribute
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', 'exported.csv');
+        link.setAttribute('download', 'backtalk_results.csv');
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
