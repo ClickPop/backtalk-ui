@@ -129,7 +129,11 @@ export const Responses = () => {
                   </p>
                 </div>
                 <div className="response-preview__actions">
-                  <button type="button" className="btn p-1">
+                  <button
+                    type="button"
+                    className="btn p-1"
+                    onClick={() => share(response.id, response.respondent)}
+                  >
                     <Download size={18} />
                   </button>
                   <button
