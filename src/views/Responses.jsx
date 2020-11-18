@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
-import { Trash2 } from 'react-feather';
+import { Trash2, Download } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -103,13 +103,18 @@ export const Responses = () => {
                     <Location data={response.geo} />
                   </p>
                 </div>
-                <button
-                  type="button"
-                  className="btn btn-inline response-preview__delete"
-                  onClick={() => handleModal(true, response.id)}
-                >
-                  <Trash2 size={18} />
-                </button>
+                <div className="response-preview__actions">
+                  <button type="button" className="btn p-1">
+                    <Download size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn p-1"
+                    onClick={() => handleModal(true, response.id)}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>

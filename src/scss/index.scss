@@ -1,6 +1,6 @@
 @import 'bootstrap', 'components/fonts', 'components/variables',
-  'components/typography', 'components/nav', 'components/card',
-  'components/survey';
+  'components/typography', 'components/button', 'components/nav',
+  'components/card', 'components/survey';
 
 body {
   background: $base-bg-color;
@@ -12,7 +12,7 @@ body {
 }
 
 .response-preview {
-  &__delete {
+  &__actions {
     position: absolute;
     top: 0;
     right: 0;
