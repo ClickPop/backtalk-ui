@@ -22,8 +22,8 @@ const submitSurvey = async (data, token) => {
 };
 
 const initialState = {
-  title: null,
-  question: null,
+  title: '',
+  question: '',
   respondent: false,
 };
 
@@ -67,13 +67,13 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
         // const hash = await axios.get(
         //   `/api/v1/surveys/getHash?num=${newSurvey.data.result.id}`,
         // );
+        setForm(initialState);
         if (setSurveys) {
           setSurveys([...surveys, newSurvey.data.result]);
         }
         if (toDashboard) {
           toDashboard(true);
         }
-        setForm(initialState);
       } else if (err?.response?.status === 422) {
         const id = uuid.v4();
         let msg;
@@ -111,6 +111,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
                 placeholder="Survey Title"
                 required
                 onChange={handleChange}
+                value={form.title}
               />
             </label>
             <label className="w-100">
@@ -122,6 +123,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
                 placeholder="Would you rather be a cat or a dog?"
                 required
                 onChange={handleChange}
+                value={form.question}
               />
             </label>
           </div>
@@ -144,6 +146,7 @@ const NewSurvey = ({ surveys, setSurveys, toDashboard }) => {
                 type="checkbox"
                 id="survey__questionRespondent"
                 onChange={handleToggle}
+                value={form.respondent}
               />
             </div>
           </div>
