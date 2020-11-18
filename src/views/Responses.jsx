@@ -177,15 +177,8 @@ export const Responses = () => {
             paramaters to your survey share URLs.
           </p>
           <div className="form-group">
-            <label for="q1" className="mb-2">
-              <strong>069</strong>
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="q1"
-              aria-describedby="q1"
-            />
+            <strong>069</strong>
+            <p>069</p>
           </div>
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
