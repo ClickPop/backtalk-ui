@@ -60,7 +60,7 @@ export const Responses = () => {
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
     const a = document.createElement('a');
-    a.setAttribute('download', `${id}_${name}.png`);
+    a.setAttribute('download', `${id}_${name || 'response'}.png`);
     a.setAttribute('href', image);
     a.click();
   };
