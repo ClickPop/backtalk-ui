@@ -72,23 +72,23 @@ export const Dashboard = () => {
         {surveys && surveys.length < 1 && !state.loading && (
           <Redirect to="/surveys/first" />
         )}
-        <Modal
-          show={show}
-          handleModal={handleModal}
-          title="Are you sure you want to delete this survey?"
-        >
-          <div className="d-flex justify-content-around">
+        <Modal show={show} handleModal={handleModal} title="Delete Response">
+          <div className="modal-body">
+            Are you sure you want to delete this response? Once it's gone, it's
+            gone.
+          </div>
+          <div class="modal-footer">
             <button
-              className="btn btn-lg btn-success"
-              onClick={() => handleDelete(deleteResponse)}
-            >
-              Yes
-            </button>
-            <button
-              className="btn btn-lg btn-danger"
+              className="btn btn-white"
               onClick={() => handleModal(false)}
             >
-              No
+              Cancel
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => handleDelete(deleteResponse)}
+            >
+              Delete
             </button>
           </div>
         </Modal>

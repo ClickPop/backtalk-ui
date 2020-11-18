@@ -15,7 +15,7 @@ export const Modal = ({ children, show, handleModal, title }) => {
         >
           <div
             className="position-fixed w-100 h-100"
-            style={{ backgroundColor: 'lightgrey', opacity: '0.4' }}
+            style={{ backgroundColor: 'lightgrey', opacity: '0.6' }}
           ></div>
           <div className="modal" role="dialog" style={{ display: 'inherit' }}>
             <div className="modal-dialog" role="document">
@@ -23,13 +23,13 @@ export const Modal = ({ children, show, handleModal, title }) => {
                 <div className="modal-header">
                   <h6 className="card-title">{title}</h6>
                   <button
-                    className="btn btn-sm btn-secondary flex-shrink"
+                    className="btn btn-light"
                     onClick={() => handleModal(false)}
                   >
-                    X
+                    <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div className="modal-body">{children}</div>
+                {children}
               </div>
             </div>
           </div>
