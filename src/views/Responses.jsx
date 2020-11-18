@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download } from 'react-feather';
+import { Trash2, Download, FileText } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -122,7 +122,7 @@ export const Responses = () => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     if (navigator.msSaveBlob) {
       // IE 10+
-      navigator.msSaveBlob(blob, 'exported.csv');
+      navigator.msSaveBlob(blob, 'backtalk_results.csv');
     } else {
       const link = document.createElement('a');
       if (link.download !== undefined) {
@@ -144,12 +144,12 @@ export const Responses = () => {
       <div className="row">
         <div className="col-12 col-lg-8 offset-lg-2">
           {responses && (
-            <div className="d-flex justify-content-end m-3">
-              <button className="btn btn-sm btn-primary" onClick={handleCSV}>
-                Export to CSV{' '}
-                <span role="img" aria-label="csv">
-                  💻
-                </span>
+            <div className="d-flex justify-content-end mb-3">
+              <button
+                className="btn btn-sm btn-secondary d-flex"
+                onClick={handleCSV}
+              >
+                Export to CSV <FileText size={18} className="text-white ml-2" />
               </button>
             </div>
           )}
