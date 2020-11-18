@@ -9,34 +9,6 @@ import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import anonymousNickname from '../helpers/anonymousNickname';
 
-const exportCSV = (data) => {
-  const keys = [];
-  const csv = [];
-  data.forEach((record) => {
-    Object.keys(record).forEach((key) => {
-      if (!keys.includes(key)) {
-        keys.push(key);
-      }
-    });
-    csv.push(jsonToCSV(record));
-  });
-  return [keys.join(','), ...csv].join('\r\n');
-};
-
-const jsonToCSV = (json) => {
-  return Object.keys(json)
-    .map((key) => {
-      let returnVal = json[key];
-      if (typeof returnVal === 'object') {
-        returnVal = JSON.stringify(json[key]);
-      }
-      return /[,\r\n]/.test(`${returnVal}`)
-        ? `"${returnVal.replace(/"/g, '')}"`
-        : `${returnVal}`;
-    })
-    .join(',');
-};
-
 export const Responses = () => {
   const params = useParams();
   const [responses, setResponses] = useState([]);
@@ -98,6 +70,51 @@ export const Responses = () => {
   const handleModal = (display, id) => {
     setDeleteResponse(display ? id : null);
     setShow(display);
+  };
+
+  const exportCSV = (data) => {
+    const keys = new Set(['respondent']);
+    data.forEach((record) => {
+      record.data.forEach((res) => {
+        if (res.id) {
+          keys.add(questions.find((q) => q.id === res.id).prompt);
+        } else if (res.key) {
+          keys.add(res.key);
+        }
+      });
+    });
+    keys.add('updatedAt');
+    const csv = data.map((record) => {
+      const returnVal = {
+        respondent: record.respondent,
+        updatedAt: new Date(record.updatedAt).toString(),
+      };
+      record.data.forEach((res) => {
+        if (res.id) {
+          returnVal[questions.find((q) => q.id === res.id).prompt] = res.value;
+        } else if (res.key) {
+          returnVal[res.key] = res.value;
+        }
+      });
+      return jsonToCSV(returnVal, Array.from(keys));
+    });
+
+    return [Array.from(keys).join(','), ...csv].join('\r\n');
+  };
+
+  const jsonToCSV = (json, keys) => {
+    return keys
+      .map((key) => {
+        let returnVal = json[key];
+        if (!returnVal) return '';
+        if (typeof returnVal === 'object') {
+          returnVal = JSON.stringify(json[key]);
+        }
+        return /[,\r\n]/.test(`${returnVal}`)
+          ? `"${returnVal.replace(/"/g, '')}"`
+          : `${returnVal}`;
+      })
+      .join(',');
   };
 
   const handleCSV = () => {
