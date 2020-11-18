@@ -51,7 +51,9 @@ export const Responses = () => {
   }, [params.hash, state.token, deleted]);
 
   const share = async (id, name) => {
-    const canvas = await html2canvas(document.getElementById(id));
+    const canvas = await html2canvas(
+      document.getElementById(id).getElementsByClassName('card-body')[0],
+    );
     canvas.style.display = 'none';
     document.body.appendChild(canvas);
     const image = canvas
