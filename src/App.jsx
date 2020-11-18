@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './views/Home';
 import Login from './views/Login';
@@ -13,14 +13,32 @@ import * as axios from 'axios';
 import { Error404 } from './views/Error404';
 import { Response } from './views/Response';
 import { Responses } from './views/Responses';
+import packageJson from '../package.json';
 
 if (process.env.NODE_ENV === 'production')
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 axios.defaults.withCredentials = true;
 
+const insertVersionMeta = async () => {
+  let metaUI = document.createElement('meta');
+  metaUI.setAttribute('property', 'backtalk:ui:version');
+  metaUI.content = packageJson.version || 'unknown';
+  document.getElementsByTagName('head')[0].appendChild(metaUI);
+
+  if (process.env.NODE_ENV === 'production') {
+    const apiDetails = await axios.get('/');
+    let metaAPI = document.createElement('meta');
+    metaAPI.setAttribute('property', 'backtalk:api:version');
+    metaAPI.content = apiDetails.api.version || 'unknown';
+    document.getElementsByTagName('head')[0].appendChild(metaAPI);
+  }
+}
+
 const App = () => {
   const { state, dispatch } = useContext(context);
+  const [ metaAdded, setMetaAdded ] = useState(false);
+
   useEffect(() => {
     let canceled = false;
     const handleRefresh = async () => {
@@ -37,11 +55,17 @@ const App = () => {
         }
       }
     };
+
     handleRefresh();
+    if (!metaAdded) {
+      insertVersionMeta();
+      setMetaAdded(true);
+    }
+
     return () => {
       canceled = true;
     };
-  }, [state.auth, dispatch]);
+  }, [state.auth, dispatch, metaAdded]);
 
   return (
     <Fragment>

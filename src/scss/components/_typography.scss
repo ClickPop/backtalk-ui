@@ -43,3 +43,20 @@ p {
     line-height: $base-line-height;
   }
 }
+
+.text {
+  &-muted {
+    color: $grey-700 !important;
+  }
+}
+
+// Response Styles
+.response {
+  &__question {
+    font-weight: bold;
+  }
+
+  &__answer {
+    font-size: 1.3rem;
+  }
+}

@@ -2,14 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { context } from '../context/Context';
 import * as axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
+import { Trash2, ExternalLink, MessageCircle } from 'react-feather';
 import NewSurvey from '../components/NewSurvey';
 import { Modal } from '../components/Modal';
-
-const decodeHtml = (html) => {
-  var txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
-};
+import decodeHtml from '../helpers/decodeHtml';
 
 export const Dashboard = () => {
   const { state } = useContext(context);
@@ -76,23 +72,23 @@ export const Dashboard = () => {
         {surveys && surveys.length < 1 && !state.loading && (
           <Redirect to="/surveys/first" />
         )}
-        <Modal
-          show={show}
-          handleModal={handleModal}
-          title="Are you sure you want to delete this survey?"
-        >
-          <div className="d-flex justify-content-around">
+        <Modal show={show} handleModal={handleModal} title="Delete Response">
+          <div className="modal-body">
+            Are you sure you want to delete this response? Once it's gone, it's
+            gone.
+          </div>
+          <div class="modal-footer">
             <button
-              className="btn btn-lg btn-success"
-              onClick={() => handleDelete(deleteResponse)}
-            >
-              Yes
-            </button>
-            <button
-              className="btn btn-lg btn-danger"
+              className="btn btn-white"
               onClick={() => handleModal(false)}
             >
-              No
+              Cancel
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => handleDelete(deleteResponse)}
+            >
+              Delete
             </button>
           </div>
         </Modal>
@@ -123,19 +119,11 @@ export const Dashboard = () => {
                           className="btn btn-inline response-preview__delete"
                           onClick={() => handleModal(true, survey.id)}
                         >
-                          <span role="img" aria-label="Delete" title="Delete">
-                            🗑
-                          </span>
+                          <Trash2 size={18} className="text-muted" />
                         </button>
                       </div>
-                      <p className="mb-0">
-                        <span
-                          role="img"
-                          aria-label="speech bubble"
-                          style={{ marginRight: '0.25rem' }}
-                        >
-                          💬
-                        </span>
+                      <div className="mb-2 d-flex align-items-center">
+                        <MessageCircle size={18} className="mr-2 text-muted" />
                         {survey?.Responses?.length ? (
                           <Link
                             to={`/responses/${survey.hash}`}
@@ -146,20 +134,15 @@ export const Dashboard = () => {
                         ) : (
                           'No responses yet'
                         )}
-                        <br />
-                        <span
-                          role="img"
-                          aria-label="link"
-                          style={{ marginRight: '0.25rem' }}
-                        >
-                          🔗
-                        </span>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <ExternalLink size={18} className="mr-2 text-muted" />
                         <Link
                           to={`/survey/${survey.hash}`}
                           className="text-decoration-none"
                           target="_blank"
                         >{`${window.location.host}/survey/${survey.hash}`}</Link>
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div>
