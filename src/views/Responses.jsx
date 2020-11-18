@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download } from 'react-feather';
+import { Trash2, Download, FileText } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -88,10 +88,87 @@ export const Responses = () => {
     setShow(display);
   };
 
+  const exportCSV = (data) => {
+    const keys = new Set(['respondent']);
+    data.forEach((record) => {
+      record.data.forEach((res) => {
+        if (res.id) {
+          keys.add(questions.find((q) => q.id === res.id).prompt);
+        } else if (res.key) {
+          keys.add(res.key);
+        }
+      });
+    });
+    keys.add('updatedAt');
+    const csv = data.map((record) => {
+      const returnVal = {
+        respondent: record.respondent,
+        updatedAt: new Date(record.updatedAt).toString(),
+      };
+      record.data.forEach((res) => {
+        if (res.id) {
+          returnVal[questions.find((q) => q.id === res.id).prompt] = res.value;
+        } else if (res.key) {
+          returnVal[res.key] = res.value;
+        }
+      });
+      return jsonToCSV(returnVal, Array.from(keys));
+    });
+
+    return [Array.from(keys).join(','), ...csv].join('\r\n');
+  };
+
+  const jsonToCSV = (json, keys) => {
+    return keys
+      .map((key) => {
+        let returnVal = json[key];
+        if (!returnVal) return '';
+        if (typeof returnVal === 'object') {
+          returnVal = JSON.stringify(json[key]);
+        }
+        return /[,\r\n]/.test(`${returnVal}`)
+          ? `"${returnVal.replace(/"/g, '')}"`
+          : `${returnVal}`;
+      })
+      .join(',');
+  };
+
+  const handleCSV = () => {
+    const csv = exportCSV(responses);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) {
+      // IE 10+
+      navigator.msSaveBlob(blob, 'backtalk_results.csv');
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        // feature detection
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'backtalk_results.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-12 col-lg-8 offset-lg-2">
+          {responses && (
+            <div className="d-flex justify-content-end mb-3">
+              <button
+                className="btn btn-sm btn-secondary d-flex"
+                onClick={handleCSV}
+              >
+                Export to CSV <FileText size={18} className="text-white ml-2" />
+              </button>
+            </div>
+          )}
           <div>
             {responses.map((response) => (
               <div
