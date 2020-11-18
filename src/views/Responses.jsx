@@ -8,6 +8,7 @@ import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import anonymousNickname from '../helpers/anonymousNickname';
+import html2canvas from 'html2canvas';
 
 export const Responses = () => {
   const params = useParams();
@@ -49,6 +50,21 @@ export const Responses = () => {
     if (deleted) setDeleted(false);
   }, [params.hash, state.token, deleted]);
 
+  const share = async (id, name) => {
+    const canvas = await html2canvas(
+      document.getElementById(id).getElementsByClassName('card-body')[0],
+    );
+    canvas.style.display = 'none';
+    document.body.appendChild(canvas);
+    const image = canvas
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream');
+    const a = document.createElement('a');
+    a.setAttribute('download', `${id}_${name || 'Anonymous'}.png`);
+    a.setAttribute('href', image);
+    a.click();
+  };
+
   const handleDelete = async (id) => {
     try {
       const res = await axios({
@@ -78,7 +94,11 @@ export const Responses = () => {
         <div className="col-12 col-lg-8 offset-lg-2">
           <div>
             {responses.map((response) => (
-              <div className="card mb-4 response-preview" key={response.id}>
+              <div
+                className="card mb-4 response-preview"
+                key={response.id}
+                id={response.id}
+              >
                 <div className="card-body mx-3 my-2">
                   <p className="text-muted">
                     <strong>
@@ -111,7 +131,11 @@ export const Responses = () => {
                   </p>
                 </div>
                 <div className="response-preview__actions">
-                  <button type="button" className="btn p-1">
+                  <button
+                    type="button"
+                    className="btn p-1"
+                    onClick={() => share(response.id, response.respondent)}
+                  >
                     <Download size={18} />
                   </button>
                   <button
