@@ -3,11 +3,12 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
-import { Trash2 } from 'react-feather';
+import { Trash2, Download } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import anonymousNickname from '../helpers/anonymousNickname';
+import html2canvas from 'html2canvas';
 
 export const Responses = () => {
   const params = useParams();
@@ -44,6 +45,19 @@ export const Responses = () => {
     if (deleted) setDeleted(false);
   }, [params.hash, state.token, deleted]);
 
+  const share = async (id, name) => {
+    const canvas = await html2canvas(document.getElementById(id));
+    canvas.style.display = 'none';
+    document.body.appendChild(canvas);
+    const image = canvas
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream');
+    const a = document.createElement('a');
+    a.setAttribute('download', `${id}_${name}.png`);
+    a.setAttribute('href', image);
+    a.click();
+  };
+
   const handleDelete = async (id) => {
     try {
       const res = await axios({
@@ -73,7 +87,11 @@ export const Responses = () => {
         <div className="col-12 col-lg-8 offset-lg-2">
           <div>
             {responses.map((response) => (
-              <div className="card mb-4 response-preview" key={response.id}>
+              <div
+                className="card mb-4 response-preview"
+                key={response.id}
+                id={response.id}
+              >
                 <div className="card-body mx-3 my-2">
                   <p className="text-secondary">
                     <strong>
@@ -109,6 +127,13 @@ export const Responses = () => {
                   onClick={() => handleModal(true, response.id)}
                 >
                   <Trash2 size={18} />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-inline response-preview__share"
+                  onClick={() => share(response.id, response.respondent)}
+                >
+                  <Download size={18} />
                 </button>
               </div>
             ))}
