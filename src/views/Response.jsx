@@ -2,6 +2,7 @@ import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { ChevronRight, ChevronLeft } from 'react-feather';
 import decodeHtml from '../helpers/decodeHtml';
 // import defaultAvatar from '../images/default-avatar.png';
 
@@ -262,15 +263,15 @@ export const Response = ({ location }) => {
             </Scrollbars>
           </div>
 
-          <div className="survey__footer px-2 px-md-0">
+          <div className="survey__footer px-2 pb-4 px-md-0 pb-md-0">
             <div className="survey__answer">
               {cursor > 0 && !surveyEnd(survey.current, cursor) && (
                 <button
                   type="button"
-                  className="btn btn-light px-3"
+                  className="btn btn-light px-2"
                   onClick={handleBack}
                 >
-                  &laquo;
+                  <ChevronLeft />
                 </button>
               )}
               <div className="input-group">
@@ -312,12 +313,12 @@ export const Response = ({ location }) => {
                   )}
                 {!surveyEnd(survey.current, cursor) ? (
                   <button
-                    className="btn btn-primary px-3"
+                    className="btn btn-primary px-2"
                     type="button"
                     name="submit"
                     onClick={handleSubmit}
                   >
-                    &raquo;
+                    <ChevronRight />
                   </button>
                 ) : (
                   <div
