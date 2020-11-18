@@ -148,7 +148,7 @@ export const Responses = () => {
         if (res.id) {
           keys.add(questions.find((q) => q.id === res.id).prompt);
         } else if (res.key) {
-          keys.add(res.key);
+          keys.add(friendlyNames[res.key].value);
         }
       });
     });
