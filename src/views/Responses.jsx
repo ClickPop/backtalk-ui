@@ -17,6 +17,8 @@ export const Responses = () => {
   const [show, setShow] = useState(false);
   const [deleteResponse, setDeleteResponse] = useState(null);
   const [deleted, setDeleted] = useState(false);
+  const [friendlyNames, setFriendlyNames] = useState({});
+  const [nicknames, setNicknames] = useState({});
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -40,7 +42,21 @@ export const Responses = () => {
               return keys;
             }, []),
         ]);
-        console.log(res.data.results[0]);
+        const fnames = localStorage.getItem(`friendly_${params.hash}`);
+        if (fnames) {
+          setFriendlyNames(JSON.parse(fnames));
+        } else {
+          res.data.results.forEach((response) => {
+            response.data.forEach((r) => {
+              if (r.key) {
+                setFriendlyNames((f) => ({
+                  ...f,
+                  [r.key]: { edit: false, value: r.key },
+                }));
+              }
+            });
+          });
+        }
       } catch (error) {
         console.error(error);
         //TODO add error popup
@@ -49,6 +65,14 @@ export const Responses = () => {
     getResponses();
     if (deleted) setDeleted(false);
   }, [params.hash, state.token, deleted]);
+
+  useEffect(() => {
+    responses.forEach((response) => {
+      if (!response.respondent) {
+        setNicknames((n) => ({ ...n, [response.id]: anonymousNickname() }));
+      }
+    });
+  }, [responses]);
 
   const share = async (id, name) => {
     const canvas = await html2canvas(
@@ -86,6 +110,35 @@ export const Responses = () => {
   const handleModal = (display, id) => {
     setDeleteResponse(display ? id : null);
     setShow(display);
+  };
+
+  const handleEdit = (key, status) => {
+    setFriendlyNames({
+      ...friendlyNames,
+      [key]: { ...friendlyNames[key], edit: status },
+    });
+    if (!status) {
+      localStorage.setItem(
+        `friendly_${params.hash}`,
+        JSON.stringify({
+          ...friendlyNames,
+          [key]: { ...friendlyNames[key], edit: status },
+        }),
+      );
+    }
+  };
+
+  const handleEnter = (e, key) => {
+    if (e.key === 'Enter') {
+      handleEdit(key, false);
+    }
+  };
+
+  const handleFriendlyName = (e, key) => {
+    setFriendlyNames({
+      ...friendlyNames,
+      [key]: { ...friendlyNames[key], value: e.target.value },
+    });
   };
 
   const exportCSV = (data) => {
@@ -176,10 +229,47 @@ export const Responses = () => {
             by adding <span className="text-monospace">?question=answer</span>{' '}
             paramaters to your survey share URLs.
           </p>
-          <div className="form-group">
-            <strong>069</strong>
-            <p>069</p>
-          </div>
+          {responses &&
+            responses.map(
+              (response) =>
+                response.data &&
+                response.data.map(
+                  (r) =>
+                    r.key && (
+                      <div className="form-group" key={r.id - response.id}>
+                        <strong>{r.key}</strong>
+                        {friendlyNames[r.key] && !friendlyNames[r.key].edit && (
+                          <p
+                            style={{ pointerEvents: 'cursor' }}
+                            onClick={(e) => {
+                              handleEdit(r.key, true);
+                            }}
+                          >
+                            {friendlyNames[r.key].value}
+                          </p>
+                        )}
+                        {friendlyNames[r.key] && friendlyNames[r.key].edit && (
+                          <p>
+                            <input
+                              type="text"
+                              value={friendlyNames[r.key].value}
+                              onChange={(e) => {
+                                handleFriendlyName(e, r.key);
+                              }}
+                              onBlur={(e) => {
+                                handleEdit(r.key, false);
+                              }}
+                              autoFocus={true}
+                              onKeyPress={(e) => {
+                                handleEnter(e, r.key);
+                              }}
+                            />
+                          </p>
+                        )}
+                      </div>
+                    ),
+                ),
+            )}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div>
@@ -205,7 +295,7 @@ export const Responses = () => {
                               <p className="mt-4 mb-1 response__question">
                                 {decodeHtml(
                                   questions.find((q) => q.id === r.id)
-                                    ?.prompt || r.key,
+                                    ?.prompt || friendlyNames[r.key]?.value,
                                 )}
                               </p>
                               <div className="mb-4 pb-2 response__answer">
@@ -216,7 +306,7 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || anonymousNickname()} from{' '}
+                    &ndash; {response.respondent || nicknames[response.id]} from{' '}
                     <Location data={response.geo} />
                   </p>
                 </div>
