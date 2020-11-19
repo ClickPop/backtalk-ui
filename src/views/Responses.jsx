@@ -53,6 +53,10 @@ export const Responses = () => {
   const share = async (id, name) => {
     const canvas = await html2canvas(
       document.getElementById(id).getElementsByClassName('card-body')[0],
+      {
+        scrollX: 0,
+        scrollY: -window.scrollY,
+      },
     );
     canvas.style.display = 'none';
     document.body.appendChild(canvas);
