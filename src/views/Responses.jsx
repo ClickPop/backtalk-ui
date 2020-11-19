@@ -238,14 +238,13 @@ export const Responses = () => {
                   (r) =>
                     r.key && (
                       <div className="form-group mb-3" key={r.id - response.id}>
-                        <strong>{r.key}</strong>
                         <form
                           onSubmit={(e) => {
                             handleSave(e, r.key);
                           }}
                         >
-                          <label htmlFor="69 fw-bold">069</label>
-                          <div className="input-group">
+                          <label className="fw-bold" htmlFor={`${r.key}_input`}>{r.key}</label>
+                          <div className="input-group mb-2">
                             <input
                               type="text"
                               className="form-control"
@@ -254,11 +253,9 @@ export const Responses = () => {
                               value={friendlyNames[r.key]?.value || ''}
                               onChange={handleFriendlyName}
                             />
-                            <div className="input-group-append">
-                              <button className="btn btn-primary" type="submit">
-                                <CheckCircle size={18} />
-                              </button>
-                            </div>
+                            <button className="btn btn-primary" type="submit">
+                              <CheckCircle size={18} />
+                            </button>
                           </div>
                         </form>
                       </div>

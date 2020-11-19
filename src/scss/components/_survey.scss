@@ -4,7 +4,10 @@
 
   &__container {
     background: $survey-bg;
-    height: 60vh;
+    flex: 1;
+    flex-basis: 100%;
+    height: 88vh;
+    flex-direction: column;
 
     @media screen and (min-width: $screen-md) {
       background: $white;
