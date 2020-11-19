@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download, FileText } from 'react-feather';
+import { Trash2, Download, FileText, CheckCircle } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -229,6 +229,26 @@ export const Responses = () => {
             by adding <span className="text-monospace">?question=answer</span>{' '}
             paramaters to your survey share URLs.
           </p>
+
+          <div className="form-group mb-3">
+            <label for="exampleInputEmail1">
+              <strong>069</strong>
+            </label>
+            <div className="input-group">
+              <input type="text" className="form-control" id="1" value="69" />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-primary"
+                  disabled
+                  type="button"
+                  id="1"
+                >
+                  <CheckCircle size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {responses &&
             responses.map(
               (response) =>
