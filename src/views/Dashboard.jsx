@@ -77,7 +77,7 @@ export const Dashboard = () => {
             Are you sure you want to delete this response? Once it's gone, it's
             gone.
           </div>
-          <div class="modal-footer">
+          <div className="modal-footer">
             <button
               className="btn btn-white"
               onClick={() => handleModal(false)}

@@ -19,8 +19,6 @@ const Location = ({ data, className }) => {
       break;
   }
 
-  console.log(data);
-
   return (
     <Fragment>
       {locationString && (

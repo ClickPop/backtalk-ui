@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download, FileText } from 'react-feather';
+import { Trash2, Download, FileText, CheckCircle } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -17,6 +17,8 @@ export const Responses = () => {
   const [show, setShow] = useState(false);
   const [deleteResponse, setDeleteResponse] = useState(null);
   const [deleted, setDeleted] = useState(false);
+  const [friendlyNames, setFriendlyNames] = useState({});
+  const [nicknames, setNicknames] = useState({});
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -40,7 +42,24 @@ export const Responses = () => {
               return keys;
             }, []),
         ]);
-        console.log(res.data.results[0]);
+        const fnames = localStorage.getItem(`friendly_${params.hash}`);
+        if (fnames) {
+          setFriendlyNames(JSON.parse(fnames));
+        } else {
+          res.data.results.forEach((response) => {
+            response.data.forEach((r) => {
+              if (r.key) {
+                setFriendlyNames((f) => ({
+                  ...f,
+                  [r.key]: {
+                    value: r.key,
+                    savedValue: r.key,
+                  },
+                }));
+              }
+            });
+          });
+        }
       } catch (error) {
         console.error(error);
         //TODO add error popup
@@ -49,6 +68,14 @@ export const Responses = () => {
     getResponses();
     if (deleted) setDeleted(false);
   }, [params.hash, state.token, deleted]);
+
+  useEffect(() => {
+    responses.forEach((response) => {
+      if (!response.respondent) {
+        setNicknames((n) => ({ ...n, [response.id]: anonymousNickname() }));
+      }
+    });
+  }, [responses]);
 
   const share = async (id, name) => {
     const canvas = await html2canvas(
@@ -92,6 +119,32 @@ export const Responses = () => {
     setShow(display);
   };
 
+  const handleSave = (e, key) => {
+    e.preventDefault();
+    setFriendlyNames({
+      ...friendlyNames,
+      [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
+    });
+    document.getElementById(`${key}_input`).blur();
+    localStorage.setItem(
+      `friendly_${params.hash}`,
+      JSON.stringify({
+        ...friendlyNames,
+        [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
+      }),
+    );
+  };
+
+  const handleFriendlyName = (e) => {
+    setFriendlyNames({
+      ...friendlyNames,
+      [e.target.name]: {
+        ...friendlyNames[e.target.name],
+        value: e.target.value,
+      },
+    });
+  };
+
   const exportCSV = (data) => {
     const keys = new Set(['respondent']);
     data.forEach((record) => {
@@ -99,7 +152,7 @@ export const Responses = () => {
         if (res.id) {
           keys.add(questions.find((q) => q.id === res.id).prompt);
         } else if (res.key) {
-          keys.add(res.key);
+          keys.add(friendlyNames[res.key].value);
         }
       });
     });
@@ -162,9 +215,10 @@ export const Responses = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-12 col-lg-8 offset-lg-2">
+        <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
+          <h2 className="mb-4">Survey Settings</h2>
           {responses && (
-            <div className="d-flex justify-content-end mb-3">
+            <div className="mb-5">
               <button
                 className="btn btn-sm btn-secondary d-flex"
                 onClick={handleCSV}
@@ -173,6 +227,47 @@ export const Responses = () => {
               </button>
             </div>
           )}
+          <h3>URL Questions</h3>
+          <p>
+            You can dynamically add new questions and answers to links you share
+            by adding <span className="text-monospace">?question=answer</span>{' '}
+            paramaters to your survey share URLs.
+          </p>
+
+          {responses &&
+            responses.map(
+              (response) =>
+                response.data &&
+                response.data.map(
+                  (r) =>
+                    r.key && (
+                      <div className="form-group mb-3" key={r.id - response.id}>
+                        <form
+                          onSubmit={(e) => {
+                            handleSave(e, r.key);
+                          }}
+                        >
+                          <label className="fw-bold" htmlFor={`${r.key}_input`}>{r.key}</label>
+                          <div className="input-group mb-2">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id={`${r.key}_input`}
+                              name={r.key}
+                              value={friendlyNames[r.key]?.value || ''}
+                              onChange={handleFriendlyName}
+                            />
+                            <button className="btn btn-primary" type="submit">
+                              <CheckCircle size={18} />
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    ),
+                ),
+            )}
+        </div>
+        <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div>
             {responses.map((response) => (
               <div
@@ -196,7 +291,8 @@ export const Responses = () => {
                               <p className="mt-4 mb-1 response__question">
                                 {decodeHtml(
                                   questions.find((q) => q.id === r.id)
-                                    ?.prompt || r.key,
+                                    ?.prompt ||
+                                    friendlyNames[r.key]?.savedValue,
                                 )}
                               </p>
                               <div className="mb-4 pb-2 response__answer">
@@ -207,7 +303,7 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || anonymousNickname()} from{' '}
+                    &ndash; {response.respondent || nicknames[response.id]} from{' '}
                     <Location data={response.geo} />
                   </p>
                 </div>
