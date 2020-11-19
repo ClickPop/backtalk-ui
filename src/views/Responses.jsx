@@ -124,7 +124,10 @@ export const Responses = () => {
     document.getElementById(`${key}_input`).blur();
     localStorage.setItem(
       `friendly_${params.hash}`,
-      JSON.stringify(friendlyNames),
+      JSON.stringify({
+        ...friendlyNames,
+        [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
+      }),
     );
   };
 
