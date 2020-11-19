@@ -51,7 +51,10 @@ export const Responses = () => {
               if (r.key) {
                 setFriendlyNames((f) => ({
                   ...f,
-                  [r.key]: { edit: false, value: r.key },
+                  [r.key]: {
+                    value: r.key,
+                    savedValue: r.key,
+                  },
                 }));
               }
             });
@@ -112,32 +115,26 @@ export const Responses = () => {
     setShow(display);
   };
 
-  const handleEdit = (key, status) => {
+  const handleSave = (e, key) => {
+    e.preventDefault();
     setFriendlyNames({
       ...friendlyNames,
-      [key]: { ...friendlyNames[key], edit: status },
+      [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
     });
-    if (!status) {
-      localStorage.setItem(
-        `friendly_${params.hash}`,
-        JSON.stringify({
-          ...friendlyNames,
-          [key]: { ...friendlyNames[key], edit: status },
-        }),
-      );
-    }
+    document.getElementById(`${key}_input`).blur();
+    localStorage.setItem(
+      `friendly_${params.hash}`,
+      JSON.stringify(friendlyNames),
+    );
   };
 
-  const handleEnter = (e, key) => {
-    if (e.key === 'Enter') {
-      handleEdit(key, false);
-    }
-  };
-
-  const handleFriendlyName = (e, key) => {
+  const handleFriendlyName = (e) => {
     setFriendlyNames({
       ...friendlyNames,
-      [key]: { ...friendlyNames[key], value: e.target.value },
+      [e.target.name]: {
+        ...friendlyNames[e.target.name],
+        value: e.target.value,
+      },
     });
   };
 
@@ -230,23 +227,6 @@ export const Responses = () => {
             paramaters to your survey share URLs.
           </p>
 
-          <div className="form-group mb-3">
-            <label for="69 fw-bold">069</label>
-            <div className="input-group">
-              <input type="text" className="form-control" id="69" value="69" />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-primary"
-                  disabled
-                  type="button"
-                  id="btn69"
-                >
-                  <CheckCircle size={18} />
-                </button>
-              </div>
-            </div>
-          </div>
-
           {responses &&
             responses.map(
               (response) =>
@@ -254,36 +234,30 @@ export const Responses = () => {
                 response.data.map(
                   (r) =>
                     r.key && (
-                      <div className="form-group" key={r.id - response.id}>
+                      <div className="form-group mb-3" key={r.id - response.id}>
                         <strong>{r.key}</strong>
-                        {friendlyNames[r.key] && !friendlyNames[r.key].edit && (
-                          <p
-                            style={{ pointerEvents: 'cursor' }}
-                            onClick={(e) => {
-                              handleEdit(r.key, true);
-                            }}
-                          >
-                            {friendlyNames[r.key].value}
-                          </p>
-                        )}
-                        {friendlyNames[r.key] && friendlyNames[r.key].edit && (
-                          <p>
+                        <form
+                          onSubmit={(e) => {
+                            handleSave(e, r.key);
+                          }}
+                        >
+                          <label htmlFor="69 fw-bold">069</label>
+                          <div className="input-group">
                             <input
                               type="text"
-                              value={friendlyNames[r.key].value}
-                              onChange={(e) => {
-                                handleFriendlyName(e, r.key);
-                              }}
-                              onBlur={(e) => {
-                                handleEdit(r.key, false);
-                              }}
-                              autoFocus={true}
-                              onKeyPress={(e) => {
-                                handleEnter(e, r.key);
-                              }}
+                              className="form-control"
+                              id={`${r.key}_input`}
+                              name={r.key}
+                              value={friendlyNames[r.key]?.value || ''}
+                              onChange={handleFriendlyName}
                             />
-                          </p>
-                        )}
+                            <div className="input-group-append">
+                              <button className="btn btn-primary" type="submit">
+                                <CheckCircle size={18} />
+                              </button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     ),
                 ),
@@ -313,7 +287,8 @@ export const Responses = () => {
                               <p className="mt-4 mb-1 response__question">
                                 {decodeHtml(
                                   questions.find((q) => q.id === r.id)
-                                    ?.prompt || friendlyNames[r.key]?.value,
+                                    ?.prompt ||
+                                    friendlyNames[r.key]?.savedValue,
                                 )}
                               </p>
                               <div className="mb-4 pb-2 response__answer">
