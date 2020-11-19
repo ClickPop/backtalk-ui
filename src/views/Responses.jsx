@@ -231,17 +231,15 @@ export const Responses = () => {
           </p>
 
           <div className="form-group mb-3">
-            <label for="exampleInputEmail1">
-              <strong>069</strong>
-            </label>
+            <label for="69 fw-bold">069</label>
             <div className="input-group">
-              <input type="text" className="form-control" id="1" value="69" />
+              <input type="text" className="form-control" id="69" value="69" />
               <div className="input-group-append">
                 <button
                   className="btn btn-primary"
                   disabled
                   type="button"
-                  id="1"
+                  id="btn69"
                 >
                   <CheckCircle size={18} />
                 </button>
