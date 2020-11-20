@@ -218,7 +218,7 @@ export const Responses = () => {
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           <h2 className="mb-4">Survey Settings</h2>
           {responses && (
-            <div className="mb-5">
+            <div className="mb-5 d-none d-md-inline-block">
               <button
                 className="btn btn-sm btn-secondary d-flex"
                 onClick={handleCSV}
