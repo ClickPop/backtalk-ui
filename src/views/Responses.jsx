@@ -9,7 +9,8 @@ import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import anonymousNickname from '../helpers/anonymousNickname';
-import html2canvas from 'html2canvas';
+import * as htmlToImage from 'html-to-image';
+import { saveAs } from 'file-saver';
 
 export const Responses = () => {
   const params = useParams();
@@ -79,22 +80,28 @@ export const Responses = () => {
   }, [responses]);
 
   const share = async (id, name) => {
-    const canvas = await html2canvas(
-      document.getElementById(id).getElementsByClassName('card-body')[0],
-      {
-        scrollX: 0,
-        scrollY: -window.scrollY,
-      },
-    );
-    canvas.style.display = 'none';
-    document.body.appendChild(canvas);
-    const image = canvas
-      .toDataURL('image/png')
-      .replace('image/png', 'image/octet-stream');
-    const a = document.createElement('a');
-    a.setAttribute('download', `${id}_${name || 'Anonymous'}.png`);
-    a.setAttribute('href', image);
-    a.click();
+    let hiddenWrapper = document.createElement('div');
+    let shareDiv = document.createElement('div');
+
+    hiddenWrapper.style.visibility='visible';
+    hiddenWrapper.style.position = 'fixed';
+    hiddenWrapper.style.top = '0';
+    hiddenWrapper.style.left = '0';
+    hiddenWrapper.style.clip = 'rect(0 0 0 0)'
+
+    shareDiv.innerHTML = document.getElementById(id).getElementsByClassName('card-body')[0].innerHTML;
+    shareDiv.style.display = 'block';
+    shareDiv.style.width = '450px';
+    shareDiv.classList = 'shared-response bg-light text-dark';
+    
+    document.body.appendChild(hiddenWrapper);
+    hiddenWrapper.appendChild(shareDiv);
+
+    let blob = await htmlToImage.toBlob(shareDiv);
+    saveAs(blob, `Response_${id}_${name || 'Anonymous'}.png`);
+
+    hiddenWrapper.removeChild(shareDiv);
+    document.body.removeChild(hiddenWrapper);
   };
 
   const handleDelete = async (id) => {
@@ -279,37 +286,39 @@ export const Responses = () => {
                 id={response.id}
               >
                 <div className="card-body mx-3 my-2">
-                  <p className="text-muted">
-                    <strong>
-                      <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
-                      <Moment format="h:mm a">{response.createdAt}</Moment>
-                    </strong>
-                  </p>
-                  {response.data &&
-                    response.data.map(
-                      (r) =>
-                        r && (
-                          <div key={`${response.id + r.id}`}>
-                            <Fragment>
-                              <p className="mt-4 mb-1 response__question">
-                                {decodeHtml(
-                                  questions.find((q) => q.id === r.id)
-                                    ?.prompt ||
-                                    friendlyNames[r.key]?.savedValue,
-                                )}
-                              </p>
-                              <div className="mb-4 pb-2 response__answer">
-                                {r.value}
-                              </div>
-                            </Fragment>{' '}
-                          </div>
-                        ),
-                    )}
-                  <p className="mb-0">
-                    &ndash; {response.respondent || nicknames[response.id]}{' '}
-                    <span>from <Location data={response.geo} /></span>{' '}
-                    <span>on <Device data={response.device} /></span>
-                  </p>
+                  <div className="share-content">
+                    <p className="text-muted">
+                      <strong>
+                        <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
+                        <Moment format="h:mm a">{response.createdAt}</Moment>
+                      </strong>
+                    </p>
+                    {response.data &&
+                      response.data.map(
+                        (r) =>
+                          r && (
+                            <div key={`${response.id + r.id}`}>
+                              <Fragment>
+                                <p className="mt-4 mb-1 response__question">
+                                  {decodeHtml(
+                                    questions.find((q) => q.id === r.id)
+                                      ?.prompt ||
+                                      friendlyNames[r.key]?.savedValue,
+                                  )}
+                                </p>
+                                <div className="mb-4 pb-2 response__answer">
+                                  {r.value}
+                                </div>
+                              </Fragment>{' '}
+                            </div>
+                          ),
+                      )}
+                    <p className="mb-0 response__footer">
+                      &ndash; {response.respondent || nicknames[response.id]}{' '}
+                      <span>from <Location data={response.geo} /></span>{' '}
+                      <span>on <Device data={response.device} /></span>
+                    </p>
+                  </div>
                 </div>
                 <div className="response-preview__actions">
                   <button

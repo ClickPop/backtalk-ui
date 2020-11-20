@@ -21,3 +21,17 @@ body {
     padding: 10px;
   }
 }
+
+.shared-response {
+  position: relative;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-size: 50px auto;
+  background-repeat: no-repeat;
+  background-position: 100% 1rem;
+  background-image: url(../images/bktk-logo-o50.png);
+
+  .response__footer {
+    margin-bottom: 0;
+  }
+}
