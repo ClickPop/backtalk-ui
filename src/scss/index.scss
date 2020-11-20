@@ -24,7 +24,7 @@ body {
 
 .shared-response {
   background-image: url('../images/bktk-logo-o50.png');
-  background-position: 0 calc(100% - 25px);
+  background-position: 1rem calc(100% - 43px);
   background-repeat: no-repeat;
   background-size: 28px auto;
   box-sizing: border-box;
@@ -39,7 +39,7 @@ body {
       display: block;
       margin-top: 1rem;
       margin-left: 32px;
-      opacity: 0.5;
+      opacity: 0.6;
     }
   }
 }
