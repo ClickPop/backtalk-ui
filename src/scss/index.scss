@@ -21,3 +21,25 @@ body {
     padding: 10px;
   }
 }
+
+.shared-response {
+  background-image: url('../images/bktk-logo-o50.png');
+  background-position: 1rem calc(100% - 43px);
+  background-repeat: no-repeat;
+  background-size: 28px auto;
+  box-sizing: border-box;
+  position: relative;
+
+  .response__footer {
+    margin-bottom: 0;
+
+    &:after {
+      color: $grey-100;
+      content: 'powered by backtalk.io';
+      display: block;
+      margin-top: 1rem;
+      margin-left: 32px;
+      opacity: 0.6;
+    }
+  }
+}
