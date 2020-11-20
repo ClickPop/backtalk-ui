@@ -9,7 +9,7 @@ const Changelog = () => {
     if (!state.auth) {
       dispatch({ type: 'SET_NAVBAR', payload: 'public' });
     }
-  }, [dispatch]);
+  }, [dispatch, state.auth]);
 
   return (
     <div className="container">
