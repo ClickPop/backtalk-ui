@@ -63,14 +63,14 @@ const Navbar = ({ logo }) => {
             <NavItem
               pathname={'/changelog'}
               text={"What's New"}
-              className="btn btn-white"
+              className="btn btn-link"
             />
             {!state.auth ? (
               <>
                 <NavItem
                   pathname={'/login'}
                   text={'Login'}
-                  className={'btn btn-white'}
+                  className={'btn btn-link'}
                 />
                 <NavItem
                   pathname={'/register'}
@@ -79,7 +79,11 @@ const Navbar = ({ logo }) => {
                 />
               </>
             ) : (
-              <NavItem onClick={handleLogout} text={'Logout'} className="btn" />
+              <NavItem
+                onClick={handleLogout}
+                text={'Logout'}
+                className="btn btn-link"
+              />
             )}
           </ul>
         </div>
