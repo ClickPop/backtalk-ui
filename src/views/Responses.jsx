@@ -218,7 +218,7 @@ export const Responses = () => {
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           <h2 className="mb-4">Survey Settings</h2>
           {responses && (
-            <div className="mb-5">
+            <div className="mb-5 d-none d-md-inline-block">
               <button
                 className="btn btn-sm btn-secondary d-flex"
                 onClick={handleCSV}
@@ -247,7 +247,9 @@ export const Responses = () => {
                             handleSave(e, r.key);
                           }}
                         >
-                          <label className="fw-bold" htmlFor={`${r.key}_input`}>{r.key}</label>
+                          <label className="fw-bold" htmlFor={`${r.key}_input`}>
+                            {r.key}
+                          </label>
                           <div className="input-group mb-2">
                             <input
                               type="text"
@@ -310,7 +312,7 @@ export const Responses = () => {
                 <div className="response-preview__actions">
                   <button
                     type="button"
-                    className="btn p-1"
+                    className="btn p-1 d-none d-md-inline-block"
                     onClick={() => share(response.id, response.respondent)}
                   >
                     <Download size={18} />

@@ -60,6 +60,11 @@ const Navbar = ({ logo }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <div className="navbar-nav justify-content-end ml-auto">
+            <NavItem
+              pathname={'/changelog'}
+              text={"What's New"}
+              className="btn btn-link"
+            />
             {!state.auth ? (
               <div>
                 <NavItem
@@ -74,7 +79,11 @@ const Navbar = ({ logo }) => {
                 />
               </div>
             ) : (
-              <NavItem onClick={handleLogout} text={'Logout'} className="btn btn-outline-primary" />
+              <NavItem
+                onClick={handleLogout}
+                text={'Logout'}
+                className="btn btn-link"
+              />
             )}
           </div>
         </div>
