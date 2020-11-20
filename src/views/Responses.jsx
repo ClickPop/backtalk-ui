@@ -94,7 +94,7 @@ export const Responses = () => {
       .getElementsByClassName('card-body')[0].innerHTML;
     shareDiv.style.display = 'block';
     shareDiv.style.width = '500px';
-    shareDiv.classList = 'shared-response pa-5 text-dark bg-white';
+    shareDiv.classList = 'shared-response p-3 text-dark bg-white';
 
     document.body.appendChild(hiddenWrapper);
     hiddenWrapper.appendChild(shareDiv);
