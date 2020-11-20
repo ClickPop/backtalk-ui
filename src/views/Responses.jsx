@@ -304,9 +304,9 @@ export const Responses = () => {
                         ),
                     )}
                   <p className="mb-0">
-                    &ndash; {response.respondent || nicknames[response.id]} from{' '}
-                    <Location data={response.geo} /> on{' '}
-                    <Device data={response.device} />
+                    &ndash; {response.respondent || nicknames[response.id]}{' '}
+                    <span>from <Location data={response.geo} /></span>{' '}
+                    <span>on <Device data={response.device} /></span>
                   </p>
                 </div>
                 <div className="response-preview__actions">
