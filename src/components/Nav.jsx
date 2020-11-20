@@ -43,7 +43,7 @@ const Navbar = ({ logo }) => {
           <img
             src={logo}
             className="navbar-logo"
-            alt="Survey Says"
+            alt="Backtalk"
             loading="lazy"
           />
         </Link>
@@ -59,24 +59,24 @@ const Navbar = ({ logo }) => {
           <span className="navbar-toggler-icon"> </span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav justify-content-end ml-auto">
+          <div className="navbar-nav justify-content-end ml-auto">
             {!state.auth ? (
-              <>
+              <div>
                 <NavItem
                   pathname={'/login'}
                   text={'Login'}
-                  className={'btn btn-white'}
+                  className={'btn btn-link'}
                 />
                 <NavItem
                   pathname={'/register'}
                   text={'Sign Up'}
                   className={'btn btn-primary'}
                 />
-              </>
+              </div>
             ) : (
-              <NavItem onClick={handleLogout} text={'Logout'} className="btn" />
+              <NavItem onClick={handleLogout} text={'Logout'} className="btn btn-outline-primary" />
             )}
-          </ul>
+          </div>
         </div>
       </nav>
     </div>
