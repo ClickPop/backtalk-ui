@@ -83,17 +83,19 @@ export const Responses = () => {
     let hiddenWrapper = document.createElement('div');
     let shareDiv = document.createElement('div');
 
-    hiddenWrapper.style.visibility='visible';
+    hiddenWrapper.style.visibility = 'visible';
     hiddenWrapper.style.position = 'fixed';
     hiddenWrapper.style.top = '0';
     hiddenWrapper.style.left = '0';
-    hiddenWrapper.style.clip = 'rect(0 0 0 0)'
+    hiddenWrapper.style.clip = 'rect(0 0 0 0)';
 
-    shareDiv.innerHTML = document.getElementById(id).getElementsByClassName('card-body')[0].innerHTML;
+    shareDiv.innerHTML = document
+      .getElementById(id)
+      .getElementsByClassName('card-body')[0].innerHTML;
     shareDiv.style.display = 'block';
-    shareDiv.style.width = '450px';
-    shareDiv.classList = 'shared-response bg-light text-dark';
-    
+    shareDiv.style.width = '500px';
+    shareDiv.classList = 'shared-response pa-5 text-dark';
+
     document.body.appendChild(hiddenWrapper);
     hiddenWrapper.appendChild(shareDiv);
 
@@ -289,7 +291,9 @@ export const Responses = () => {
                   <div className="share-content">
                     <p className="text-muted">
                       <strong>
-                        <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
+                        <Moment format="MMM D, YYYY">
+                          {response.createdAt}
+                        </Moment>{' '}
                         <Moment format="h:mm a">{response.createdAt}</Moment>
                       </strong>
                     </p>
@@ -315,8 +319,12 @@ export const Responses = () => {
                       )}
                     <p className="mb-0 response__footer">
                       &ndash; {response.respondent || nicknames[response.id]}{' '}
-                      <span>from <Location data={response.geo} /></span>{' '}
-                      <span>on <Device data={response.device} /></span>
+                      <span>
+                        from <Location data={response.geo} />
+                      </span>{' '}
+                      <span>
+                        on <Device data={response.device} />
+                      </span>
                     </p>
                   </div>
                 </div>
