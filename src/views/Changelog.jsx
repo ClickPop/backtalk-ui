@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import { Button } from '../components/Button';
 import { ChangelogEntry } from '../components/ChangelogEntry';
 import { context } from '../context/Context';
 
