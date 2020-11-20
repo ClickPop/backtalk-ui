@@ -2,6 +2,7 @@ import * as axios from 'axios';
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import Moment from 'react-moment';
 import { Location } from '../components/Location';
+import { Device } from '../components/Device';
 import { useParams } from 'react-router-dom';
 import { Trash2, Download, FileText, CheckCircle } from 'react-feather';
 import { context } from '../context/Context';
@@ -304,7 +305,8 @@ export const Responses = () => {
                     )}
                   <p className="mb-0">
                     &ndash; {response.respondent || nicknames[response.id]} from{' '}
-                    <Location data={response.geo} />
+                    <Location data={response.geo} /> on{' '}
+                    <Device data={response.device} />
                   </p>
                 </div>
                 <div className="response-preview__actions">
