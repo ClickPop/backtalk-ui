@@ -20,6 +20,11 @@ const Changelog = () => {
             A list of all the ways Backtalk is making it easier to get the
             answers you need, quickly.
           </p>
+          <ChangelogEntry
+            title="Device Details for Responses"
+            date="November 20, 2020"
+            description="It's the little details that matter most, so we added just a little flag at the bottom of each response to let you know what devices are being used by your audience. Additionally, we made some other small visual changes and minor bug fixes... but we doubt most people will even notice."
+          />
 
           <ChangelogEntry
             title="Friendly Names for URL Questions"
