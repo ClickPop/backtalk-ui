@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './views/Home';
+import Changelog from './views/Changelog';
 import Login from './views/Login';
 import Register from './views/Register';
 import FirstSurvey from './views/FirstSurvey';
@@ -33,11 +34,11 @@ const insertVersionMeta = async () => {
     metaAPI.content = apiDetails.api.version || 'unknown';
     document.getElementsByTagName('head')[0].appendChild(metaAPI);
   }
-}
+};
 
 const App = () => {
   const { state, dispatch } = useContext(context);
-  const [ metaAdded, setMetaAdded ] = useState(false);
+  const [metaAdded, setMetaAdded] = useState(false);
 
   useEffect(() => {
     let canceled = false;
@@ -89,6 +90,7 @@ const App = () => {
               component={Responses}
             />
             <Route exact path="/" component={Home} />
+            <Route exact path="/changelog" component={Changelog} />
             <Route path="/survey/:hash" component={Response} />
             <Route component={Error404} />
           </Switch>
