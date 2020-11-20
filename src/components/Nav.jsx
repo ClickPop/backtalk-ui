@@ -60,6 +60,11 @@ const Navbar = ({ logo }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav justify-content-end ml-auto">
+            <NavItem
+              pathname={'/changelog'}
+              text={"What's New"}
+              className="btn btn-white"
+            />
             {!state.auth ? (
               <>
                 <NavItem
