@@ -1,21 +1,5 @@
 .btn {
-  border-radius: 0.3rem;
-
-  &-primary {
-    background-color: $primary;
-    border-color: $primary;
-
-    &:hover {
-      background-color: darken($primary, 10%);
-      border-color: darken($primary, 10%);
-    }
-  }
-}
-
-a {
-  color: $primary;
-
-  &:hover {
-    color: darken($primary, 10%);
+  &-link {
+    text-decoration: none;
   }
 }

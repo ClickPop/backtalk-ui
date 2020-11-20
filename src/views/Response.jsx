@@ -193,15 +193,6 @@ export const Response = ({ location }) => {
     <div className="survey d-flex py-md-4">
       {survey && (
         <div className="container p-0 d-flex flex-column survey__container">
-          {/*
-          <header className="no-gutters survey-chat__header">
-            <figure className="avatar mini rounded-circle border border-primary overflow-hidden bg-light">
-              <img src={avatar} alt="Survey Says" loading="lazy" />
-            </figure>
-            <h1 className="text-center survey-chat__title">{survey.title}</h1>
-          </header>
-          */}
-
           <div className="d-flex flex-column survey__feed">
             <Scrollbars>
               {survey?.current?.questions &&
