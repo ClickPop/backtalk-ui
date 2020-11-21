@@ -66,6 +66,7 @@
   &__question .message {
     background-color: $white;
     color: $body-color;
+    animation: slideRight 0.2s ease-in-out 0.5s both;
 
     @media screen and (min-width: $screen-md) {
       background-color: $survey-bg;
@@ -76,5 +77,42 @@
     background-color: $primary;
     color: $white;
     margin-left: auto;
+    animation: slideLeft 0.2s ease-in-out both;
+  }
+
+  @keyframes slideRight {
+    0% {
+      transform: scaleY(0);
+      opacity: 0;
+      margin-left: -30vw;
+    }
+
+    80% {
+      transform: scaleY(0.5);
+    }
+
+    100% {
+      transform: scaleY(1);
+      opacity: 1;
+      margin-left: 0vw;
+    }
+  }
+
+  @keyframes slideLeft {
+    0% {
+      transform: scaleY(0);
+      opacity: 0;
+      margin-right: -30vw;
+    }
+
+    80% {
+      transform: scaleY(0.5);
+    }
+
+    100% {
+      transform: scaleY(1);
+      opacity: 1;
+      margin-right: 0vw;
+    }
   }
 }
