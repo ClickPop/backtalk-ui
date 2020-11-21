@@ -15,9 +15,15 @@ import { Error404 } from './views/Error404';
 import { Response } from './views/Response';
 import { Responses } from './views/Responses';
 import packageJson from '../package.json';
+import TagManager from 'react-gtm-module';
 
-if (process.env.NODE_ENV === 'production')
+if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+  const TagManagerArgs = {
+    gtmId: 'GTM-588SGLL',
+  };
+  TagManager.initialize(TagManagerArgs);
+}
 
 axios.defaults.withCredentials = true;
 
