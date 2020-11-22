@@ -239,22 +239,16 @@ export const Response = ({ location }) => {
                       )}
                     </div>
                   )}
-                <div
-                  className="survey__set"
-                  style={{
-                    height: surveyEnd(survey.current, cursor) ? 'auto' : 0,
-                    opacity: surveyEnd(survey.current, cursor) ? 1 : 0,
-                    overflow: 'hidden',
-                    transition: 'opacity 0.7s ease-in-out 0.5s',
-                  }}
-                >
-                  <div className="survey__question">
-                    <h2 className="message">
-                      Thanks for answering! You can make a survey of your own in
-                      just a few seconds with <a href="/">Backtalk</a>
-                    </h2>
+                {surveyEnd(survey.current, cursor) && (
+                  <div className="survey__set">
+                    <div className="survey__question">
+                      <h2 className="message">
+                        Thanks for answering! You can make a survey of your own
+                        in just a few seconds with <a href="/">Backtalk</a>
+                      </h2>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </Scrollbars>
           </div>
