@@ -195,7 +195,10 @@ export const Response = ({ location }) => {
         <div className="container p-0 d-flex flex-column survey__container">
           <div className="d-flex flex-column survey__feed">
             <Scrollbars>
-              <div className="h-100 d-flex flex-column justify-content-end">
+              <div
+                className="d-flex flex-column justify-content-end justify-content-md-start mb-2 mb-0-md"
+                style={{ overflow: 'auto', minHeight: '100%' }}
+              >
                 {survey?.current?.questions &&
                   survey.current.questions.map(
                     (question, i) =>
