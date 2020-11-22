@@ -66,7 +66,7 @@
   &__question .message {
     background-color: $white;
     color: $body-color;
-    animation: slideRight 0.2s ease-in-out 0.5s both;
+    animation: slideRight 0.3s ease-in-out 0.2s both;
 
     @media screen and (min-width: $screen-md) {
       background-color: $survey-bg;
@@ -77,7 +77,7 @@
     background-color: $primary;
     color: $white;
     margin-left: auto;
-    animation: slideLeft 0.2s ease-in-out both;
+    animation: slideLeft 0.3s ease-in-out both;
   }
 
   @keyframes slideRight {

@@ -185,8 +185,26 @@ export const Response = ({ location }) => {
   };
 
   const scrollResponse = () => {
-    const feed = document.querySelector('.survey__feed');
-    feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
+    // const feed = document.querySelector('.survey__feed');
+    // feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
+    const c = cursor + 1;
+    let selector;
+    if (c < survey?.current?.questions?.length) {
+      selector = document.querySelector(`#response-${c}`);
+    } else if (
+      c === survey?.current?.questions?.length &&
+      survey.current.respondent
+    ) {
+      selector = document.querySelector('#respondent-question');
+    } else if (
+      c === survey?.current?.questions?.length + 1 &&
+      survey.current.respondent
+    ) {
+      selector = document.querySelector('#survey-end');
+    }
+    selector.scrollIntoView({ behavior: 'smooth' });
+    // setTimeout(() => {
+    // }, 200);
   };
 
   return (
@@ -197,7 +215,11 @@ export const Response = ({ location }) => {
             <Scrollbars>
               <div
                 className="d-flex flex-column justify-content-end justify-content-md-start mb-2 mb-0-md"
-                style={{ overflow: 'auto', minHeight: '100%' }}
+                style={{
+                  overflow: 'auto',
+                  overflowX: 'hidden',
+                  minHeight: '100%',
+                }}
               >
                 {survey?.current?.questions &&
                   survey.current.questions.map(
@@ -206,7 +228,7 @@ export const Response = ({ location }) => {
                       cursor >= i && (
                         <div className="survey__set" key={question.id}>
                           <div className="survey__question">
-                            <h2 className="message">
+                            <h2 className="message" id={`response-${i}`}>
                               {decodeHtml(question.prompt)}
                             </h2>
                           </div>
@@ -224,7 +246,7 @@ export const Response = ({ location }) => {
                   cursor >= survey.current.questions.length && (
                     <div className="survey__set">
                       <div className="survey__question">
-                        <h2 className="message">
+                        <h2 className="message" id={`respondent-question`}>
                           Thanks! Would you please leave an email address or
                           twitter or Instagram handle so we can get in touch?
                           <br />
@@ -242,7 +264,7 @@ export const Response = ({ location }) => {
                 {surveyEnd(survey.current, cursor) && (
                   <div className="survey__set">
                     <div className="survey__question">
-                      <h2 className="message">
+                      <h2 className="message" id={`survey-end`}>
                         Thanks for answering! You can make a survey of your own
                         in just a few seconds with <a href="/">Backtalk</a>
                       </h2>
