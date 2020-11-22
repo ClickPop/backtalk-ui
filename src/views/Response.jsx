@@ -1,8 +1,7 @@
 import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { ChevronRight, ChevronLeft } from 'react-feather';
+import { ChevronRight, ChevronLeft, Smile } from 'react-feather';
 import decodeHtml from '../helpers/decodeHtml';
 // import defaultAvatar from '../images/default-avatar.png';
 
@@ -185,8 +184,28 @@ export const Response = ({ location }) => {
   };
 
   const scrollResponse = () => {
-    const feed = document.querySelector('.survey__feed');
-    feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
+    /** I double commented your new code, pre-commented is still single commented */
+    // const feed = document.querySelector('.survey__feed');
+    // feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
+    // // const c = cursor + 1;
+    let selector = document.querySelector('#scroll-to-this');
+    console.log(selector);
+    // // if (c < survey?.current?.questions?.length) {
+    // //   selector = document.querySelector(`#response-${c}`);
+    // // } else if (
+    // //   c === survey?.current?.questions?.length &&
+    // //   survey.current.respondent
+    // // ) {
+    // //   selector = document.querySelector('#respondent-question');
+    // // } else if (
+    // //   c === survey?.current?.questions?.length + 1 &&
+    // //   survey.current.respondent
+    // // ) {
+    // //   selector = document.querySelector('#survey-end');
+    // // }
+    selector.scrollIntoView({ behavior: 'smooth' });
+    // // setTimeout(() => {
+    // // }, 200);
   };
 
   return (
@@ -194,7 +213,7 @@ export const Response = ({ location }) => {
       {survey && (
         <div className="container p-0 d-flex flex-column survey__container">
           <div className="d-flex flex-column survey__feed">
-            <Scrollbars>
+            <div className="d-flex flex-column survey__feedItems">
               {survey?.current?.questions &&
                 survey.current.questions.map(
                   (question, i) =>
@@ -202,7 +221,7 @@ export const Response = ({ location }) => {
                     cursor >= i && (
                       <div className="survey__set" key={question.id}>
                         <div className="survey__question">
-                          <h2 className="message">
+                          <h2 className="message" id={`response-${i}`}>
                             {decodeHtml(question.prompt)}
                           </h2>
                         </div>
@@ -220,7 +239,7 @@ export const Response = ({ location }) => {
                 cursor >= survey.current.questions.length && (
                   <div className="survey__set">
                     <div className="survey__question">
-                      <h2 className="message">
+                      <h2 className="message" id={`respondent-question`}>
                         Thanks! Would you please leave an email address or
                         twitter or Instagram handle so we can get in touch?
                         <br />
@@ -235,23 +254,18 @@ export const Response = ({ location }) => {
                     )}
                   </div>
                 )}
-              <div
-                className="survey__set"
-                style={{
-                  height: surveyEnd(survey.current, cursor) ? 'auto' : 0,
-                  opacity: surveyEnd(survey.current, cursor) ? 1 : 0,
-                  overflow: 'hidden',
-                  transition: 'opacity 0.7s ease-in-out 0.5s',
-                }}
-              >
-                <div className="survey__question">
-                  <h2 className="message">
-                    Thanks for answering! You can make a survey of your own in
-                    just a few seconds with <a href="/">Backtalk</a>
-                  </h2>
+              {surveyEnd(survey.current, cursor) && (
+                <div className="survey__set">
+                  <div className="survey__question">
+                    <h2 className="message" id={`survey-end`}>
+                      Thanks for answering! You can make a survey of your own in
+                      just a few seconds with <a href="/">Backtalk</a>
+                    </h2>
+                  </div>
                 </div>
-              </div>
-            </Scrollbars>
+              )}
+              <div id="scroll-to-this"></div>
+            </div>
           </div>
 
           <div className="survey__footer px-2 pb-4 px-md-0 pb-md-0">
@@ -273,6 +287,7 @@ export const Response = ({ location }) => {
                         <textarea
                           autoFocus={true}
                           autoCorrect="off"
+                          autoComplete="off"
                           name={survey?.current.questions[cursor].id}
                           onChange={handleChange}
                           value={currentResponse.value}
@@ -316,9 +331,7 @@ export const Response = ({ location }) => {
                     className="text-center display-6"
                     style={{ width: '100%' }}
                   >
-                    <span role="img" aria-label="happy face">
-                      😂
-                    </span>
+                    <Smile size={24} />
                   </div>
                 )}
               </div>

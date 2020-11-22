@@ -1,0 +1,44 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+    margin-left: -30vw;
+  }
+
+  80% {
+    transform: scaleY(0.5);
+  }
+
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+    margin-left: 0vw;
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+    margin-right: -30vw;
+  }
+
+  80% {
+    transform: scaleY(0.5);
+  }
+
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+    margin-right: 0vw;
+  }
+}
