@@ -24,7 +24,11 @@
     overflow-y: scroll;
 
     &Items {
-      height: 100%;
+      margin-top: auto;
+
+      @media screen and (min-width: $screen-md) {
+        margin-top: 0;
+      }
     }
   }
 
