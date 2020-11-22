@@ -2,7 +2,7 @@ import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { ChevronRight, ChevronLeft, Smile} from 'react-feather';
+import { ChevronRight, ChevronLeft, Smile } from 'react-feather';
 import decodeHtml from '../helpers/decodeHtml';
 // import defaultAvatar from '../images/default-avatar.png';
 
@@ -215,14 +215,7 @@ export const Response = ({ location }) => {
         <div className="container p-0 d-flex flex-column survey__container">
           <div className="d-flex flex-column survey__feed">
             <Scrollbars>
-              <div
-                className="d-flex flex-column justify-content-end justify-content-md-start mb-2 mb-0-md"
-                style={{
-                  overflow: 'auto',
-                  overflowX: 'hidden',
-                  minHeight: '100%',
-                }}
-              >
+              <div className="d-flex flex-column justify-content-end justify-content-md-start survey__feedItems">
                 {survey?.current?.questions &&
                   survey.current.questions.map(
                     (question, i) =>
@@ -297,6 +290,7 @@ export const Response = ({ location }) => {
                         <textarea
                           autoFocus={true}
                           autoCorrect="off"
+                          autoComplete="off"
                           name={survey?.current.questions[cursor].id}
                           onChange={handleChange}
                           value={currentResponse.value}
