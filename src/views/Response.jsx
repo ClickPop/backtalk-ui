@@ -2,7 +2,7 @@ import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { ChevronRight, ChevronLeft } from 'react-feather';
+import { ChevronRight, ChevronLeft, Smile} from 'react-feather';
 import decodeHtml from '../helpers/decodeHtml';
 // import defaultAvatar from '../images/default-avatar.png';
 
@@ -340,9 +340,7 @@ export const Response = ({ location }) => {
                     className="text-center display-6"
                     style={{ width: '100%' }}
                   >
-                    <span role="img" aria-label="happy face">
-                      😂
-                    </span>
+                    <Smile size={24} />
                   </div>
                 )}
               </div>
