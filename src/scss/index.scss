@@ -43,3 +43,10 @@ body {
     }
   }
 }
+
+.home-preview {
+  border: 1px solid rgba($primary, 0.1);
+  border-radius: $base-border-radius;
+  box-shadow: $base-box-shadow;
+  padding: 20px;
+}
