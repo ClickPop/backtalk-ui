@@ -23,10 +23,8 @@
     flex: 1;
     overflow-y: scroll;
 
-    &items {
-      min-height: 100%;
-      overflow-y: scroll;
-      overflow-x: hidden;
+    &Items {
+      height: 100%;
     }
   }
 

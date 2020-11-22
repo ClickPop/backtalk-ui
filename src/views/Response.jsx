@@ -213,7 +213,7 @@ export const Response = ({ location }) => {
       {survey && (
         <div className="container p-0 d-flex flex-column survey__container">
           <div className="d-flex flex-column survey__feed">
-            <div className="d-flex flex-column justify-content-end justify-content-md-start survey__feedItems">
+            <div className="d-flex flex-column survey__feedItems">
               {survey?.current?.questions &&
                 survey.current.questions.map(
                   (question, i) =>
