@@ -50,6 +50,7 @@ export const Responses = () => {
         } else {
           res.data.results.forEach((response) => {
             response.data.forEach((r) => {
+              console.log(r.key);
               if (r.key) {
                 setFriendlyNames((f) => ({
                   ...f,
@@ -244,40 +245,33 @@ export const Responses = () => {
             paramaters to your survey share URLs.
           </p>
 
-          {responses &&
-            responses.map(
-              (response) =>
-                response.data &&
-                response.data.map(
-                  (r) =>
-                    r.key && (
-                      <div className="form-group mb-3" key={r.id - response.id}>
-                        <form
-                          onSubmit={(e) => {
-                            handleSave(e, r.key);
-                          }}
-                        >
-                          <label className="fw-bold" htmlFor={`${r.key}_input`}>
-                            {r.key}
-                          </label>
-                          <div className="input-group mb-2">
-                            <input
-                              type="text"
-                              className="form-control"
-                              id={`${r.key}_input`}
-                              name={r.key}
-                              value={friendlyNames[r.key]?.value || ''}
-                              onChange={handleFriendlyName}
-                            />
-                            <button className="btn btn-primary" type="submit">
-                              <CheckCircle size={18} />
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    ),
-                ),
-            )}
+          {friendlyNames &&
+            Object.keys(friendlyNames).map((name) => (
+              <div className="form-group mb-3" key={name}>
+                <form
+                  onSubmit={(e) => {
+                    handleSave(e, name);
+                  }}
+                >
+                  <label className="fw-bold" htmlFor={`${name}_input`}>
+                    {name}
+                  </label>
+                  <div className="input-group mb-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id={`${name}_input`}
+                      name={name}
+                      value={friendlyNames[name]?.value || ''}
+                      onChange={handleFriendlyName}
+                    />
+                    <button className="btn btn-primary" type="submit">
+                      <CheckCircle size={18} />
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div>
@@ -299,9 +293,9 @@ export const Responses = () => {
                     </p>
                     {response.data &&
                       response.data.map(
-                        (r) =>
+                        (r, i) =>
                           r && (
-                            <div key={`${response.id + r.id}`}>
+                            <div key={`${r.id || r.key}_${response.id}_${i}`}>
                               <Fragment>
                                 <p className="mt-4 mb-1 response__question">
                                   {decodeHtml(
