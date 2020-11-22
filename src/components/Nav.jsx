@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import { context } from '../context/Context';
@@ -66,7 +66,7 @@ const Navbar = ({ logo }) => {
               className="btn btn-link"
             />
             {!state.auth ? (
-              <div>
+              <Fragment>
                 <NavItem
                   pathname={'/login'}
                   text={'Login'}
@@ -77,7 +77,7 @@ const Navbar = ({ logo }) => {
                   text={'Sign Up'}
                   className={'btn btn-primary'}
                 />
-              </div>
+              </Fragment>
             ) : (
               <NavItem
                 onClick={handleLogout}
