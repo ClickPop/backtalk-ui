@@ -185,26 +185,28 @@ export const Response = ({ location }) => {
   };
 
   const scrollResponse = () => {
+    /** I double commented your new code, pre-commented is still single commented */
     // const feed = document.querySelector('.survey__feed');
     // feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
-    const c = cursor + 1;
-    let selector;
-    if (c < survey?.current?.questions?.length) {
-      selector = document.querySelector(`#response-${c}`);
-    } else if (
-      c === survey?.current?.questions?.length &&
-      survey.current.respondent
-    ) {
-      selector = document.querySelector('#respondent-question');
-    } else if (
-      c === survey?.current?.questions?.length + 1 &&
-      survey.current.respondent
-    ) {
-      selector = document.querySelector('#survey-end');
-    }
+    // // const c = cursor + 1;
+    let selector = document.querySelector('#scroll-to-this');
+    console.log(selector);
+    // // if (c < survey?.current?.questions?.length) {
+    // //   selector = document.querySelector(`#response-${c}`);
+    // // } else if (
+    // //   c === survey?.current?.questions?.length &&
+    // //   survey.current.respondent
+    // // ) {
+    // //   selector = document.querySelector('#respondent-question');
+    // // } else if (
+    // //   c === survey?.current?.questions?.length + 1 &&
+    // //   survey.current.respondent
+    // // ) {
+    // //   selector = document.querySelector('#survey-end');
+    // // }
     selector.scrollIntoView({ behavior: 'smooth' });
-    // setTimeout(() => {
-    // }, 200);
+    // // setTimeout(() => {
+    // // }, 200);
   };
 
   return (
@@ -271,6 +273,7 @@ export const Response = ({ location }) => {
                     </div>
                   </div>
                 )}
+                <div id="scroll-to-this"></div>
               </div>
             </Scrollbars>
           </div>
