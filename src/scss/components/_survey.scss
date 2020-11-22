@@ -21,6 +21,7 @@
 
   &__feed {
     flex: 1;
+    overflow-y: scroll;
 
     &items {
       min-height: 100%;

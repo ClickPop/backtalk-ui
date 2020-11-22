@@ -1,6 +1,7 @@
 @import 'components/variables', 'components/animations', 'bootstrap',
   'components/fonts', 'components/button', 'components/typography',
-  'components/nav', 'components/card', 'components/survey';
+  'components/nav', 'components/card', 'components/survey',
+  'components/scrollbar';
 
 body {
   background: $base-bg-color;

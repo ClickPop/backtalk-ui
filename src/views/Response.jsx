@@ -1,7 +1,6 @@
 import * as axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { ChevronRight, ChevronLeft, Smile } from 'react-feather';
 import decodeHtml from '../helpers/decodeHtml';
 // import defaultAvatar from '../images/default-avatar.png';
@@ -214,61 +213,59 @@ export const Response = ({ location }) => {
       {survey && (
         <div className="container p-0 d-flex flex-column survey__container">
           <div className="d-flex flex-column survey__feed">
-            <Scrollbars>
-              <div className="d-flex flex-column justify-content-end justify-content-md-start survey__feedItems">
-                {survey?.current?.questions &&
-                  survey.current.questions.map(
-                    (question, i) =>
-                      question.type !== 'query' &&
-                      cursor >= i && (
-                        <div className="survey__set" key={question.id}>
-                          <div className="survey__question">
-                            <h2 className="message" id={`response-${i}`}>
-                              {decodeHtml(question.prompt)}
-                            </h2>
-                          </div>
-                          <div className="survey__response">
-                            <pre className="message">
-                              {responses.length > 0 &&
-                                i < cursor &&
-                                responses[i].value}
-                            </pre>
-                          </div>
+            <div className="d-flex flex-column justify-content-end justify-content-md-start survey__feedItems">
+              {survey?.current?.questions &&
+                survey.current.questions.map(
+                  (question, i) =>
+                    question.type !== 'query' &&
+                    cursor >= i && (
+                      <div className="survey__set" key={question.id}>
+                        <div className="survey__question">
+                          <h2 className="message" id={`response-${i}`}>
+                            {decodeHtml(question.prompt)}
+                          </h2>
                         </div>
-                      ),
-                  )}
-                {survey?.current?.respondent &&
-                  cursor >= survey.current.questions.length && (
-                    <div className="survey__set">
-                      <div className="survey__question">
-                        <h2 className="message" id={`respondent-question`}>
-                          Thanks! Would you please leave an email address or
-                          twitter or Instagram handle so we can get in touch?
-                          <br />
-                          <br />
-                          <em>nbd if you don't want to.</em>
-                        </h2>
-                      </div>
-                      {surveyEnd(survey.current, cursor) && (
                         <div className="survey__response">
-                          <p className="message">{name}</p>
+                          <pre className="message">
+                            {responses.length > 0 &&
+                              i < cursor &&
+                              responses[i].value}
+                          </pre>
                         </div>
-                      )}
-                    </div>
-                  )}
-                {surveyEnd(survey.current, cursor) && (
+                      </div>
+                    ),
+                )}
+              {survey?.current?.respondent &&
+                cursor >= survey.current.questions.length && (
                   <div className="survey__set">
                     <div className="survey__question">
-                      <h2 className="message" id={`survey-end`}>
-                        Thanks for answering! You can make a survey of your own
-                        in just a few seconds with <a href="/">Backtalk</a>
+                      <h2 className="message" id={`respondent-question`}>
+                        Thanks! Would you please leave an email address or
+                        twitter or Instagram handle so we can get in touch?
+                        <br />
+                        <br />
+                        <em>nbd if you don't want to.</em>
                       </h2>
                     </div>
+                    {surveyEnd(survey.current, cursor) && (
+                      <div className="survey__response">
+                        <p className="message">{name}</p>
+                      </div>
+                    )}
                   </div>
                 )}
-                <div id="scroll-to-this"></div>
-              </div>
-            </Scrollbars>
+              {surveyEnd(survey.current, cursor) && (
+                <div className="survey__set">
+                  <div className="survey__question">
+                    <h2 className="message" id={`survey-end`}>
+                      Thanks for answering! You can make a survey of your own in
+                      just a few seconds with <a href="/">Backtalk</a>
+                    </h2>
+                  </div>
+                </div>
+              )}
+              <div id="scroll-to-this"></div>
+            </div>
           </div>
 
           <div className="survey__footer px-2 pb-4 px-md-0 pb-md-0">
