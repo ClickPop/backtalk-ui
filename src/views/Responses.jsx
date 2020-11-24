@@ -14,6 +14,8 @@ import { saveAs } from 'file-saver';
 
 export const Responses = () => {
   const params = useParams();
+  const [survey, setSurvey] = useState({});
+  const [surveyTitle, setSurveyTitle] = useState('');
   const [responses, setResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [show, setShow] = useState(false);
@@ -28,6 +30,8 @@ export const Responses = () => {
         const res = await axios.get(`/api/v1/responses/${params.hash}`, {
           headers: { Authorization: `Bearer ${state.token}` },
         });
+        setSurvey(res.data.survey);
+        setSurveyTitle(res.data.survey.title);
         setResponses(
           res.data.results.sort(
             (a, b) =>
@@ -223,22 +227,60 @@ export const Responses = () => {
     }
   };
 
+  const handleTitleEdit = (e) => {
+    setSurveyTitle(e.target.value);
+  };
+
+  const handleTitleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios({
+        method: 'patch',
+        url: '/api/v1/surveys/update',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: survey.id,
+          title: surveyTitle,
+        },
+      });
+      setSurvey(res.data.result);
+      setSurveyTitle(res.data.result.title);
+    } catch (err) {
+      console.error(err);
+      // TODO error popup
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <h2 className="mb-4">Survey Settings</h2>
-          {responses && (
-            <div className="mb-5 d-none d-md-inline-block">
+          <h2 className="mb-3">Settings</h2>
+
+          <form onSubmit={handleTitleSave} className="form-group mb-5">
+            <h3 className="h4">Survey title</h3>
+            <label htmlFor="titleEdit" className="fw-bold">
+              {decodeHtml(survey?.title)}
+            </label>
+            <div className="input-group">
+              <input
+                type="text"
+                name="titleEdit"
+                className="form-control"
+                value={surveyTitle}
+                onChange={handleTitleEdit}
+              />
               <button
-                className="btn btn-sm btn-secondary d-flex"
-                onClick={handleCSV}
+                className="btn btn-primary"
+                type="submit"
+                disabled={decodeHtml(survey?.title) === surveyTitle}
               >
-                Export to CSV <FileText size={18} className="text-white ml-2" />
+                <CheckCircle size={18} />
               </button>
             </div>
-          )}
-          <h3>URL Questions</h3>
+          </form>
+
+          <h3 className="h4">URL Questions</h3>
           <p>
             You can dynamically add new questions and answers to links you share
             by adding <span className="text-monospace">?question=answer</span>{' '}
@@ -265,7 +307,14 @@ export const Responses = () => {
                       value={friendlyNames[name]?.value || ''}
                       onChange={handleFriendlyName}
                     />
-                    <button className="btn btn-primary" type="submit">
+                    <button
+                      className="btn btn-primary"
+                      type="submit"
+                      disabled={
+                        friendlyNames[name]?.savedValue ===
+                        friendlyNames[name]?.value
+                      }
+                    >
                       <CheckCircle size={18} />
                     </button>
                   </div>
@@ -274,6 +323,16 @@ export const Responses = () => {
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
+          {responses && (
+            <div className="mb-3 text-right d-none d-md-block">
+              <button
+                className="btn btn-sm btn-secondary d-flex"
+                onClick={handleCSV}
+              >
+                Export to CSV <FileText size={18} className="text-white ml-2" />
+              </button>
+            </div>
+          )}
           <div>
             {responses.map((response) => (
               <div
