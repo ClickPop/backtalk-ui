@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import classNames from 'classnames';
 import * as axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { context } from '../context/Context';
 import * as uuid from 'uuid';
 
@@ -98,6 +98,9 @@ const Login = () => {
                 Login
               </button>
             </div>
+            <small>
+              <Link to="/password-reset">Forgot your password?</Link>
+            </small>
           </form>
         </section>
       </div>

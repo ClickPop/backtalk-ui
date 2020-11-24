@@ -16,6 +16,8 @@ import { Response } from './views/Response';
 import { Responses } from './views/Responses';
 import packageJson from '../package.json';
 import TagManager from 'react-gtm-module';
+import { PasswordResetStart } from './views/PasswordResetStart';
+import { PasswordReset } from './views/PasswordReset';
 
 if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
@@ -96,6 +98,16 @@ const App = () => {
               component={Responses}
             />
             <Route exact path="/" component={Home} />
+            <Route
+              exact
+              path="/password-reset"
+              component={PasswordResetStart}
+            />
+            <Route
+              exact
+              path="/password-reset/:token"
+              component={PasswordReset}
+            />
             <Route exact path="/changelog" component={Changelog} />
             <Route path="/survey/:hash" component={Response} />
             <Route component={Error404} />
