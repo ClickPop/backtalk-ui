@@ -4,7 +4,13 @@ import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { Device } from '../components/Device';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download, FileText, CheckCircle } from 'react-feather';
+import {
+  Trash2,
+  Download,
+  FileText,
+  CheckCircle,
+  XCircle,
+} from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -23,6 +29,7 @@ export const Responses = () => {
   const [deleted, setDeleted] = useState(false);
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
+  const [clickToEdit, setClickToEdit] = useState(false);
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -245,9 +252,29 @@ export const Responses = () => {
       });
       setSurvey(res.data.result);
       setSurveyTitle(res.data.result.title);
+      setClickToEdit(false);
     } catch (err) {
       console.error(err);
       // TODO error popup
+    }
+  };
+
+  const handleTitleBlur = () => {
+    if (surveyTitle === survey?.title) {
+      setClickToEdit(false);
+    }
+  };
+
+  const handleTitleClear = () => {
+    if (survey.title && surveyTitle !== survey?.title) {
+      setSurveyTitle(survey?.title);
+      setClickToEdit(false);
+    }
+  };
+
+  const handleTitleEsc = (e) => {
+    if (e.key === 'Escape') {
+      handleTitleClear();
     }
   };
 
@@ -312,7 +339,7 @@ export const Responses = () => {
               >
                 {decodeHtml(survey?.title)}
               </label>
-              <div className="input-group click-to-edit">
+              <div className={`input-group ${!clickToEdit && 'click-to-edit'}`}>
                 <input
                   type="text"
                   name="titleEdit"
@@ -320,7 +347,17 @@ export const Responses = () => {
                   id="surveyTitle"
                   value={surveyTitle}
                   onChange={handleTitleEdit}
+                  onFocus={(e) => setClickToEdit(true)}
+                  onBlur={handleTitleBlur}
+                  onKeyPress={handleTitleEsc}
                 />
+                <button
+                  className="btn btn-outline-secondary"
+                  disabled={decodeHtml(survey?.title) === surveyTitle}
+                  onClick={handleTitleClear}
+                >
+                  <XCircle size={18} />
+                </button>
                 <button
                   className="btn btn-primary"
                   type="submit"
