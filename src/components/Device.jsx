@@ -5,13 +5,13 @@ const Device = ({ data, className }) => {
   let deviceString;
   let DeviceIcon;
   switch (data?.device?.type) {
-    case 'mobile':
+    case 'smartphone':
       DeviceIcon = Smartphone;
-      deviceString = `their ${data?.os?.name || 'phone'}`
+      deviceString = `${data?.os?.name || 'their phone'}`
       break;
     case 'tablet':
       DeviceIcon = Tablet;
-      deviceString = `their ${data?.os?.name || 'tablet'}`
+      deviceString = `${data?.os?.name || 'their tablet'}`
       break;
     case 'desktop':
       DeviceIcon = Monitor;
