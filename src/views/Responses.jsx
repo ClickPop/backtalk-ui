@@ -341,6 +341,7 @@ export const Responses = () => {
               </label>
               <div className={`input-group ${!clickToEdit && 'click-to-edit'}`}>
                 <input
+                  autocomplete="off"
                   type="text"
                   name="titleEdit"
                   className="form-control fw-bold"
