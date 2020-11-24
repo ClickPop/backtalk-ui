@@ -255,32 +255,9 @@ export const Responses = () => {
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <h2 className="mb-3">Settings</h2>
+          <h2 className="h3 mb-3">Settings</h2>
 
-          <form onSubmit={handleTitleSave} className="form-group mb-5">
-            <h3 className="h4">Survey title</h3>
-            <label htmlFor="titleEdit" className="fw-bold">
-              {decodeHtml(survey?.title)}
-            </label>
-            <div className="input-group click-to-edit">
-              <input
-                type="text"
-                name="titleEdit"
-                className="form-control"
-                value={surveyTitle}
-                onChange={handleTitleEdit}
-              />
-              <button
-                className="btn btn-primary"
-                type="submit"
-                disabled={decodeHtml(survey?.title) === surveyTitle}
-              >
-                <CheckCircle size={18} />
-              </button>
-            </div>
-          </form>
-
-          <h3 className="h4">URL Questions</h3>
+          <h3 className="h5">URL Questions</h3>
           <p>
             You can dynamically add new questions and answers to links you share
             by adding <span className="text-monospace">?question=answer</span>{' '}
@@ -323,16 +300,45 @@ export const Responses = () => {
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
-          {responses && (
-            <div className="mb-3 text-right d-none d-md-block">
-              <button
-                className="btn btn-sm btn-secondary d-flex"
-                onClick={handleCSV}
+          <div class="d-flex justify-content-between align-items-center">
+            <form onSubmit={handleTitleSave} className="form-group mb-3">
+              <label
+                htmlFor="titleEdit"
+                className="visually-hidden"
+                for="surveyTitle"
               >
-                Export to CSV <FileText size={18} className="text-white ml-2" />
-              </button>
-            </div>
-          )}
+                {decodeHtml(survey?.title)}
+              </label>
+              <div className="input-group click-to-edit">
+                <input
+                  type="text"
+                  name="titleEdit"
+                  className="form-control fw-bold"
+                  id="surveyTitle"
+                  value={surveyTitle}
+                  onChange={handleTitleEdit}
+                />
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  disabled={decodeHtml(survey?.title) === surveyTitle}
+                >
+                  <CheckCircle size={18} />
+                </button>
+              </div>
+            </form>
+            {responses && (
+              <div className="mb-3 text-right d-none d-md-block">
+                <button
+                  className="btn btn-sm btn-secondary d-flex"
+                  onClick={handleCSV}
+                >
+                  Export to CSV{' '}
+                  <FileText size={18} className="text-white ml-2" />
+                </button>
+              </div>
+            )}
+          </div>
           <div>
             {responses.map((response) => (
               <div
