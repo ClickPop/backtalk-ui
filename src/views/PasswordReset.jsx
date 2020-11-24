@@ -36,7 +36,7 @@ export const PasswordReset = () => {
             const id = uuid.v4();
             dispatch({
               type: 'SET_ALERT',
-              payload: { id, msg: 'Expired Token, why did you wait so long?' },
+              payload: { id, msg: 'Expired Token' },
             });
             setTimeout(() => {
               dispatch({ type: 'REMOVE_ALERT', payload: { id } });
@@ -52,12 +52,11 @@ export const PasswordReset = () => {
               type: 'SET_ALERT',
               payload: {
                 id,
-                msg: 'Password is the same as your old password ya dummy!',
+                msg: 'New password is the same as your old password.',
               },
             });
             setTimeout(() => {
               dispatch({ type: 'REMOVE_ALERT', payload: { id } });
-              setExpired(true);
             }, 3000);
             setPassword('');
             setPasswordConfirm('');
@@ -103,7 +102,7 @@ export const PasswordReset = () => {
       const id = uuid.v4();
       dispatch({
         type: 'SET_ALERT',
-        payload: { id, msg: 'Passwords do not match dawg' },
+        payload: { id, msg: 'Passwords do not match.' },
       });
       setTimeout(() => {
         dispatch({ type: 'REMOVE_ALERT', payload: { id } });
@@ -128,7 +127,7 @@ export const PasswordReset = () => {
           const id = uuid.v4();
           dispatch({
             type: 'SET_ALERT',
-            payload: { id, msg: 'Expired Token, why did you wait so long?' },
+            payload: { id, msg: 'Expired Token' },
           });
           setTimeout(() => {
             dispatch({ type: 'REMOVE_ALERT', payload: { id } });
@@ -144,12 +143,11 @@ export const PasswordReset = () => {
             type: 'SET_ALERT',
             payload: {
               id,
-              msg: 'Password is the same as your old password ya dummy!',
+              msg: 'New password is the same as your old password.',
             },
           });
           setTimeout(() => {
             dispatch({ type: 'REMOVE_ALERT', payload: { id } });
-            setExpired(true);
           }, 3000);
           setPassword('');
           setPasswordConfirm('');
