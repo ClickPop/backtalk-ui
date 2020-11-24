@@ -262,7 +262,7 @@ export const Responses = () => {
             <label htmlFor="titleEdit" className="fw-bold">
               {decodeHtml(survey?.title)}
             </label>
-            <div className="input-group">
+            <div className="input-group click-to-edit">
               <input
                 type="text"
                 name="titleEdit"
