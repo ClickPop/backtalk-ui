@@ -10,6 +10,7 @@ label {
       border: 1px solid darken($base-bg-color, 5%);
       border-color: none;
       border-radius: $base-border-radius / 2 !important;
+      transition: background 0.3s;
     }
 
     .btn {

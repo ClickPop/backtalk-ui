@@ -352,18 +352,18 @@ export const Responses = () => {
                   onKeyPress={handleTitleEsc}
                 />
                 <button
-                  className="btn btn-outline-secondary"
+                  className="btn btn-outline-natural"
                   disabled={decodeHtml(survey?.title) === surveyTitle}
                   onClick={handleTitleClear}
                 >
                   <XCircle size={18} />
                 </button>
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-outline-natural"
                   type="submit"
                   disabled={decodeHtml(survey?.title) === surveyTitle}
                 >
-                  <CheckCircle size={18} />
+                  <CheckCircle size={18} className="text-success" />
                 </button>
               </div>
             </form>
