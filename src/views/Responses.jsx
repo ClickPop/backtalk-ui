@@ -301,7 +301,10 @@ export const Responses = () => {
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div class="d-flex justify-content-between align-items-center">
-            <form onSubmit={handleTitleSave} className="form-group mb-3">
+            <form
+              onSubmit={handleTitleSave}
+              className="form-group mb-3 mr-0 mr-md-3 flex-fill"
+            >
               <label
                 htmlFor="titleEdit"
                 className="visually-hidden"
