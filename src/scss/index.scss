@@ -1,6 +1,7 @@
-@import 'components/variables', 'bootstrap', 'components/fonts',
-  'components/button', 'components/typography', 'components/nav',
-  'components/card', 'components/survey';
+@import 'components/variables', 'components/animations', 'bootstrap',
+  'components/fonts', 'components/button', 'components/typography',
+  'components/nav', 'components/form', 'components/card', 'components/survey',
+  'components/scrollbar';
 
 body {
   background: $base-bg-color;
@@ -42,4 +43,11 @@ body {
       opacity: 0.6;
     }
   }
+}
+
+.home-preview {
+  border: 1px solid rgba($primary, 0.1);
+  border-radius: $base-border-radius;
+  box-shadow: $base-box-shadow;
+  padding: 20px;
 }

@@ -4,7 +4,13 @@ import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { Device } from '../components/Device';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download, FileText, CheckCircle } from 'react-feather';
+import {
+  Trash2,
+  Download,
+  FileText,
+  CheckCircle,
+  XCircle,
+} from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -14,6 +20,8 @@ import { saveAs } from 'file-saver';
 
 export const Responses = () => {
   const params = useParams();
+  const [survey, setSurvey] = useState({});
+  const [surveyTitle, setSurveyTitle] = useState('');
   const [responses, setResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [show, setShow] = useState(false);
@@ -21,6 +29,7 @@ export const Responses = () => {
   const [deleted, setDeleted] = useState(false);
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
+  const [clickToEdit, setClickToEdit] = useState(false);
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -28,6 +37,8 @@ export const Responses = () => {
         const res = await axios.get(`/api/v1/responses/${params.hash}`, {
           headers: { Authorization: `Bearer ${state.token}` },
         });
+        setSurvey(res.data.survey);
+        setSurveyTitle(res.data.survey.title);
         setResponses(
           res.data.results.sort(
             (a, b) =>
@@ -50,6 +61,7 @@ export const Responses = () => {
         } else {
           res.data.results.forEach((response) => {
             response.data.forEach((r) => {
+              console.log(r.key);
               if (r.key) {
                 setFriendlyNames((f) => ({
                   ...f,
@@ -222,64 +234,152 @@ export const Responses = () => {
     }
   };
 
+  const handleTitleEdit = (e) => {
+    setSurveyTitle(e.target.value);
+  };
+
+  const handleTitleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios({
+        method: 'patch',
+        url: '/api/v1/surveys/update',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: survey.id,
+          title: surveyTitle,
+        },
+      });
+      setSurvey(res.data.result);
+      setSurveyTitle(res.data.result.title);
+      setClickToEdit(false);
+    } catch (err) {
+      console.error(err);
+      // TODO error popup
+    }
+  };
+
+  const handleTitleBlur = () => {
+    if (surveyTitle === survey?.title) {
+      setClickToEdit(false);
+    }
+  };
+
+  const handleTitleClear = () => {
+    if (survey.title && surveyTitle !== survey?.title) {
+      setSurveyTitle(survey?.title);
+      setClickToEdit(false);
+    }
+  };
+
+  const handleTitleEsc = (e) => {
+    if (e.key === 'Escape') {
+      handleTitleClear();
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <h2 className="mb-4">Survey Settings</h2>
-          {responses && (
-            <div className="mb-5 d-none d-md-inline-block">
-              <button
-                className="btn btn-sm btn-secondary d-flex"
-                onClick={handleCSV}
-              >
-                Export to CSV <FileText size={18} className="text-white ml-2" />
-              </button>
-            </div>
-          )}
-          <h3>URL Questions</h3>
+          <h2 className="h3 mb-3">Settings</h2>
+
+          <h3 className="h5">URL Questions</h3>
           <p>
             You can dynamically add new questions and answers to links you share
             by adding <span className="text-monospace">?question=answer</span>{' '}
             paramaters to your survey share URLs.
           </p>
 
-          {responses &&
-            responses.map(
-              (response) =>
-                response.data &&
-                response.data.map(
-                  (r) =>
-                    r.key && (
-                      <div className="form-group mb-3" key={r.id - response.id}>
-                        <form
-                          onSubmit={(e) => {
-                            handleSave(e, r.key);
-                          }}
-                        >
-                          <label className="fw-bold" htmlFor={`${r.key}_input`}>
-                            {r.key}
-                          </label>
-                          <div className="input-group mb-2">
-                            <input
-                              type="text"
-                              className="form-control"
-                              id={`${r.key}_input`}
-                              name={r.key}
-                              value={friendlyNames[r.key]?.value || ''}
-                              onChange={handleFriendlyName}
-                            />
-                            <button className="btn btn-primary" type="submit">
-                              <CheckCircle size={18} />
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    ),
-                ),
-            )}
+          {friendlyNames &&
+            Object.keys(friendlyNames).map((name) => (
+              <div className="form-group mb-3" key={name}>
+                <form
+                  onSubmit={(e) => {
+                    handleSave(e, name);
+                  }}
+                >
+                  <label className="fw-bold" htmlFor={`${name}_input`}>
+                    {name}
+                  </label>
+                  <div className="input-group mb-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id={`${name}_input`}
+                      name={name}
+                      value={friendlyNames[name]?.value || ''}
+                      onChange={handleFriendlyName}
+                    />
+                    <button
+                      className="btn btn-primary"
+                      type="submit"
+                      disabled={
+                        friendlyNames[name]?.savedValue ===
+                        friendlyNames[name]?.value
+                      }
+                    >
+                      <CheckCircle size={18} />
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <form
+              onSubmit={handleTitleSave}
+              className="form-group mb-3 mr-0 mr-md-3 flex-fill"
+            >
+              <label
+                htmlFor="titleEdit"
+                className="visually-hidden"
+                for="surveyTitle"
+              >
+                {decodeHtml(survey?.title)}
+              </label>
+              <div className={`input-group ${!clickToEdit && 'click-to-edit'}`}>
+                <input
+                  autocomplete="off"
+                  type="text"
+                  name="titleEdit"
+                  className="form-control fw-bold"
+                  id="surveyTitle"
+                  value={surveyTitle}
+                  onChange={handleTitleEdit}
+                  onFocus={(e) => setClickToEdit(true)}
+                  onBlur={handleTitleBlur}
+                  onKeyPress={handleTitleEsc}
+                />
+                <button
+                  className="btn btn-outline-natural"
+                  disabled={decodeHtml(survey?.title) === surveyTitle}
+                  onClick={handleTitleClear}
+                >
+                  <XCircle size={18} />
+                </button>
+                <button
+                  className="btn btn-outline-natural"
+                  type="submit"
+                  disabled={decodeHtml(survey?.title) === surveyTitle}
+                >
+                  <CheckCircle size={18} className="text-success" />
+                </button>
+              </div>
+            </form>
+            {responses && (
+              <div className="mb-3 text-right d-none d-md-block">
+                <button
+                  className="btn btn-sm btn-secondary d-flex"
+                  onClick={handleCSV}
+                >
+                  Export to CSV{' '}
+                  <FileText size={18} className="text-white ml-2" />
+                </button>
+              </div>
+            )}
+          </div>
           <div>
             {responses.map((response) => (
               <div
@@ -299,9 +399,9 @@ export const Responses = () => {
                     </p>
                     {response.data &&
                       response.data.map(
-                        (r) =>
+                        (r, i) =>
                           r && (
-                            <div key={`${response.id + r.id}`}>
+                            <div key={`${r.id || r.key}_${response.id}_${i}`}>
                               <Fragment>
                                 <p className="mt-4 mb-1 response__question">
                                   {decodeHtml(
