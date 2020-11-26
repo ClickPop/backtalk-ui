@@ -4,24 +4,19 @@ import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { Device } from '../components/Device';
 import { useParams } from 'react-router-dom';
-import {
-  Trash2,
-  Download,
-  FileText,
-  CheckCircle,
-  XCircle,
-} from 'react-feather';
+import { Trash2, Download, FileText } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import anonymousNickname from '../helpers/anonymousNickname';
 import * as htmlToImage from 'html-to-image';
 import { saveAs } from 'file-saver';
+import { EditInPlaceInput } from '../components/EditInPlaceInput';
 
 export const Responses = () => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
-  const [surveyTitle, setSurveyTitle] = useState('');
+  const [surveyTitle, setSurveyTitle] = useState(null);
   const [responses, setResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [show, setShow] = useState(false);
@@ -29,7 +24,6 @@ export const Responses = () => {
   const [deleted, setDeleted] = useState(false);
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
-  const [clickToEdit, setClickToEdit] = useState(false);
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -61,7 +55,6 @@ export const Responses = () => {
         } else {
           res.data.results.forEach((response) => {
             response.data.forEach((r) => {
-              console.log(r.key);
               if (r.key) {
                 setFriendlyNames((f) => ({
                   ...f,
@@ -157,12 +150,12 @@ export const Responses = () => {
     );
   };
 
-  const handleFriendlyName = (e) => {
+  const handleFriendlyName = (value, name) => {
     setFriendlyNames({
       ...friendlyNames,
-      [e.target.name]: {
-        ...friendlyNames[e.target.name],
-        value: e.target.value,
+      [name]: {
+        ...friendlyNames[name],
+        value: value,
       },
     });
   };
@@ -234,47 +227,26 @@ export const Responses = () => {
     }
   };
 
-  const handleTitleEdit = (e) => {
-    setSurveyTitle(e.target.value);
-  };
-
   const handleTitleSave = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios({
-        method: 'patch',
-        url: '/api/v1/surveys/update',
-        headers: { Authorization: `Bearer ${state.token}` },
-        data: {
-          surveyId: survey.id,
-          title: surveyTitle,
-        },
-      });
-      setSurvey(res.data.result);
-      setSurveyTitle(res.data.result.title);
-      setClickToEdit(false);
-    } catch (err) {
-      console.error(err);
-      // TODO error popup
-    }
-  };
-
-  const handleTitleBlur = () => {
-    if (surveyTitle === survey?.title) {
-      setClickToEdit(false);
-    }
-  };
-
-  const handleTitleClear = () => {
-    if (survey.title && surveyTitle !== survey?.title) {
-      setSurveyTitle(survey?.title);
-      setClickToEdit(false);
-    }
-  };
-
-  const handleTitleEsc = (e) => {
-    if (e.key === 'Escape') {
-      handleTitleClear();
+    if (survey?.title !== surveyTitle) {
+      try {
+        const res = await axios({
+          method: 'patch',
+          url: '/api/v1/surveys/update',
+          headers: { Authorization: `Bearer ${state.token}` },
+          data: {
+            surveyId: survey.id,
+            title: surveyTitle,
+          },
+        });
+        setSurvey(res.data.result);
+        setSurveyTitle(res.data.result.title);
+        document.activeElement.blur();
+      } catch (err) {
+        console.error(err);
+        // TODO error popup
+      }
     }
   };
 
@@ -293,84 +265,37 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <div className="form-group mb-3" key={name}>
-                <form
-                  onSubmit={(e) => {
-                    handleSave(e, name);
-                  }}
-                >
-                  <label className="fw-bold" htmlFor={`${name}_input`}>
-                    {name}
-                  </label>
-                  <div className="input-group mb-2">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id={`${name}_input`}
-                      name={name}
-                      value={friendlyNames[name]?.value || ''}
-                      onChange={handleFriendlyName}
-                    />
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      disabled={
-                        friendlyNames[name]?.savedValue ===
-                        friendlyNames[name]?.value
-                      }
-                    >
-                      <CheckCircle size={18} />
-                    </button>
-                  </div>
-                </form>
-              </div>
+              <EditInPlaceInput
+                key={name}
+                name={name}
+                id={`${name}_input`}
+                value={friendlyNames[name]?.value}
+                initialValue={friendlyNames[name]?.savedValue}
+                setValue={(v) => handleFriendlyName(v, name)}
+                onSubmit={(e) => {
+                  handleSave(e, name);
+                }}
+                label={friendlyNames[name]?.savedValue}
+                showLabel={true}
+              />
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
-          <div class="d-flex justify-content-between align-items-center">
-            <form
-              onSubmit={handleTitleSave}
-              className="form-group mb-3 mr-0 mr-md-3 flex-fill"
-            >
-              <label
-                htmlFor="titleEdit"
-                className="visually-hidden"
-                for="surveyTitle"
-              >
-                {decodeHtml(survey?.title)}
-              </label>
-              <div className={`input-group ${!clickToEdit && 'click-to-edit'}`}>
-                <input
-                  autocomplete="off"
-                  type="text"
-                  name="titleEdit"
-                  className="form-control fw-bold"
-                  id="surveyTitle"
-                  value={surveyTitle}
-                  onChange={handleTitleEdit}
-                  onFocus={(e) => setClickToEdit(true)}
-                  onBlur={handleTitleBlur}
-                  onKeyPress={handleTitleEsc}
-                />
-                <button
-                  className="btn btn-outline-natural"
-                  disabled={decodeHtml(survey?.title) === surveyTitle}
-                  onClick={handleTitleClear}
-                >
-                  <XCircle size={18} />
-                </button>
-                <button
-                  className="btn btn-outline-natural"
-                  type="submit"
-                  disabled={decodeHtml(survey?.title) === surveyTitle}
-                >
-                  <CheckCircle size={18} className="text-success" />
-                </button>
-              </div>
-            </form>
+          <div className="d-flex justify-content-between align-items-center">
+            {surveyTitle !== null && (
+              <EditInPlaceInput
+                name="titleEdit"
+                id="surveyTitle"
+                value={surveyTitle}
+                initialValue={survey?.title}
+                setValue={setSurveyTitle}
+                onSubmit={handleTitleSave}
+              />
+            )}
             {responses && (
               <div className="mb-3 text-right d-none d-md-block">
                 <button
+                  type="button"
                   className="btn btn-sm btn-secondary d-flex"
                   onClick={handleCSV}
                 >
@@ -454,11 +379,16 @@ export const Responses = () => {
           Are you sure you want to delete this response? Once it's gone, it's
           gone.
         </div>
-        <div class="modal-footer">
-          <button className="btn btn-white" onClick={() => handleModal(false)}>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-white"
+            onClick={() => handleModal(false)}
+          >
             Cancel
           </button>
           <button
+            type="button"
             className="btn btn-danger"
             onClick={() => handleDelete(deleteResponse)}
           >
