@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { context } from '../context/Context';
-import screenshot from '../images/backtalk-example.png';
+import screenshot from '../images/survey-screenshot.jpg';
 const Home = () => {
   const { state, dispatch } = useContext(context);
 
@@ -42,15 +42,12 @@ const Home = () => {
             pathname="/register"
             text="Creat a survey!"
           ></Button>
-          <div className="home-preview mt-5">
-            <img
-              src={screenshot}
-              className="img-fluid my-2"
-              alt="Example survey asking how can we make your experience better?"
-              loading="lazy"
-            />
-          </div>
-          
+          <img
+            src={screenshot}
+            className="img-fluid my-2"
+            alt="Example survey asking how can we make your experience better?"
+            loading="lazy"
+          />
         </div>
       </div>
     </div>

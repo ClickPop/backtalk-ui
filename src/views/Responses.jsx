@@ -11,6 +11,7 @@ import {
   CheckCircle,
   XCircle,
 } from 'react-feather';
+import { FeedbackFloat } from '../components/FeedbackFloat';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -466,6 +467,7 @@ export const Responses = () => {
           </button>
         </div>
       </Modal>
+      <FeedbackFloat />
     </div>
   );
 };
