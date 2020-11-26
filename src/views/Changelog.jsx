@@ -21,6 +21,18 @@ const Changelog = () => {
             answers you need, quickly.
           </p>
           <ChangelogEntry
+            title="Password Reset"
+            date="November 25, 2020"
+            description="Happy Thanksgiving eve! We added the ability to share feedback with us through a sticky side widget you'll see on the dashboard and responses view."
+          />
+
+          <ChangelogEntry
+            title="Password Reset"
+            date="November 23, 2020"
+            description="This wasn't super important when it was just us using Backtalk, but now that other folks are using it too, we thought we should make it possible to reset your password. You're welcome. Also... use 1Password or something."
+          />
+
+          <ChangelogEntry
             title="Device Details for Responses"
             date="November 20, 2020"
             description="It's the little details that matter most, so we added just a little flag at the bottom of each response to let you know what devices are being used by your audience. Additionally, we made some other small visual changes and minor bug fixes... but we doubt most people will even notice."
