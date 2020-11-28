@@ -6,6 +6,24 @@ import { Trash2, Download } from 'react-feather';
 import decodeHtml from '../helpers/decodeHtml';
 import * as htmlToImage from 'html-to-image';
 import { saveAs } from 'file-saver';
+import { Card } from './Card';
+
+const CardActions = ({ share, handleModal }) => {
+  return (
+    <>
+      <button
+        type="button"
+        className="btn p-1 d-none d-md-inline-block"
+        onClick={share}
+      >
+        <Download size={18} />
+      </button>
+      <button type="button" className="btn p-1" onClick={handleModal}>
+        <Trash2 size={18} />
+      </button>
+    </>
+  );
+};
 
 export const ResponseCard = ({
   response,
@@ -42,61 +60,50 @@ export const ResponseCard = ({
   };
 
   return (
-    <div className="card mb-4 response-preview" id={response.id}>
-      <div className="card-body mx-3 my-2">
-        <div className="share-content">
-          <p className="text-muted">
-            <strong>
-              <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
-              <Moment format="h:mm a">{response.createdAt}</Moment>
-            </strong>
-          </p>
-          {response.data &&
-            response.data.map(
-              (r, i) =>
-                r && (
-                  <div key={`${r.id || r.key}_${response.id}_${i}`}>
-                    <>
-                      <p className="mt-4 mb-1 response__question">
-                        {decodeHtml(
-                          questions.find((q) => q.id === r.id)?.prompt ||
-                            friendlyNames[r.key]?.savedValue,
-                        )}
-                      </p>
-                      <div className="mb-4 pb-2 response__answer">
-                        {r.value}
-                      </div>
-                    </>{' '}
-                  </div>
-                ),
-            )}
-          <p className="mb-0 response__footer">
-            &ndash; {response.respondent || nicknames[response.id]}{' '}
-            <span>
-              from <Location data={response.geo} />
-            </span>{' '}
-            <span>
-              on <Device data={response.device} />
-            </span>
-          </p>
-        </div>
+    <Card
+      className="mb-4 response-preview"
+      actions={
+        <CardActions
+          share={() => share(response.id, response.respondent)}
+          handleModal={() => handleModal(true, response.id)}
+        />
+      }
+      id={response.id}
+    >
+      <div className="share-content">
+        <p className="text-muted">
+          <strong>
+            <Moment format="MMM D, YYYY">{response.createdAt}</Moment>{' '}
+            <Moment format="h:mm a">{response.createdAt}</Moment>
+          </strong>
+        </p>
+        {response.data &&
+          response.data.map(
+            (r, i) =>
+              r && (
+                <div key={`${r.id || r.key}_${response.id}_${i}`}>
+                  <>
+                    <p className="mt-4 mb-1 response__question">
+                      {decodeHtml(
+                        questions.find((q) => q.id === r.id)?.prompt ||
+                          friendlyNames[r.key]?.savedValue,
+                      )}
+                    </p>
+                    <div className="mb-4 pb-2 response__answer">{r.value}</div>
+                  </>{' '}
+                </div>
+              ),
+          )}
+        <p className="mb-0 response__footer">
+          &ndash; {response.respondent || nicknames[response.id]}{' '}
+          <span>
+            from <Location data={response.geo} />
+          </span>{' '}
+          <span>
+            on <Device data={response.device} />
+          </span>
+        </p>
       </div>
-      <div className="response-preview__actions">
-        <button
-          type="button"
-          className="btn p-1 d-none d-md-inline-block"
-          onClick={() => share(response.id, response.respondent)}
-        >
-          <Download size={18} />
-        </button>
-        <button
-          type="button"
-          className="btn p-1"
-          onClick={() => handleModal(true, response.id)}
-        >
-          <Trash2 size={18} />
-        </button>
-      </div>
-    </div>
+    </Card>
   );
 };
