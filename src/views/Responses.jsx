@@ -4,7 +4,7 @@ import Moment from 'react-moment';
 import { Location } from '../components/Location';
 import { Device } from '../components/Device';
 import { useParams } from 'react-router-dom';
-import { Trash2, Download, FileText } from 'react-feather';
+import { Trash2,import { FeedbackFloat } from '../components/FeedbackFloat';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
@@ -396,6 +396,7 @@ export const Responses = () => {
           </button>
         </div>
       </Modal>
+      <FeedbackFloat />
     </div>
   );
 };
