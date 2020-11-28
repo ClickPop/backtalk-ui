@@ -16,10 +16,10 @@ const CardActions = ({ share, handleModal }) => {
         className="btn p-1 d-none d-md-inline-block"
         onClick={share}
       >
-        <Download size={18} />
+        <Download size={18} className="text-muted" />
       </button>
       <button type="button" className="btn p-1" onClick={handleModal}>
-        <Trash2 size={18} />
+        <Trash2 size={18} className="text-muted" />
       </button>
     </>
   );
@@ -61,7 +61,7 @@ export const ResponseCard = ({
 
   return (
     <Card
-      className="mb-4 response-preview"
+      className="mb-4 p-3 response-preview"
       actions={
         <CardActions
           share={() => share(response.id, response.respondent)}
