@@ -7,6 +7,27 @@ import NewSurvey from '../components/NewSurvey';
 import { FeedbackFloat } from '../components/FeedbackFloat';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
+import { Card } from '../components/Card';
+
+const CardTitle = ({ survey }) => {
+  return (
+    <Link to={`/responses/${survey.hash}`} className="text-decoration-none">
+      {decodeHtml(survey.title)}
+    </Link>
+  );
+};
+
+const CardActions = ({ onClick }) => {
+  return (
+    <button
+      type="button"
+      className="btn btn-inline response-preview__delete"
+      onClick={onClick}
+    >
+      <Trash2 size={18} className="text-muted" />
+    </button>
+  );
+};
 
 export const Dashboard = () => {
   const { state } = useContext(context);
@@ -104,49 +125,38 @@ export const Dashboard = () => {
             {surveys &&
               !state.loading &&
               surveys.map((survey) => (
-                <div key={survey.id} className="col-12 col-xl-6 pr-0 pr-xl-2">
-                  <div className="card card--hover p-3 mb-4">
-                    <div className="card-body">
-                      <div className="d-flex justify-content-between">
-                        <h5 className="card-title">
-                          <Link
-                            to={`/responses/${survey.hash}`}
-                            className="text-decoration-none"
-                          >
-                            {decodeHtml(survey.title)}
-                          </Link>
-                        </h5>
-                        <button
-                          type="button"
-                          className="btn btn-inline response-preview__delete"
-                          onClick={() => handleModal(true, survey.id)}
-                        >
-                          <Trash2 size={18} className="text-muted" />
-                        </button>
-                      </div>
-                      <div className="mb-2 d-flex align-items-center">
-                        <MessageCircle size={18} className="mr-2 text-muted" />
-                        {survey?.Responses?.length ? (
-                          <Link
-                            to={`/responses/${survey.hash}`}
-                            className="text-decoration-none"
-                          >
-                            {survey.Responses.length} responses
-                          </Link>
-                        ) : (
-                          'No responses yet'
-                        )}
-                      </div>
-                      <div className="d-flex align-items-center">
-                        <ExternalLink size={18} className="mr-2 text-muted" />
+                <div key={survey.id} className="col-12 pr-0 pr-xl-2">
+                  <Card
+                    className="p-3 mb-4"
+                    title={<CardTitle survey={survey} />}
+                    actions={
+                      <CardActions
+                        onClick={() => handleModal(true, survey.id)}
+                      />
+                    }
+                  >
+                    <div className="mb-2 d-flex align-items-center">
+                      <MessageCircle size={18} className="mr-2 text-muted" />
+                      {survey?.Responses?.length ? (
                         <Link
-                          to={`/survey/${survey.hash}`}
+                          to={`/responses/${survey.hash}`}
                           className="text-decoration-none"
-                          target="_blank"
-                        >{`${window.location.host}/survey/${survey.hash}`}</Link>
-                      </div>
+                        >
+                          {survey.Responses.length} responses
+                        </Link>
+                      ) : (
+                        'No responses yet'
+                      )}
                     </div>
-                  </div>
+                    <div className="d-flex align-items-center">
+                      <ExternalLink size={18} className="mr-2 text-muted" />
+                      <Link
+                        to={`/survey/${survey.hash}`}
+                        className="text-decoration-none"
+                        target="_blank"
+                      >{`${window.location.host}/survey/${survey.hash}`}</Link>
+                    </div>
+                  </Card>
                 </div>
               ))}
           </div>
