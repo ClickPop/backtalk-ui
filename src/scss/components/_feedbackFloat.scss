@@ -1,0 +1,18 @@
+.feedbackFloat {
+  background: $primary;
+  border-radius: $base-border-radius;
+  color: $white;
+  padding: 0.3rem 0.5rem 1rem;
+  position: fixed;
+  right: -36px;
+  top: calc(50% - 1rem);
+  text-decoration: none;
+  transform: rotate(-90deg);
+  transition: 0.3s;
+  z-index: 200;
+
+  &:hover {
+    background-color: darken($primary, 10%);
+    color: $white;
+  }
+}

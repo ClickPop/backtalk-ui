@@ -1,27 +1,18 @@
 import * as axios from 'axios';
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import Moment from 'react-moment';
-import { Location } from '../components/Location';
-import { Device } from '../components/Device';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Trash2,
-  Download,
-  FileText,
-  CheckCircle,
-  XCircle,
-} from 'react-feather';
+import { FeedbackFloat } from '../components/FeedbackFloat';
+import { FileText } from 'react-feather';
 import { context } from '../context/Context';
 import { Modal } from '../components/Modal';
-import decodeHtml from '../helpers/decodeHtml';
 import anonymousNickname from '../helpers/anonymousNickname';
-import * as htmlToImage from 'html-to-image';
-import { saveAs } from 'file-saver';
+import { EditInPlaceInput } from '../components/EditInPlaceInput';
+import { ResponseCard } from '../components/ResponseCard';
 
 export const Responses = () => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
-  const [surveyTitle, setSurveyTitle] = useState('');
+  const [surveyTitle, setSurveyTitle] = useState(null);
   const [responses, setResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [show, setShow] = useState(false);
@@ -29,7 +20,6 @@ export const Responses = () => {
   const [deleted, setDeleted] = useState(false);
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
-  const [clickToEdit, setClickToEdit] = useState(false);
   const { state } = useContext(context);
   useEffect(() => {
     const getResponses = async () => {
@@ -61,7 +51,6 @@ export const Responses = () => {
         } else {
           res.data.results.forEach((response) => {
             response.data.forEach((r) => {
-              console.log(r.key);
               if (r.key) {
                 setFriendlyNames((f) => ({
                   ...f,
@@ -90,33 +79,6 @@ export const Responses = () => {
       }
     });
   }, [responses]);
-
-  const share = async (id, name) => {
-    let hiddenWrapper = document.createElement('div');
-    let shareDiv = document.createElement('div');
-
-    hiddenWrapper.style.visibility = 'visible';
-    hiddenWrapper.style.position = 'fixed';
-    hiddenWrapper.style.top = '0';
-    hiddenWrapper.style.left = '0';
-    hiddenWrapper.style.clip = 'rect(0 0 0 0)';
-
-    shareDiv.innerHTML = document
-      .getElementById(id)
-      .getElementsByClassName('card-body')[0].innerHTML;
-    shareDiv.style.display = 'block';
-    shareDiv.style.width = '500px';
-    shareDiv.classList = 'shared-response p-3 text-dark bg-white';
-
-    document.body.appendChild(hiddenWrapper);
-    hiddenWrapper.appendChild(shareDiv);
-
-    let blob = await htmlToImage.toBlob(shareDiv);
-    saveAs(blob, `Response_${id}_${name || 'Anonymous'}.png`);
-
-    hiddenWrapper.removeChild(shareDiv);
-    document.body.removeChild(hiddenWrapper);
-  };
 
   const handleDelete = async (id) => {
     try {
@@ -157,12 +119,12 @@ export const Responses = () => {
     );
   };
 
-  const handleFriendlyName = (e) => {
+  const handleFriendlyName = (value, name) => {
     setFriendlyNames({
       ...friendlyNames,
-      [e.target.name]: {
-        ...friendlyNames[e.target.name],
-        value: e.target.value,
+      [name]: {
+        ...friendlyNames[name],
+        value: value,
       },
     });
   };
@@ -234,47 +196,26 @@ export const Responses = () => {
     }
   };
 
-  const handleTitleEdit = (e) => {
-    setSurveyTitle(e.target.value);
-  };
-
   const handleTitleSave = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios({
-        method: 'patch',
-        url: '/api/v1/surveys/update',
-        headers: { Authorization: `Bearer ${state.token}` },
-        data: {
-          surveyId: survey.id,
-          title: surveyTitle,
-        },
-      });
-      setSurvey(res.data.result);
-      setSurveyTitle(res.data.result.title);
-      setClickToEdit(false);
-    } catch (err) {
-      console.error(err);
-      // TODO error popup
-    }
-  };
-
-  const handleTitleBlur = () => {
-    if (surveyTitle === survey?.title) {
-      setClickToEdit(false);
-    }
-  };
-
-  const handleTitleClear = () => {
-    if (survey.title && surveyTitle !== survey?.title) {
-      setSurveyTitle(survey?.title);
-      setClickToEdit(false);
-    }
-  };
-
-  const handleTitleEsc = (e) => {
-    if (e.key === 'Escape') {
-      handleTitleClear();
+    if (survey?.title !== surveyTitle) {
+      try {
+        const res = await axios({
+          method: 'patch',
+          url: '/api/v1/surveys/update',
+          headers: { Authorization: `Bearer ${state.token}` },
+          data: {
+            surveyId: survey.id,
+            title: surveyTitle,
+          },
+        });
+        setSurvey(res.data.result);
+        setSurveyTitle(res.data.result.title);
+        document.activeElement.blur();
+      } catch (err) {
+        console.error(err);
+        // TODO error popup
+      }
     }
   };
 
@@ -293,84 +234,37 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <div className="form-group mb-3" key={name}>
-                <form
-                  onSubmit={(e) => {
-                    handleSave(e, name);
-                  }}
-                >
-                  <label className="fw-bold" htmlFor={`${name}_input`}>
-                    {name}
-                  </label>
-                  <div className="input-group mb-2">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id={`${name}_input`}
-                      name={name}
-                      value={friendlyNames[name]?.value || ''}
-                      onChange={handleFriendlyName}
-                    />
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      disabled={
-                        friendlyNames[name]?.savedValue ===
-                        friendlyNames[name]?.value
-                      }
-                    >
-                      <CheckCircle size={18} />
-                    </button>
-                  </div>
-                </form>
-              </div>
+              <EditInPlaceInput
+                key={name}
+                name={name}
+                id={`${name}_input`}
+                value={friendlyNames[name]?.value}
+                initialValue={friendlyNames[name]?.savedValue}
+                setValue={(v) => handleFriendlyName(v, name)}
+                onSubmit={(e) => {
+                  handleSave(e, name);
+                }}
+                label={friendlyNames[name]?.savedValue}
+                showLabel={true}
+              />
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
-          <div class="d-flex justify-content-between align-items-center">
-            <form
-              onSubmit={handleTitleSave}
-              className="form-group mb-3 mr-0 mr-md-3 flex-fill"
-            >
-              <label
-                htmlFor="titleEdit"
-                className="visually-hidden"
-                for="surveyTitle"
-              >
-                {decodeHtml(survey?.title)}
-              </label>
-              <div className={`input-group ${!clickToEdit && 'click-to-edit'}`}>
-                <input
-                  autocomplete="off"
-                  type="text"
-                  name="titleEdit"
-                  className="form-control fw-bold"
-                  id="surveyTitle"
-                  value={surveyTitle}
-                  onChange={handleTitleEdit}
-                  onFocus={(e) => setClickToEdit(true)}
-                  onBlur={handleTitleBlur}
-                  onKeyPress={handleTitleEsc}
-                />
-                <button
-                  className="btn btn-outline-natural"
-                  disabled={decodeHtml(survey?.title) === surveyTitle}
-                  onClick={handleTitleClear}
-                >
-                  <XCircle size={18} />
-                </button>
-                <button
-                  className="btn btn-outline-natural"
-                  type="submit"
-                  disabled={decodeHtml(survey?.title) === surveyTitle}
-                >
-                  <CheckCircle size={18} className="text-success" />
-                </button>
-              </div>
-            </form>
+          <div className="d-flex justify-content-between align-items-center">
+            {surveyTitle !== null && (
+              <EditInPlaceInput
+                name="titleEdit"
+                id="surveyTitle"
+                value={surveyTitle}
+                initialValue={survey?.title}
+                setValue={setSurveyTitle}
+                onSubmit={handleTitleSave}
+              />
+            )}
             {responses && (
               <div className="mb-3 text-right d-none d-md-block">
                 <button
+                  type="button"
                   className="btn btn-sm btn-secondary d-flex"
                   onClick={handleCSV}
                 >
@@ -382,69 +276,14 @@ export const Responses = () => {
           </div>
           <div>
             {responses.map((response) => (
-              <div
-                className="card mb-4 response-preview"
+              <ResponseCard
                 key={response.id}
-                id={response.id}
-              >
-                <div className="card-body mx-3 my-2">
-                  <div className="share-content">
-                    <p className="text-muted">
-                      <strong>
-                        <Moment format="MMM D, YYYY">
-                          {response.createdAt}
-                        </Moment>{' '}
-                        <Moment format="h:mm a">{response.createdAt}</Moment>
-                      </strong>
-                    </p>
-                    {response.data &&
-                      response.data.map(
-                        (r, i) =>
-                          r && (
-                            <div key={`${r.id || r.key}_${response.id}_${i}`}>
-                              <Fragment>
-                                <p className="mt-4 mb-1 response__question">
-                                  {decodeHtml(
-                                    questions.find((q) => q.id === r.id)
-                                      ?.prompt ||
-                                      friendlyNames[r.key]?.savedValue,
-                                  )}
-                                </p>
-                                <div className="mb-4 pb-2 response__answer">
-                                  {r.value}
-                                </div>
-                              </Fragment>{' '}
-                            </div>
-                          ),
-                      )}
-                    <p className="mb-0 response__footer">
-                      &ndash; {response.respondent || nicknames[response.id]}{' '}
-                      <span>
-                        from <Location data={response.geo} />
-                      </span>{' '}
-                      <span>
-                        on <Device data={response.device} />
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <div className="response-preview__actions">
-                  <button
-                    type="button"
-                    className="btn p-1 d-none d-md-inline-block"
-                    onClick={() => share(response.id, response.respondent)}
-                  >
-                    <Download size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn p-1"
-                    onClick={() => handleModal(true, response.id)}
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
+                response={response}
+                questions={questions}
+                friendlyNames={friendlyNames}
+                nicknames={nicknames}
+                handleModal={handleModal}
+              />
             ))}
           </div>
         </div>
@@ -454,11 +293,16 @@ export const Responses = () => {
           Are you sure you want to delete this response? Once it's gone, it's
           gone.
         </div>
-        <div class="modal-footer">
-          <button className="btn btn-white" onClick={() => handleModal(false)}>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-white"
+            onClick={() => handleModal(false)}
+          >
             Cancel
           </button>
           <button
+            type="button"
             className="btn btn-danger"
             onClick={() => handleDelete(deleteResponse)}
           >
@@ -466,6 +310,7 @@ export const Responses = () => {
           </button>
         </div>
       </Modal>
+      <FeedbackFloat />
     </div>
   );
 };
