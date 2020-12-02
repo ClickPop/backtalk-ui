@@ -40,9 +40,10 @@ export const Admin = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-12 order-md-1 col-md-4 col-lg-6">
+        <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
+          <h2 className="h3 mb-3">Show me</h2>
           {users.length > 0 && (
-            <Card title="Overall Usage">
+            <div>
               <p
                 className="card-text"
                 onClick={() => setView('users')}
@@ -58,10 +59,11 @@ export const Admin = () => {
                 Surveys: {surveyCount}
               </p>
               <p className="card-text">Responses: {responseCount}</p>
-            </Card>
+            </div>
           )}
         </div>
-        <div className="col-12 order-md-2 col-md-8 col-lg-6">
+        <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
+          <h1 className="mb-4">Results</h1>
           {view === 'users' &&
             users &&
             users.map((user) => (
