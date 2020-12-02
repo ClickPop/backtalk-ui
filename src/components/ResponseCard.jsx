@@ -8,7 +8,7 @@ import * as htmlToImage from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { Card } from './Card';
 
-const CardActions = ({ share, handleModal }) => {
+const CardActions = ({ share, handleModal, isShared }) => {
   return (
     <>
       <button
@@ -18,9 +18,11 @@ const CardActions = ({ share, handleModal }) => {
       >
         <Download size={18} className="text-muted" />
       </button>
-      <button type="button" className="btn p-1" onClick={handleModal}>
-        <Trash2 size={18} className="text-muted" />
-      </button>
+      {!isShared && (
+        <button type="button" className="btn p-1" onClick={handleModal}>
+          <Trash2 size={18} className="text-muted" />
+        </button>
+      )}
     </>
   );
 };
@@ -31,6 +33,7 @@ export const ResponseCard = ({
   friendlyNames,
   nicknames,
   handleModal,
+  isShared,
 }) => {
   const share = async (id, name) => {
     let hiddenWrapper = document.createElement('div');
@@ -66,6 +69,7 @@ export const ResponseCard = ({
         <CardActions
           share={() => share(response.id, response.respondent)}
           handleModal={() => handleModal(true, response.id)}
+          isShared={isShared}
         />
       }
       id={response.id}
@@ -96,12 +100,17 @@ export const ResponseCard = ({
           )}
         <p className="mb-0 response__footer">
           &ndash; {response.respondent || nicknames[response.id]}{' '}
-          <span>
-            from <Location data={response.geo} />
-          </span>{' '}
-          <span>
-            on <Device data={response.device} />
-          </span>
+          {!isShared && (
+            <>
+              {' '}
+              <span>
+                from <Location data={response.geo} />
+              </span>{' '}
+              <span>
+                on <Device data={response.device} />
+              </span>
+            </>
+          )}
         </p>
       </div>
     </Card>
