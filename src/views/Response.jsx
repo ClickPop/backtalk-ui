@@ -286,7 +286,7 @@ export const Response = ({ location }) => {
                       {cursor < survey?.current.questions.length && (
                         <textarea
                           autoFocus={true}
-                          autoCorrect="off"
+                          autoCorrect="on"
                           autoComplete="off"
                           name={survey?.current.questions[cursor].id}
                           onChange={handleChange}
