@@ -234,33 +234,54 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <EditInPlaceInput
-                key={name}
-                name={name}
-                id={`${name}_input`}
-                value={friendlyNames[name]?.value}
-                initialValue={friendlyNames[name]?.savedValue}
-                setValue={(v) => handleFriendlyName(v, name)}
-                onSubmit={(e) => {
-                  handleSave(e, name);
-                }}
-                label={friendlyNames[name]?.savedValue}
-                showLabel={true}
-              />
+              <div>
+                <EditInPlaceInput
+                  key={name}
+                  name={name}
+                  id={`${name}_input`}
+                  value={friendlyNames[name]?.value}
+                  initialValue={friendlyNames[name]?.savedValue}
+                  setValue={(v) => handleFriendlyName(v, name)}
+                  onSubmit={(e) => {
+                    handleSave(e, name);
+                  }}
+                  label={friendlyNames[name]?.savedValue}
+                  showLabel={true}
+                />
+
+                <div class="card">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                      <span>Answer 1</span>
+                      <span>5</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                      <span>Answer 2</span>
+                      <span>2</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                      <span>Answer 3</span>
+                      <span>1</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div className="d-flex justify-content-between align-items-center">
-            {surveyTitle !== null && (
-              <EditInPlaceInput
-                name="titleEdit"
-                id="surveyTitle"
-                value={surveyTitle}
-                initialValue={survey?.title}
-                setValue={setSurveyTitle}
-                onSubmit={handleTitleSave}
-              />
-            )}
+            <div class="mb-3 mr-0 mr-md-3 flex-fill">
+              {surveyTitle !== null && (
+                <EditInPlaceInput
+                  name="titleEdit"
+                  id="surveyTitle"
+                  value={surveyTitle}
+                  initialValue={survey?.title}
+                  setValue={setSurveyTitle}
+                  onSubmit={handleTitleSave}
+                />
+              )}
+            </div>
             {responses && (
               <div className="mb-3 text-right d-none d-md-block">
                 <button
