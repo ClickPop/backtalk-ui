@@ -22,6 +22,8 @@ export const Responses = () => {
   const [nicknames, setNicknames] = useState({});
   const { state } = useContext(context);
   const [queryResponses, setQueryResponses] = useState({});
+  const [isPublic, setIsPublic] = useState(null);
+
   useEffect(() => {
     const getResponses = async () => {
       try {
@@ -29,6 +31,7 @@ export const Responses = () => {
           headers: { Authorization: `Bearer ${state.token}` },
         });
         setSurvey(res.data.survey);
+        setIsPublic(res.data.survey.isPublic);
         setSurveyTitle(res.data.survey.title);
         setResponses(
           res.data.results.sort(
@@ -238,11 +241,50 @@ export const Responses = () => {
     }
   };
 
+  const handlePublic = async (e) => {
+    e.preventDefault();
+    setIsPublic(e.target.checked);
+    try {
+      const res = await axios({
+        method: 'patch',
+        url: '/api/v1/surveys/update',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: survey.id,
+          isPublic: e.target.checked,
+        },
+      });
+      setSurvey(res.data.result);
+      setSurveyTitle(res.data.result.title);
+      document.activeElement.blur();
+    } catch (err) {
+      console.error(err);
+      // TODO error popup
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           <h2 className="h3 mb-3">Settings</h2>
+
+          {isPublic !== null && (
+            <>
+              <h3 className="h5">
+                Would you like the survey responses to be public?
+              </h3>
+              <div className="form-check form-switch form-switch-lg mb-3">
+                <input
+                  className="form-check-input form-check-input-lg"
+                  type="checkbox"
+                  name="is-public"
+                  onChange={handlePublic}
+                  checked={isPublic}
+                />
+              </div>
+            </>
+          )}
 
           <h3 className="h5">URL Questions</h3>
           <p>
