@@ -99,18 +99,18 @@ export const ResponseCard = ({
               ),
           )}
         <p className="mb-0 response__footer">
-          &ndash; {response.respondent || nicknames[response.id]}{' '}
-          {!isShared && (
-            <>
-              {' '}
-              <span>
-                from <Location data={response.geo} />
-              </span>{' '}
-              <span>
-                on <Device data={response.device} />
-              </span>
-            </>
-          )}
+          &ndash;{' '}
+          {!isShared ? (
+            <>{response.respondent || nicknames[response.id]} </>
+          ) : (
+            <>Someone </>
+          )}{' '}
+          <span>
+            from <Location data={response.geo} />
+          </span>{' '}
+          <span>
+            on <Device data={response.device} />
+          </span>
         </p>
       </div>
     </Card>
