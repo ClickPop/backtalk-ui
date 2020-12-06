@@ -6,7 +6,7 @@ const FeedbackFloat = () => {
     <a
       href="https://backtalk.io/survey/ReG94d4J?source=backtalk"
       target="_blank"
-      class="feedbackFloat"
+      className="feedbackFloat"
       rel="noopener noreferrer"
     >
       Feedback <MessageSquare size={16} />

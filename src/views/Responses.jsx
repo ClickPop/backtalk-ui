@@ -21,6 +21,7 @@ export const Responses = () => {
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
   const { state } = useContext(context);
+  const [queryResponses, setQueryResponses] = useState({});
   useEffect(() => {
     const getResponses = async () => {
       try {
@@ -35,6 +36,24 @@ export const Responses = () => {
               new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
           ),
         );
+        const qResponses = {};
+        res.data.results.forEach((resp) => {
+          resp.data.forEach((d) => {
+            if (d.type === 'query') {
+              if (!qResponses[d.key]) {
+                qResponses[d.key] = {};
+              }
+              if (!qResponses[d.key][d.value]) {
+                qResponses[d.key][d.value] = {
+                  count: 1,
+                };
+              } else {
+                qResponses[d.key][d.value].count++;
+              }
+            }
+          });
+        });
+        setQueryResponses(qResponses);
         setQuestions(res.data.questions);
         setQuestions([
           ...res.data.questions,
@@ -234,7 +253,7 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <div>
+              <div key={name}>
                 <EditInPlaceInput
                   key={name}
                   name={name}
@@ -249,28 +268,27 @@ export const Responses = () => {
                   showLabel={true}
                 />
 
-                <div class="card">
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between">
-                      <span>Answer 1</span>
-                      <span>5</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                      <span>Answer 2</span>
-                      <span>2</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                      <span>Answer 3</span>
-                      <span>1</span>
-                    </li>
-                  </ul>
+                <div className="card">
+                  {queryResponses[name] && (
+                    <ul className="list-group list-group-flush">
+                      {Object.keys(queryResponses[name]).map((r) => (
+                        <li
+                          key={r}
+                          className="list-group-item d-flex justify-content-between"
+                        >
+                          <span>{r}</span>
+                          <span>{queryResponses[name][r].count}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div className="d-flex justify-content-between align-items-center">
-            <div class="mb-3 mr-0 mr-md-3 flex-fill">
+            <div className="mb-3 mr-0 mr-md-3 flex-fill">
               {surveyTitle !== null && (
                 <EditInPlaceInput
                   name="titleEdit"
