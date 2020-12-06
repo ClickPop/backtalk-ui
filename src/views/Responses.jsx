@@ -1,6 +1,6 @@
 import * as axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FeedbackFloat } from '../components/FeedbackFloat';
 import { FileText } from 'react-feather';
 import { context } from '../context/Context';
@@ -267,14 +267,21 @@ export const Responses = () => {
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <h2 className="h3 mb-3">Settings</h2>
+          <div className="mb-4">
+            <h3 className="h5">Share Survey</h3>
+            <Link
+              to={`/survey/${params.hash}`}
+              target="_blank"
+              className="text-decoration-none"
+            >
+              {`${window.location.host}/survey/${params.hash}`}
+            </Link>
+          </div>
 
           {isPublic !== null && (
-            <>
-              <h3 className="h5">
-                Would you like the survey responses to be public?
-              </h3>
-              <div className="form-check form-switch form-switch-lg mb-3">
+            <div className="mb-4">
+              <h3 className="h5">Share Results</h3>
+              <div className="form-check form-switch form-switch-lg">
                 <input
                   className="form-check-input form-check-input-lg"
                   type="checkbox"
@@ -283,7 +290,18 @@ export const Responses = () => {
                   checked={isPublic}
                 />
               </div>
-            </>
+              {isPublic && (
+                <p>
+                  <Link
+                    to={`/share/${params.hash}`}
+                    target="_blank"
+                    className="text-decoration-none"
+                  >
+                    {`${window.location.host}/share/${params.hash}`}
+                  </Link>
+                </p>
+              )}
+            </div>
           )}
 
           <h3 className="h5">URL Questions</h3>
