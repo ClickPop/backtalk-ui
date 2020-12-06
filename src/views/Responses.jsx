@@ -21,7 +21,9 @@ export const Responses = () => {
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
   const { state } = useContext(context);
+  const [queryResponses, setQueryResponses] = useState({});
   const [isPublic, setIsPublic] = useState(null);
+
   useEffect(() => {
     const getResponses = async () => {
       try {
@@ -37,6 +39,24 @@ export const Responses = () => {
               new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
           ),
         );
+        const qResponses = {};
+        res.data.results.forEach((resp) => {
+          resp.data.forEach((d) => {
+            if (d.type === 'query') {
+              if (!qResponses[d.key]) {
+                qResponses[d.key] = {};
+              }
+              if (!qResponses[d.key][d.value]) {
+                qResponses[d.key][d.value] = {
+                  count: 1,
+                };
+              } else {
+                qResponses[d.key][d.value].count++;
+              }
+            }
+          });
+        });
+        setQueryResponses(qResponses);
         setQuestions(res.data.questions);
         setQuestions([
           ...res.data.questions,
@@ -275,33 +295,53 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <EditInPlaceInput
-                key={name}
-                name={name}
-                id={`${name}_input`}
-                value={friendlyNames[name]?.value}
-                initialValue={friendlyNames[name]?.savedValue}
-                setValue={(v) => handleFriendlyName(v, name)}
-                onSubmit={(e) => {
-                  handleSave(e, name);
-                }}
-                label={friendlyNames[name]?.savedValue}
-                showLabel={true}
-              />
+              <div key={name}>
+                <EditInPlaceInput
+                  key={name}
+                  name={name}
+                  id={`${name}_input`}
+                  value={friendlyNames[name]?.value}
+                  initialValue={friendlyNames[name]?.savedValue}
+                  setValue={(v) => handleFriendlyName(v, name)}
+                  onSubmit={(e) => {
+                    handleSave(e, name);
+                  }}
+                  label={friendlyNames[name]?.savedValue}
+                  showLabel={true}
+                />
+
+                <div className="card">
+                  {queryResponses[name] && (
+                    <ul className="list-group list-group-flush">
+                      {Object.keys(queryResponses[name]).map((r) => (
+                        <li
+                          key={r}
+                          className="list-group-item d-flex justify-content-between"
+                        >
+                          <span>{r}</span>
+                          <span>{queryResponses[name][r].count}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div className="d-flex justify-content-between align-items-center">
-            {surveyTitle !== null && (
-              <EditInPlaceInput
-                name="titleEdit"
-                id="surveyTitle"
-                value={surveyTitle}
-                initialValue={survey?.title}
-                setValue={setSurveyTitle}
-                onSubmit={handleTitleSave}
-              />
-            )}
+            <div className="mb-3 mr-0 mr-md-3 flex-fill">
+              {surveyTitle !== null && (
+                <EditInPlaceInput
+                  name="titleEdit"
+                  id="surveyTitle"
+                  value={surveyTitle}
+                  initialValue={survey?.title}
+                  setValue={setSurveyTitle}
+                  onSubmit={handleTitleSave}
+                />
+              )}
+            </div>
             {responses && (
               <div className="mb-3 text-right d-none d-md-block">
                 <button
