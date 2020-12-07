@@ -8,6 +8,7 @@ import { Modal } from '../components/Modal';
 import anonymousNickname from '../helpers/anonymousNickname';
 import { EditInPlaceInput } from '../components/EditInPlaceInput';
 import { ResponseCard } from '../components/ResponseCard';
+import { CopyLink } from '../components/CopyLink';
 
 export const Responses = () => {
   const params = useParams();
@@ -267,14 +268,22 @@ export const Responses = () => {
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <h2 className="h3 mb-3">Settings</h2>
+          <div className="mb-4">
+            <h3 className="h5">Share Survey</h3>
+            <CopyLink
+              to={`/survey/${params.hash}`}
+              target="_blank"
+              className="text-decoration-none"
+              heapName="Heap-Copy_Survey"
+            >
+              {`${window.location.host}/survey/${params.hash}`}
+            </CopyLink>
+          </div>
 
           {isPublic !== null && (
-            <>
-              <h3 className="h5">
-                Would you like the survey responses to be public?
-              </h3>
-              <div className="form-check form-switch form-switch-lg mb-3">
+            <div className="mb-4">
+              <h3 className="h5">Share Results</h3>
+              <div className="form-check form-switch form-switch-lg">
                 <input
                   className="form-check-input form-check-input-lg"
                   type="checkbox"
@@ -283,7 +292,19 @@ export const Responses = () => {
                   checked={isPublic}
                 />
               </div>
-            </>
+              {isPublic && (
+                <p>
+                  <CopyLink
+                    to={`/share/${params.hash}`}
+                    target="_blank"
+                    className="text-decoration-none"
+                    heapName="Heap-Copy_Results"
+                  >
+                    {`${window.location.host}/share/${params.hash}`}
+                  </CopyLink>
+                </p>
+              )}
+            </div>
           )}
 
           <h3 className="h5">URL Questions</h3>
@@ -346,7 +367,7 @@ export const Responses = () => {
               <div className="mb-3 text-right d-none d-md-block">
                 <button
                   type="button"
-                  className="btn btn-sm btn-secondary d-flex"
+                  className="btn btn-sm btn-secondary d-flex Heap-Download_CSV"
                   onClick={handleCSV}
                 >
                   Export to CSV{' '}

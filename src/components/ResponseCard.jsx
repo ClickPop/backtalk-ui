@@ -13,13 +13,17 @@ const CardActions = ({ share, handleModal, isShared }) => {
     <>
       <button
         type="button"
-        className="btn p-1 d-none d-md-inline-block"
+        className="btn p-1 d-none d-md-inline-block Heap-Download_Image"
         onClick={share}
       >
         <Download size={18} className="text-muted" />
       </button>
       {!isShared && (
-        <button type="button" className="btn p-1" onClick={handleModal}>
+        <button
+          type="button"
+          className="btn p-1 Heap-Delete"
+          onClick={handleModal}
+        >
           <Trash2 size={18} className="text-muted" />
         </button>
       )}
