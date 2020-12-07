@@ -34,10 +34,22 @@ export const Responses = () => {
         setIsPublic(res.data.survey.isPublic);
         setSurveyTitle(res.data.survey.title);
         setResponses(
-          res.data.results.sort(
-            (a, b) =>
-              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-          ),
+          res.data.results
+            .sort(
+              (a, b) =>
+                new Date(b.updatedAt).getTime() -
+                new Date(a.updatedAt).getTime(),
+            )
+            .map((res) => ({
+              ...res,
+              data: res.data.sort((a, b) => {
+                if (a.type === 'query') {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              }),
+            })),
         );
         const qResponses = {};
         res.data.results.forEach((resp) => {
@@ -313,15 +325,21 @@ export const Responses = () => {
                 <div className="card">
                   {queryResponses[name] && (
                     <ul className="list-group list-group-flush">
-                      {Object.keys(queryResponses[name]).map((r) => (
-                        <li
-                          key={r}
-                          className="list-group-item d-flex justify-content-between"
-                        >
-                          <span>{r}</span>
-                          <span>{queryResponses[name][r].count}</span>
-                        </li>
-                      ))}
+                      {Object.keys(queryResponses[name])
+                        .sort(
+                          (a, b) =>
+                            queryResponses[name][b].count -
+                            queryResponses[name][a].count,
+                        )
+                        .map((r) => (
+                          <li
+                            key={r}
+                            className="list-group-item d-flex justify-content-between"
+                          >
+                            <span>{r}</span>
+                            <span>{queryResponses[name][r].count}</span>
+                          </li>
+                        ))}
                     </ul>
                   )}
                 </div>
