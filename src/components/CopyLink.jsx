@@ -9,9 +9,12 @@ export const CopyLink = ({
   className,
   onClick,
   copyFrom,
+  heapName,
 }) => {
   return (
-    <span className="d-flex justify-content-between align-items-center">
+    <span
+      className={`d-flex justify-content-between align-items-center ${heapName}`}
+    >
       <Link to={to} target={target} className={className} ref={copyFrom}>
         {children}
       </Link>

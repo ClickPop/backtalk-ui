@@ -278,6 +278,7 @@ export const Responses = () => {
               className="text-decoration-none"
               onClick={copySurvey}
               copyFrom={surveyRef}
+              heapName="Heap-Copy_Survey"
             >
               {`${window.location.host}/survey/${params.hash}`}
             </CopyLink>
@@ -303,6 +304,7 @@ export const Responses = () => {
                     className="text-decoration-none"
                     copyFrom={shareRef}
                     onClick={copyShare}
+                    heapName="Heap-Copy_Results"
                   >
                     {`${window.location.host}/share/${params.hash}`}
                   </CopyLink>
@@ -371,7 +373,7 @@ export const Responses = () => {
               <div className="mb-3 text-right d-none d-md-block">
                 <button
                   type="button"
-                  className="btn btn-sm btn-secondary d-flex"
+                  className="btn btn-sm btn-secondary d-flex Heap-Download_CSV"
                   onClick={handleCSV}
                 >
                   Export to CSV{' '}

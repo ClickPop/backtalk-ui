@@ -159,6 +159,7 @@ export const Dashboard = () => {
                         target="_blank"
                         copyFrom={surveyRef}
                         onClick={copySurvey}
+                        heapName="Heap-Copy_Survey"
                       >{`${window.location.host}/survey/${survey.hash}`}</CopyLink>
                     </div>
                   </Card>
