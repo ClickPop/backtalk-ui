@@ -21,7 +21,25 @@ const Changelog = () => {
             answers you need, quickly.
           </p>
           <ChangelogEntry
-            title="Password Reset"
+            title="Click to Copy"
+            date="December 6, 2020"
+            description="Our first user feature request! We added a little icon to let you easily copy and share your surveys and links to survey results."
+          />
+
+          <ChangelogEntry
+            title="Share Your Results"
+            date="December 6, 2020"
+            description="Working with a team? You can now make your survey results shareable! Don't worry, we remove the personal contact info from folks."
+          />
+
+          <ChangelogEntry
+            title="Better Stats"
+            date="December 6, 2020"
+            description="You can now see a count of all of the answers to your URL questions."
+          />
+
+          <ChangelogEntry
+            title="Give Us Your Feedback!"
             date="November 25, 2020"
             description="Happy Thanksgiving eve! We added the ability to share feedback with us through a sticky side widget you'll see on the dashboard and responses view."
           />
