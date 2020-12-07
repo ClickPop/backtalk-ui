@@ -328,7 +328,7 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <div key={name}>
+              <div key={name} class="mb-4">
                 <EditInPlaceInput
                   key={name}
                   name={name}
