@@ -80,9 +80,9 @@ export const Responses = () => {
               return keys;
             }, []),
         ]);
-        const fnames = localStorage.getItem(`friendly_${params.hash}`);
+        const fnames = res.data.survey.friendlyNames;
         if (fnames) {
-          setFriendlyNames(JSON.parse(fnames));
+          setFriendlyNames(fnames);
         } else {
           res.data.results.forEach((response) => {
             response.data.forEach((r) => {
@@ -138,20 +138,30 @@ export const Responses = () => {
     setShow(display);
   };
 
-  const handleSave = (e, key) => {
+  const handleSave = async (e, key) => {
     e.preventDefault();
-    setFriendlyNames({
-      ...friendlyNames,
-      [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
-    });
-    document.getElementById(`${key}_input`).blur();
-    localStorage.setItem(
-      `friendly_${params.hash}`,
-      JSON.stringify({
-        ...friendlyNames,
-        [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
-      }),
-    );
+    try {
+      const res = await axios({
+        method: 'patch',
+        url: '/api/v1/surveys/update',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: survey.id,
+          friendlyNames: {
+            ...friendlyNames,
+            [key]: {
+              ...friendlyNames[key],
+              savedValue: friendlyNames[key].value,
+            },
+          },
+        },
+      });
+      setFriendlyNames(res.data.result.friendlyNames);
+      document.getElementById(`${key}_input`).blur();
+    } catch (err) {
+      //TODO add error popup
+      console.error(err);
+    }
   };
 
   const handleFriendlyName = (value, name) => {
@@ -328,7 +338,7 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <div key={name} class="mb-4">
+              <div key={name} className="mb-4">
                 <EditInPlaceInput
                   key={name}
                   name={name}
