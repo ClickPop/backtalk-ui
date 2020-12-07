@@ -9,7 +9,6 @@ import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import { Card } from '../components/Card';
 import { CopyLink } from '../components/CopyLink';
-import { useCopy } from '../helpers/copy';
 
 const CardTitle = ({ survey }) => {
   return (
@@ -37,7 +36,6 @@ export const Dashboard = () => {
   const [show, setShow] = useState(false);
   const [deleteResponse, setDeleteResponse] = useState(null);
   const [deleted, setDeleted] = useState(false);
-  const [surveyRef, copySurvey] = useCopy();
 
   const handleDelete = async (id) => {
     try {
@@ -157,8 +155,6 @@ export const Dashboard = () => {
                         to={`/survey/${survey.hash}`}
                         className="text-decoration-none mr-2"
                         target="_blank"
-                        copyFrom={surveyRef}
-                        onClick={copySurvey}
                         heapName="Heap-Copy_Survey"
                       >{`${window.location.host}/survey/${survey.hash}`}</CopyLink>
                     </div>

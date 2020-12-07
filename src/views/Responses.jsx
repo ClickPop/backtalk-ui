@@ -8,7 +8,6 @@ import { Modal } from '../components/Modal';
 import anonymousNickname from '../helpers/anonymousNickname';
 import { EditInPlaceInput } from '../components/EditInPlaceInput';
 import { ResponseCard } from '../components/ResponseCard';
-import { useCopy } from '../helpers/copy';
 import { CopyLink } from '../components/CopyLink';
 
 export const Responses = () => {
@@ -25,8 +24,7 @@ export const Responses = () => {
   const { state } = useContext(context);
   const [queryResponses, setQueryResponses] = useState({});
   const [isPublic, setIsPublic] = useState(null);
-  const [surveyRef, copySurvey] = useCopy();
-  const [shareRef, copyShare] = useCopy();
+
   useEffect(() => {
     const getResponses = async () => {
       try {
@@ -276,8 +274,6 @@ export const Responses = () => {
               to={`/survey/${params.hash}`}
               target="_blank"
               className="text-decoration-none"
-              onClick={copySurvey}
-              copyFrom={surveyRef}
               heapName="Heap-Copy_Survey"
             >
               {`${window.location.host}/survey/${params.hash}`}
@@ -302,8 +298,6 @@ export const Responses = () => {
                     to={`/share/${params.hash}`}
                     target="_blank"
                     className="text-decoration-none"
-                    copyFrom={shareRef}
-                    onClick={copyShare}
                     heapName="Heap-Copy_Results"
                   >
                     {`${window.location.host}/share/${params.hash}`}
