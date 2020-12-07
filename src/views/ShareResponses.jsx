@@ -22,19 +22,24 @@ export const ShareResponses = () => {
         if (!response.respondent) {
           setNicknames((n) => ({ ...n, [response.id]: anonymousNickname() }));
         }
-        res.data.survey.Responses.forEach((response) => {
-          response.data.forEach((r) => {
-            if (r.key) {
-              setFriendlyNames((f) => ({
-                ...f,
-                [r.key]: {
-                  value: r.key,
-                  savedValue: r.key,
-                },
-              }));
-            }
+        const fnames = res.data.survey.friendlyNames;
+        if (fnames) {
+          setFriendlyNames(fnames);
+        } else {
+          res.data.survey.Responses.forEach((response) => {
+            response.data.forEach((r) => {
+              if (r.key) {
+                setFriendlyNames((f) => ({
+                  ...f,
+                  [r.key]: {
+                    value: r.key,
+                    savedValue: r.key,
+                  },
+                }));
+              }
+            });
           });
-        });
+        }
       });
     };
 
