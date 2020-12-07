@@ -8,6 +8,8 @@ import { FeedbackFloat } from '../components/FeedbackFloat';
 import { Modal } from '../components/Modal';
 import decodeHtml from '../helpers/decodeHtml';
 import { Card } from '../components/Card';
+import { CopyLink } from '../components/CopyLink';
+import { useCopy } from '../helpers/copy';
 
 const CardTitle = ({ survey }) => {
   return (
@@ -35,6 +37,7 @@ export const Dashboard = () => {
   const [show, setShow] = useState(false);
   const [deleteResponse, setDeleteResponse] = useState(null);
   const [deleted, setDeleted] = useState(false);
+  const [surveyRef, copySurvey] = useCopy();
 
   const handleDelete = async (id) => {
     try {
@@ -150,11 +153,13 @@ export const Dashboard = () => {
                     </div>
                     <div className="d-flex align-items-center">
                       <ExternalLink size={18} className="mr-2 text-muted" />
-                      <Link
+                      <CopyLink
                         to={`/survey/${survey.hash}`}
-                        className="text-decoration-none"
+                        className="text-decoration-none mr-2"
                         target="_blank"
-                      >{`${window.location.host}/survey/${survey.hash}`}</Link>
+                        copyFrom={surveyRef}
+                        onClick={copySurvey}
+                      >{`${window.location.host}/survey/${survey.hash}`}</CopyLink>
                     </div>
                   </Card>
                 </div>

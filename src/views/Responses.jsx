@@ -1,6 +1,6 @@
 import * as axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FeedbackFloat } from '../components/FeedbackFloat';
 import { FileText } from 'react-feather';
 import { context } from '../context/Context';
@@ -8,6 +8,8 @@ import { Modal } from '../components/Modal';
 import anonymousNickname from '../helpers/anonymousNickname';
 import { EditInPlaceInput } from '../components/EditInPlaceInput';
 import { ResponseCard } from '../components/ResponseCard';
+import { useCopy } from '../helpers/copy';
+import { CopyLink } from '../components/CopyLink';
 
 export const Responses = () => {
   const params = useParams();
@@ -23,7 +25,8 @@ export const Responses = () => {
   const { state } = useContext(context);
   const [queryResponses, setQueryResponses] = useState({});
   const [isPublic, setIsPublic] = useState(null);
-
+  const [surveyRef, copySurvey] = useCopy();
+  const [shareRef, copyShare] = useCopy();
   useEffect(() => {
     const getResponses = async () => {
       try {
@@ -269,13 +272,15 @@ export const Responses = () => {
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           <div className="mb-4">
             <h3 className="h5">Share Survey</h3>
-            <Link
+            <CopyLink
               to={`/survey/${params.hash}`}
               target="_blank"
               className="text-decoration-none"
+              onClick={copySurvey}
+              copyFrom={surveyRef}
             >
               {`${window.location.host}/survey/${params.hash}`}
-            </Link>
+            </CopyLink>
           </div>
 
           {isPublic !== null && (
@@ -292,13 +297,15 @@ export const Responses = () => {
               </div>
               {isPublic && (
                 <p>
-                  <Link
+                  <CopyLink
                     to={`/share/${params.hash}`}
                     target="_blank"
                     className="text-decoration-none"
+                    copyFrom={shareRef}
+                    onClick={copyShare}
                   >
                     {`${window.location.host}/share/${params.hash}`}
-                  </Link>
+                  </CopyLink>
                 </p>
               )}
             </div>
