@@ -12,7 +12,7 @@ export const CopyLink = ({ children, to, target, className, heapName }) => {
       <Link to={to} target={target} className={className} ref={ref}>
         {children}
       </Link>
-      <span title="Copy Button" style={{ cursor: 'pointer' }} onClick={copy}>
+      <span className="copy-link" title="Copy to Clipboard" style={{ cursor: 'pointer' }} onClick={copy}>
         {/* TODO, add error state */}
         {copied ? <Check size={18} /> : <Copy size={18} />}
       </span>
