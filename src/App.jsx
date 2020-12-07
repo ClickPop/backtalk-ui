@@ -18,6 +18,7 @@ import packageJson from '../package.json';
 import TagManager from 'react-gtm-module';
 import { PasswordResetStart } from './views/PasswordResetStart';
 import { PasswordReset } from './views/PasswordReset';
+import { Admin } from './views/Admin';
 import { ShareResponses } from './views/ShareResponses';
 
 if (process.env.NODE_ENV === 'production') {
@@ -93,6 +94,7 @@ const App = () => {
               component={FirstSurvey}
             />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+            <ProtectedRoute exact path="/admin" component={Admin} />
             <ProtectedRoute
               exact
               path="/responses/:hash"
