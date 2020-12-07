@@ -35,10 +35,7 @@ export const EditInPlaceInput = ({
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="form-group mb-3 mr-0 mr-md-3 flex-fill"
-    >
+    <form onSubmit={onSubmit} className="form-group flex-fill">
       <label htmlFor={id} className={`${!showLabel && 'visually-hidden'}`}>
         {label}
       </label>

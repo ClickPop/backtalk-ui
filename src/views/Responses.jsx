@@ -8,6 +8,7 @@ import { Modal } from '../components/Modal';
 import anonymousNickname from '../helpers/anonymousNickname';
 import { EditInPlaceInput } from '../components/EditInPlaceInput';
 import { ResponseCard } from '../components/ResponseCard';
+import { CopyLink } from '../components/CopyLink';
 
 export const Responses = () => {
   const params = useParams();
@@ -21,6 +22,9 @@ export const Responses = () => {
   const [friendlyNames, setFriendlyNames] = useState({});
   const [nicknames, setNicknames] = useState({});
   const { state } = useContext(context);
+  const [queryResponses, setQueryResponses] = useState({});
+  const [isPublic, setIsPublic] = useState(null);
+
   useEffect(() => {
     const getResponses = async () => {
       try {
@@ -28,13 +32,44 @@ export const Responses = () => {
           headers: { Authorization: `Bearer ${state.token}` },
         });
         setSurvey(res.data.survey);
+        setIsPublic(res.data.survey.isPublic);
         setSurveyTitle(res.data.survey.title);
         setResponses(
-          res.data.results.sort(
-            (a, b) =>
-              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-          ),
+          res.data.results
+            .sort(
+              (a, b) =>
+                new Date(b.updatedAt).getTime() -
+                new Date(a.updatedAt).getTime(),
+            )
+            .map((res) => ({
+              ...res,
+              data: res.data.sort((a, b) => {
+                if (a.type === 'query') {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              }),
+            })),
         );
+        const qResponses = {};
+        res.data.results.forEach((resp) => {
+          resp.data.forEach((d) => {
+            if (d.type === 'query') {
+              if (!qResponses[d.key]) {
+                qResponses[d.key] = {};
+              }
+              if (!qResponses[d.key][d.value]) {
+                qResponses[d.key][d.value] = {
+                  count: 1,
+                };
+              } else {
+                qResponses[d.key][d.value].count++;
+              }
+            }
+          });
+        });
+        setQueryResponses(qResponses);
         setQuestions(res.data.questions);
         setQuestions([
           ...res.data.questions,
@@ -45,9 +80,9 @@ export const Responses = () => {
               return keys;
             }, []),
         ]);
-        const fnames = localStorage.getItem(`friendly_${params.hash}`);
+        const fnames = res.data.survey.friendlyNames;
         if (fnames) {
-          setFriendlyNames(JSON.parse(fnames));
+          setFriendlyNames(fnames);
         } else {
           res.data.results.forEach((response) => {
             response.data.forEach((r) => {
@@ -103,20 +138,30 @@ export const Responses = () => {
     setShow(display);
   };
 
-  const handleSave = (e, key) => {
+  const handleSave = async (e, key) => {
     e.preventDefault();
-    setFriendlyNames({
-      ...friendlyNames,
-      [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
-    });
-    document.getElementById(`${key}_input`).blur();
-    localStorage.setItem(
-      `friendly_${params.hash}`,
-      JSON.stringify({
-        ...friendlyNames,
-        [key]: { ...friendlyNames[key], savedValue: friendlyNames[key].value },
-      }),
-    );
+    try {
+      const res = await axios({
+        method: 'patch',
+        url: '/api/v1/surveys/update',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: survey.id,
+          friendlyNames: {
+            ...friendlyNames,
+            [key]: {
+              ...friendlyNames[key],
+              savedValue: friendlyNames[key].value,
+            },
+          },
+        },
+      });
+      setFriendlyNames(res.data.result.friendlyNames);
+      document.getElementById(`${key}_input`).blur();
+    } catch (err) {
+      //TODO add error popup
+      console.error(err);
+    }
   };
 
   const handleFriendlyName = (value, name) => {
@@ -219,11 +264,70 @@ export const Responses = () => {
     }
   };
 
+  const handlePublic = async (e) => {
+    e.preventDefault();
+    setIsPublic(e.target.checked);
+    try {
+      const res = await axios({
+        method: 'patch',
+        url: '/api/v1/surveys/update',
+        headers: { Authorization: `Bearer ${state.token}` },
+        data: {
+          surveyId: survey.id,
+          isPublic: e.target.checked,
+        },
+      });
+      setSurvey(res.data.result);
+      setSurveyTitle(res.data.result.title);
+      document.activeElement.blur();
+    } catch (err) {
+      console.error(err);
+      // TODO error popup
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <h2 className="h3 mb-3">Settings</h2>
+          <div className="mb-4">
+            <h3 className="h5">Share Survey</h3>
+            <CopyLink
+              to={`/survey/${params.hash}`}
+              target="_blank"
+              className="text-decoration-none"
+              heapName="Heap-Copy_Survey"
+            >
+              {`${window.location.host}/survey/${params.hash}`}
+            </CopyLink>
+          </div>
+
+          {isPublic !== null && (
+            <div className="mb-4">
+              <h3 className="h5">Share Results</h3>
+              <div className="form-check form-switch form-switch-lg">
+                <input
+                  className="form-check-input form-check-input-lg"
+                  type="checkbox"
+                  name="is-public"
+                  onChange={handlePublic}
+                  checked={isPublic}
+                />
+              </div>
+              {isPublic && (
+                <p>
+                  <CopyLink
+                    to={`/share/${params.hash}`}
+                    target="_blank"
+                    className="text-decoration-none"
+                    heapName="Heap-Copy_Results"
+                  >
+                    {`${window.location.host}/share/${params.hash}`}
+                  </CopyLink>
+                </p>
+              )}
+            </div>
+          )}
 
           <h3 className="h5">URL Questions</h3>
           <p>
@@ -234,38 +338,64 @@ export const Responses = () => {
 
           {friendlyNames &&
             Object.keys(friendlyNames).map((name) => (
-              <EditInPlaceInput
-                key={name}
-                name={name}
-                id={`${name}_input`}
-                value={friendlyNames[name]?.value}
-                initialValue={friendlyNames[name]?.savedValue}
-                setValue={(v) => handleFriendlyName(v, name)}
-                onSubmit={(e) => {
-                  handleSave(e, name);
-                }}
-                label={friendlyNames[name]?.savedValue}
-                showLabel={true}
-              />
+              <div key={name} className="mb-4">
+                <EditInPlaceInput
+                  key={name}
+                  name={name}
+                  id={`${name}_input`}
+                  value={friendlyNames[name]?.value}
+                  initialValue={friendlyNames[name]?.savedValue}
+                  setValue={(v) => handleFriendlyName(v, name)}
+                  onSubmit={(e) => {
+                    handleSave(e, name);
+                  }}
+                  label={friendlyNames[name]?.savedValue}
+                  showLabel={true}
+                />
+
+                <div className="card">
+                  {queryResponses[name] && (
+                    <ul className="list-group list-group-flush">
+                      {Object.keys(queryResponses[name])
+                        .sort(
+                          (a, b) =>
+                            queryResponses[name][b].count -
+                            queryResponses[name][a].count,
+                        )
+                        .map((r) => (
+                          <li
+                            key={r}
+                            className="list-group-item d-flex justify-content-between"
+                          >
+                            <span>{r}</span>
+                            <span>{queryResponses[name][r].count}</span>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             ))}
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div className="d-flex justify-content-between align-items-center">
-            {surveyTitle !== null && (
-              <EditInPlaceInput
-                name="titleEdit"
-                id="surveyTitle"
-                value={surveyTitle}
-                initialValue={survey?.title}
-                setValue={setSurveyTitle}
-                onSubmit={handleTitleSave}
-              />
-            )}
+            <div className="mb-3 mr-0 mr-md-3 flex-fill">
+              {surveyTitle !== null && (
+                <EditInPlaceInput
+                  name="titleEdit"
+                  id="surveyTitle"
+                  value={surveyTitle}
+                  initialValue={survey?.title}
+                  setValue={setSurveyTitle}
+                  onSubmit={handleTitleSave}
+                />
+              )}
+            </div>
             {responses && (
               <div className="mb-3 text-right d-none d-md-block">
                 <button
                   type="button"
-                  className="btn btn-sm btn-secondary d-flex"
+                  className="btn btn-sm btn-secondary d-flex Heap-Download_CSV"
                   onClick={handleCSV}
                 >
                   Export to CSV{' '}

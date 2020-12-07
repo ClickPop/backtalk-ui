@@ -40,7 +40,7 @@ const Home = () => {
           <Button
             className="btn btn-primary btn-lg"
             pathname="/register"
-            text="Creat a survey!"
+            text="Create a survey!"
           ></Button>
           <img
             src={screenshot}
