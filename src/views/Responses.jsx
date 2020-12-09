@@ -107,7 +107,7 @@ export const Responses = (props) => {
     };
     getResponses();
     if (deleted) setDeleted(false);
-  }, [params.hash, state.token, deleted]);
+  }, [params.hash, state.token, deleted, props.shared]);
 
   useEffect(() => {
     responses.forEach((response) => {
@@ -348,7 +348,7 @@ export const Responses = (props) => {
               ? (<p>
                 These quesstions were dynamically passed via URL parameters. 
                 One of the many neat features available to 
-                {' '}<a href="https://backtalk.io/" target="_blank">Backtalk.io</a>{' '}
+                {' '}<a href="https://backtalk.io/">Backtalk.io</a>{' '}
                 users.
               </p>)
               : (<p>
