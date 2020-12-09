@@ -374,8 +374,9 @@ export const Responses = (props) => {
                         onSubmit={(e) => {
                           handleSave(e, name);
                         }}
-                        label={friendlyNames[name]?.savedValue}
+                        label={`Query String: ?${name}=`}
                         showLabel={true}
+                        labelAsDescription={true}
                       />
                   }
 
