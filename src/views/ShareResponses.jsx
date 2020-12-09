@@ -4,7 +4,7 @@ import * as axios from 'axios';
 import { ResponseCard } from '../components/ResponseCard';
 import anonymousNickname from '../helpers/anonymousNickname';
 
-export const ShareResponses = () => {
+export const ShareResponses = (props) => {
   const [survey, setSurvey] = useState({});
   const [questions, setQuestions] = useState([]);
   const [nicknames, setNicknames] = useState({});
@@ -47,7 +47,7 @@ export const ShareResponses = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container" {...props}>
       <div className="col-12 col-sm-10 col-lg-8 col-xl-6 mx-auto">
         <div className="row mb-3">
           <h2>{survey?.title}</h2>

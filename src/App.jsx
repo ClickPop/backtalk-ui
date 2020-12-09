@@ -99,6 +99,7 @@ const App = () => {
               exact
               path="/responses/:hash"
               component={Responses}
+              title="wow"
             />
             <Route exact path="/" component={Home} />
             <Route
@@ -113,7 +114,8 @@ const App = () => {
             />
             <Route exact path="/changelog" component={Changelog} />
             <Route path="/survey/:hash" component={Response} />
-            <Route path="/share/:hash" component={ShareResponses} />
+            <Route path="/share/:hash" render={() => <Responses shared="true" />} />
+            <Route path="/share2/:hash" render={() => <ShareResponses/>} />
             <Route component={Error404} />
           </Switch>
         </div>

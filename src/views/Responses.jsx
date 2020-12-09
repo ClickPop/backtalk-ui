@@ -10,7 +10,7 @@ import { EditInPlaceInput } from '../components/EditInPlaceInput';
 import { ResponseCard } from '../components/ResponseCard';
 import { CopyLink } from '../components/CopyLink';
 
-export const Responses = () => {
+export const Responses = (props) => {
   const params = useParams();
   const [survey, setSurvey] = useState({});
   const [surveyTitle, setSurveyTitle] = useState(null);
@@ -24,6 +24,8 @@ export const Responses = () => {
   const { state } = useContext(context);
   const [queryResponses, setQueryResponses] = useState({});
   const [isPublic, setIsPublic] = useState(null);
+
+  const [sharedVersion, setSharedVersion] = useState(false);
 
   useEffect(() => {
     const getResponses = async () => {
@@ -114,6 +116,10 @@ export const Responses = () => {
       }
     });
   }, [responses]);
+
+  useEffect(() => {
+    setSharedVersion(('shared' in props && props.shared === 'true') ? true : false);
+  }, [props]);
 
   const handleDelete = async (id) => {
     try {
@@ -291,6 +297,7 @@ export const Responses = () => {
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           <div className="mb-4">
+            {shared}
             <h3 className="h5">Share Survey</h3>
             <CopyLink
               to={`/survey/${params.hash}`}
