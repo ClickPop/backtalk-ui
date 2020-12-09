@@ -19,7 +19,6 @@ import TagManager from 'react-gtm-module';
 import { PasswordResetStart } from './views/PasswordResetStart';
 import { PasswordReset } from './views/PasswordReset';
 import { Admin } from './views/Admin';
-import { ShareResponses } from './views/ShareResponses';
 
 if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
@@ -115,7 +114,6 @@ const App = () => {
             <Route exact path="/changelog" component={Changelog} />
             <Route path="/survey/:hash" component={Response} />
             <Route path="/share/:hash" render={() => <Responses shared="true" />} />
-            <Route path="/share2/:hash" render={() => <ShareResponses/>} />
             <Route component={Error404} />
           </Switch>
         </div>

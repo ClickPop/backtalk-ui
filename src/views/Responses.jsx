@@ -26,19 +26,18 @@ export const Responses = (props) => {
   const [queryResponses, setQueryResponses] = useState({});
   const [isPublic, setIsPublic] = useState(null);
 
-  const [sharedVersion, setSharedVersion] = useState(false);
-
   useEffect(() => {
     const getResponses = async () => {
       try {
-        const res = await axios.get(`/api/v1/responses/${params.hash}`, {
+        const res = (props.shared === 'true') ? await axios.get(`/api/v1/surveys/share/${params.hash}`) : await axios.get(`/api/v1/responses/${params.hash}`, {
           headers: { Authorization: `Bearer ${state.token}` },
         });
+        
         setSurvey(res.data.survey);
         setIsPublic(res.data.survey.isPublic);
         setSurveyTitle(res.data.survey.title);
         setResponses(
-          res.data.results
+          res.data.survey.Responses
             .sort(
               (a, b) =>
                 new Date(b.updatedAt).getTime() -
@@ -56,7 +55,7 @@ export const Responses = (props) => {
             })),
         );
         const qResponses = {};
-        res.data.results.forEach((resp) => {
+        res.data.survey.Responses.forEach((resp) => {
           resp.data.forEach((d) => {
             if (d.type === 'query') {
               if (!qResponses[d.key]) {
@@ -73,10 +72,10 @@ export const Responses = (props) => {
           });
         });
         setQueryResponses(qResponses);
-        setQuestions(res.data.questions);
+        setQuestions(res.data.survey.Questions);
         setQuestions([
-          ...res.data.questions,
-          ...res.data.results
+          ...res.data.survey.Questions,
+          ...res.data.survey.Responses
             .map((result) => result.data)
             .reduce((newResps, resp) => {
               const keys = resp.filter((r) => r.key).map((r) => r.key);
@@ -87,7 +86,7 @@ export const Responses = (props) => {
         if (fnames) {
           setFriendlyNames(fnames);
         } else {
-          res.data.results.forEach((response) => {
+          res.data.survey.Responses.forEach((response) => {
             response.data.forEach((r) => {
               if (r.key) {
                 setFriendlyNames((f) => ({
@@ -118,9 +117,7 @@ export const Responses = (props) => {
     });
   }, [responses]);
 
-  useEffect(() => {
-    setSharedVersion(('shared' in props && props.shared === 'true') ? true : false);
-  }, [props]);
+  const isSharedVersion = () => props.shared === 'true';
 
   const handleDelete = async (id) => {
     try {
@@ -297,106 +294,131 @@ export const Responses = (props) => {
     <div className="container">
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
-          <div className="mb-4">
-            {responses?.length > 0 && <ResponseMap responses={responses} />}
-            <h3 className="h5">Share Survey</h3>
-            <CopyLink
-              to={`/survey/${params.hash}`}
-              target="_blank"
-              className="text-decoration-none"
-              heapName="Heap-Copy_Survey"
-            >
-              {`${window.location.host}/survey/${params.hash}`}
-            </CopyLink>
-          </div>
-
-          {isPublic !== null && (
+          {responses?.length > 0 && <ResponseMap responses={responses} />}
+          
+          {!isSharedVersion() && (
             <div className="mb-4">
-              <h3 className="h5">Share Results</h3>
-              <div className="form-check form-switch form-switch-lg">
-                <input
-                  className="form-check-input form-check-input-lg"
-                  type="checkbox"
-                  name="is-public"
-                  onChange={handlePublic}
-                  checked={isPublic}
-                />
-              </div>
-              {isPublic && (
-                <p>
-                  <CopyLink
-                    to={`/share/${params.hash}`}
-                    target="_blank"
-                    className="text-decoration-none"
-                    heapName="Heap-Copy_Results"
-                  >
-                    {`${window.location.host}/share/${params.hash}`}
-                  </CopyLink>
-                </p>
-              )}
+              <h3 className="h5">Share Survey</h3>
+              <CopyLink
+                to={`/survey/${params.hash}`}
+                target="_blank"
+                className="text-decoration-none"
+                heapName="Heap-Copy_Survey"
+              >
+                {`${window.location.host}/survey/${params.hash}`}
+              </CopyLink>
             </div>
           )}
-
-          <h3 className="h5">URL Questions</h3>
-          <p>
-            You can dynamically add new questions and answers to links you share
-            by adding <span className="text-monospace">?question=answer</span>{' '}
-            paramaters to your survey share URLs.
-          </p>
-
-          {friendlyNames &&
-            Object.keys(friendlyNames).map((name) => (
-              <div key={name} className="mb-4">
-                <EditInPlaceInput
-                  key={name}
-                  name={name}
-                  id={`${name}_input`}
-                  value={friendlyNames[name]?.value}
-                  initialValue={friendlyNames[name]?.savedValue}
-                  setValue={(v) => handleFriendlyName(v, name)}
-                  onSubmit={(e) => {
-                    handleSave(e, name);
-                  }}
-                  label={friendlyNames[name]?.savedValue}
-                  showLabel={true}
-                />
-
-                <div className="card">
-                  {queryResponses[name] && (
-                    <ul className="list-group list-group-flush">
-                      {Object.keys(queryResponses[name])
-                        .sort(
-                          (a, b) =>
-                            queryResponses[name][b].count -
-                            queryResponses[name][a].count,
-                        )
-                        .map((r) => (
-                          <li
-                            key={r}
-                            className="list-group-item d-flex justify-content-between"
-                          >
-                            <span>{r}</span>
-                            <span>{queryResponses[name][r].count}</span>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
+          
+          {!isSharedVersion() && (
+            isPublic !== null && (
+              <div className="mb-4">
+                <h3 className="h5">Share Results</h3>
+                <div className="form-check form-switch form-switch-lg">
+                  <input
+                    className="form-check-input form-check-input-lg"
+                    type="checkbox"
+                    name="is-public"
+                    onChange={handlePublic}
+                    checked={isPublic}
+                  />
                 </div>
+                {isPublic && (
+                  <p>
+                    <CopyLink
+                      to={`/share/${params.hash}`}
+                      target="_blank"
+                      className="text-decoration-none"
+                      heapName="Heap-Copy_Results"
+                    >
+                      {`${window.location.host}/share/${params.hash}`}
+                    </CopyLink>
+                  </p>
+                )}
               </div>
-            ))}
+            )
+          )}
+
+          <div>
+            {isSharedVersion() 
+              ? <h3 className="h5">Additional Questions</h3>
+              : <h3 className="h5">URL Questions</h3>
+            }
+            {isSharedVersion()
+              ? (<p>
+                These quesstions were dynamically passed via URL parameters. 
+                One of the many neat features available to 
+                {' '}<a href="https://backtalk.io/" target="_blank">Backtalk.io</a>{' '}
+                users.
+              </p>)
+              : (<p>
+                You can dynamically add new questions and answers to links you share
+                by adding <span className="text-monospace">?question=answer</span>{' '}
+                paramaters to your survey share URLs.
+              </p>) 
+            }
+            
+
+            {friendlyNames &&
+              Object.keys(friendlyNames).map((name) => (
+                <div key={name} className="mb-4">
+                  {isSharedVersion()
+                    ? <h4 className="h6">{friendlyNames[name]?.savedValue}</h4>
+                    : <EditInPlaceInput
+                        key={name}
+                        name={name}
+                        id={`${name}_input`}
+                        value={friendlyNames[name]?.value}
+                        initialValue={friendlyNames[name]?.savedValue}
+                        setValue={(v) => handleFriendlyName(v, name)}
+                        onSubmit={(e) => {
+                          handleSave(e, name);
+                        }}
+                        label={friendlyNames[name]?.savedValue}
+                        showLabel={true}
+                      />
+                  }
+
+                  <div className="card">
+                    {queryResponses[name] && (
+                      <ul className="list-group list-group-flush">
+                        {Object.keys(queryResponses[name])
+                          .sort(
+                            (a, b) =>
+                              queryResponses[name][b].count -
+                              queryResponses[name][a].count,
+                          )
+                          .map((r) => (
+                            <li
+                              key={r}
+                              className="list-group-item d-flex justify-content-between"
+                            >
+                              <span>{r}</span>
+                              <span>{queryResponses[name][r].count}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              )
+            )}
+          </div>
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div className="d-flex justify-content-between align-items-center">
             <div className="mb-3 mr-0 mr-md-3 flex-fill">
               {surveyTitle !== null && (
-                <EditInPlaceInput
-                  name="titleEdit"
-                  id="surveyTitle"
-                  value={surveyTitle}
-                  initialValue={survey?.title}
-                  setValue={setSurveyTitle}
-                  onSubmit={handleTitleSave}
-                />
+                !isSharedVersion()
+                ? <EditInPlaceInput
+                    name="titleEdit"
+                    id="surveyTitle"
+                    value={surveyTitle}
+                    initialValue={survey?.title}
+                    setValue={setSurveyTitle}
+                    onSubmit={handleTitleSave}
+                  />
+                : <h3>{surveyTitle}</h3>
               )}
             </div>
             {responses && (
@@ -420,34 +442,37 @@ export const Responses = (props) => {
                 questions={questions}
                 friendlyNames={friendlyNames}
                 nicknames={nicknames}
-                handleModal={handleModal}
+                handleModal={isSharedVersion() ? undefined : handleModal}
+                isShared={isSharedVersion()}
               />
             ))}
           </div>
         </div>
       </div>
-      <Modal show={show} handleModal={handleModal} title="Delete Response">
-        <div className="modal-body">
-          Are you sure you want to delete this response? Once it's gone, it's
-          gone.
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-white"
-            onClick={() => handleModal(false)}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={() => handleDelete(deleteResponse)}
-          >
-            Delete
-          </button>
-        </div>
-      </Modal>
+      {(!isSharedVersion()) && (
+        <Modal show={show} handleModal={handleModal} title="Delete Response">
+          <div className="modal-body">
+            Are you sure you want to delete this response? Once it's gone, it's
+            gone.
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-white"
+              onClick={() => handleModal(false)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => handleDelete(deleteResponse)}
+            >
+              Delete
+            </button>
+          </div>
+        </Modal>
+      )}
       <FeedbackFloat />
     </div>
   );
