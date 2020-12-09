@@ -29,30 +29,30 @@ export const Responses = (props) => {
   useEffect(() => {
     const getResponses = async () => {
       try {
-        const res = (props.shared === 'true') ? await axios.get(`/api/v1/surveys/share/${params.hash}`) : await axios.get(`/api/v1/responses/${params.hash}`, {
-          headers: { Authorization: `Bearer ${state.token}` },
-        });
-        
+        const res =
+          props.shared === 'true'
+            ? await axios.get(`/api/v1/surveys/share/${params.hash}`)
+            : await axios.get(`/api/v1/responses/${params.hash}`, {
+                headers: { Authorization: `Bearer ${state.token}` },
+              });
+
         setSurvey(res.data.survey);
         setIsPublic(res.data.survey.isPublic);
         setSurveyTitle(res.data.survey.title);
         setResponses(
-          res.data.survey.Responses
-            .sort(
-              (a, b) =>
-                new Date(b.updatedAt).getTime() -
-                new Date(a.updatedAt).getTime(),
-            )
-            .map((res) => ({
-              ...res,
-              data: res.data.sort((a, b) => {
-                if (a.type === 'query') {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              }),
-            })),
+          res.data.survey.Responses.sort(
+            (a, b) =>
+              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+          ).map((res) => ({
+            ...res,
+            data: res.data.sort((a, b) => {
+              if (a.type === 'query') {
+                return -1;
+              } else {
+                return 1;
+              }
+            }),
+          })),
         );
         const qResponses = {};
         res.data.survey.Responses.forEach((resp) => {
@@ -75,12 +75,13 @@ export const Responses = (props) => {
         setQuestions(res.data.survey.Questions);
         setQuestions([
           ...res.data.survey.Questions,
-          ...res.data.survey.Responses
-            .map((result) => result.data)
-            .reduce((newResps, resp) => {
+          ...res.data.survey.Responses.map((result) => result.data).reduce(
+            (newResps, resp) => {
               const keys = resp.filter((r) => r.key).map((r) => r.key);
               return keys;
-            }, []),
+            },
+            [],
+          ),
         ]);
         const fnames = res.data.survey.friendlyNames;
         if (fnames) {
@@ -295,7 +296,7 @@ export const Responses = (props) => {
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           {responses?.length > 0 && <ResponseMap responses={responses} />}
-          
+
           {!isSharedVersion() && (
             <div className="mb-4">
               <h3 className="h5">Share Survey</h3>
@@ -309,76 +310,76 @@ export const Responses = (props) => {
               </CopyLink>
             </div>
           )}
-          
-          {!isSharedVersion() && (
-            isPublic !== null && (
-              <div className="mb-4">
-                <h3 className="h5">Share Results</h3>
-                <div className="form-check form-switch form-switch-lg">
-                  <input
-                    className="form-check-input form-check-input-lg"
-                    type="checkbox"
-                    name="is-public"
-                    onChange={handlePublic}
-                    checked={isPublic}
-                  />
-                </div>
-                {isPublic && (
-                  <p>
-                    <CopyLink
-                      to={`/share/${params.hash}`}
-                      target="_blank"
-                      className="text-decoration-none"
-                      heapName="Heap-Copy_Results"
-                    >
-                      {`${window.location.host}/share/${params.hash}`}
-                    </CopyLink>
-                  </p>
-                )}
+
+          {!isSharedVersion() && isPublic !== null && (
+            <div className="mb-4">
+              <h3 className="h5">Share Results</h3>
+              <div className="form-check form-switch form-switch-lg">
+                <input
+                  className="form-check-input form-check-input-lg"
+                  type="checkbox"
+                  name="is-public"
+                  onChange={handlePublic}
+                  checked={isPublic}
+                />
               </div>
-            )
+              {isPublic && (
+                <p>
+                  <CopyLink
+                    to={`/share/${params.hash}`}
+                    target="_blank"
+                    className="text-decoration-none"
+                    heapName="Heap-Copy_Results"
+                  >
+                    {`${window.location.host}/share/${params.hash}`}
+                  </CopyLink>
+                </p>
+              )}
+            </div>
           )}
 
           <div>
-            {isSharedVersion() 
-              ? <h3 className="h5">Additional Questions</h3>
-              : <h3 className="h5">URL Questions</h3>
-            }
-            {isSharedVersion()
-              ? (<p>
-                These quesstions were dynamically passed via URL parameters. 
-                One of the many neat features available to 
-                {' '}<a href="https://backtalk.io/">Backtalk.io</a>{' '}
-                users.
-              </p>)
-              : (<p>
-                You can dynamically add new questions and answers to links you share
-                by adding <span className="text-monospace">?question=answer</span>{' '}
+            {isSharedVersion() ? (
+              <h3 className="h5">Additional Questions</h3>
+            ) : (
+              <h3 className="h5">URL Questions</h3>
+            )}
+            {isSharedVersion() ? (
+              <p>
+                These quesstions were dynamically passed via URL parameters. One
+                of the many neat features available to{' '}
+                <a href="https://backtalk.io/">Backtalk.io</a> users.
+              </p>
+            ) : (
+              <p>
+                You can dynamically add new questions and answers to links you
+                share by adding{' '}
+                <span className="text-monospace">?question=answer</span>{' '}
                 paramaters to your survey share URLs.
-              </p>) 
-            }
-            
+              </p>
+            )}
 
             {friendlyNames &&
               Object.keys(friendlyNames).map((name) => (
                 <div key={name} className="mb-4">
-                  {isSharedVersion()
-                    ? <h4 className="h6">{friendlyNames[name]?.savedValue}</h4>
-                    : <EditInPlaceInput
-                        key={name}
-                        name={name}
-                        id={`${name}_input`}
-                        value={friendlyNames[name]?.value}
-                        initialValue={friendlyNames[name]?.savedValue}
-                        setValue={(v) => handleFriendlyName(v, name)}
-                        onSubmit={(e) => {
-                          handleSave(e, name);
-                        }}
-                        label={`Query String: ?${name}=`}
-                        showLabel={true}
-                        labelAsDescription={true}
-                      />
-                  }
+                  {isSharedVersion() ? (
+                    <h4 className="h6">{friendlyNames[name]?.savedValue}</h4>
+                  ) : (
+                    <EditInPlaceInput
+                      key={name}
+                      name={name}
+                      id={`${name}_input`}
+                      value={friendlyNames[name]?.value}
+                      initialValue={friendlyNames[name]?.savedValue}
+                      setValue={(v) => handleFriendlyName(v, name)}
+                      onSubmit={(e) => {
+                        handleSave(e, name);
+                      }}
+                      label={`Query String: ?${name}=`}
+                      showLabel={true}
+                      labelAsDescription={true}
+                    />
+                  )}
 
                   <div className="card">
                     {queryResponses[name] && (
@@ -402,16 +403,15 @@ export const Responses = (props) => {
                     )}
                   </div>
                 </div>
-              )
-            )}
+              ))}
           </div>
         </div>
         <div className="col-12 order-sm-1 col-sm-6 col-lg-8 pr-sm-4">
           <div className="d-flex justify-content-between align-items-center">
             <div className="mb-3 mr-0 mr-md-3 flex-fill">
-              {surveyTitle !== null && (
-                !isSharedVersion()
-                ? <EditInPlaceInput
+              {surveyTitle !== null &&
+                (!isSharedVersion() ? (
+                  <EditInPlaceInput
                     name="titleEdit"
                     id="surveyTitle"
                     value={surveyTitle}
@@ -419,10 +419,11 @@ export const Responses = (props) => {
                     setValue={setSurveyTitle}
                     onSubmit={handleTitleSave}
                   />
-                : <h3>{surveyTitle}</h3>
-              )}
+                ) : (
+                  <h3>{surveyTitle}</h3>
+                ))}
             </div>
-            {responses && (
+            {responses && !isSharedVersion() && (
               <div className="mb-3 text-right d-none d-md-block">
                 <button
                   type="button"
@@ -450,7 +451,7 @@ export const Responses = (props) => {
           </div>
         </div>
       </div>
-      {(!isSharedVersion()) && (
+      {!isSharedVersion() && (
         <Modal show={show} handleModal={handleModal} title="Delete Response">
           <div className="modal-body">
             Are you sure you want to delete this response? Once it's gone, it's
