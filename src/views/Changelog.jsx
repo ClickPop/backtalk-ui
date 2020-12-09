@@ -21,6 +21,12 @@ const Changelog = () => {
             answers you need, quickly.
           </p>
           <ChangelogEntry
+            title="Response Map"
+            date="December 9, 2020"
+            description="We added a map so you can get a better idea of where your responses are coming from."
+          />
+
+          <ChangelogEntry
             title="Click to Copy"
             date="December 6, 2020"
             description="Our first user feature request! We added a little icon to let you easily copy and share your surveys and links to survey results."
