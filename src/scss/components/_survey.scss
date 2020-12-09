@@ -5,7 +5,8 @@
   &__container {
     background: $survey-bg;
     flex-basis: 100%;
-    height: 50vh;
+    height: 88vh;
+    box-sizing: border-box;
     flex-direction: column;
 
     @media screen and (min-width: $screen-md) {
