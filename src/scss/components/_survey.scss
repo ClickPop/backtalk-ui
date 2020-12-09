@@ -74,7 +74,7 @@
 
   &__question .message {
     background-color: $white;
-    color: $body-color;
+    color: $base-bg-color;
     animation: fadeIn 0.3s ease-in-out 0.2s both;
 
     @media screen and (min-width: $screen-md) {
