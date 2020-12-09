@@ -9,6 +9,7 @@ import anonymousNickname from '../helpers/anonymousNickname';
 import { EditInPlaceInput } from '../components/EditInPlaceInput';
 import { ResponseCard } from '../components/ResponseCard';
 import { CopyLink } from '../components/CopyLink';
+import { ResponseMap } from '../components/ResponseMap';
 
 export const Responses = () => {
   const params = useParams();
@@ -291,6 +292,7 @@ export const Responses = () => {
       <div className="row">
         <div className="col-12 order-sm-2 col-sm-6 col-lg-4">
           <div className="mb-4">
+            {responses?.length > 0 && <ResponseMap responses={responses} />}
             <h3 className="h5">Share Survey</h3>
             <CopyLink
               to={`/survey/${params.hash}`}
