@@ -38,8 +38,7 @@ const Navbar = ({ logo }) => {
   return (
     <div className="container">
       <nav className="navbar navbar-expand-sm navbar-light">
-        <Link className="navbar-brand d-flex" to={{ pathname: path }}>
-          <span className="h4 pt-3 pr-1">Backtalk</span>
+        <Link className="navbar-brand d-flex" to={{ pathname: path }} title="Backtalk">
           <img
             src={logo}
             className="navbar-logo"

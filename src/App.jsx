@@ -5,7 +5,7 @@ import Changelog from './views/Changelog';
 import Login from './views/Login';
 import Register from './views/Register';
 import FirstSurvey from './views/FirstSurvey';
-import logo from './images/bktk-logo.svg';
+import logo from './images/bktk-logo-header.png';
 import { Navbar } from './components/Nav';
 import { Dashboard } from './views/Dashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
