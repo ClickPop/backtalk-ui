@@ -189,7 +189,6 @@ export const Response = ({ location }) => {
     // feed.scroll({ top: feed.scrollHeight, behavior: 'smooth' });
     // // const c = cursor + 1;
     let selector = document.querySelector('#scroll-to-this');
-    console.log(selector);
     // // if (c < survey?.current?.questions?.length) {
     // //   selector = document.querySelector(`#response-${c}`);
     // // } else if (
