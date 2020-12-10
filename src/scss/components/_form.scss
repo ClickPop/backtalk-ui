@@ -4,17 +4,38 @@ label {
 }
 
 .input-group {
+  &.click-to-edit,
+  &.click-to-edit__active {
+    transition: background-color 0.3s;
+
+    & ~ .form-text {
+      font-style: italic;
+      padding: 0 0.8rem;
+      margin: 0 0 0.8rem;
+      transition: all 0.1s;
+    }
+  }
+  &.click-to-edit__active {
+    & ~ .form-text {
+    }
+  }
   &.click-to-edit {
     input[type='text'] {
-      background: darken($base-bg-color, 5%);
+      background-color: darken($base-bg-color, 5%);
       border: 1px solid darken($base-bg-color, 5%);
       border-color: none;
       border-radius: $base-border-radius / 2 !important;
-      transition: background 0.3s;
     }
 
     .btn {
       display: none;
+    }
+
+    & ~ .form-text {
+      margin: 0;
+      padding: 0;
+      height: 0;
+      overflow-y: hidden;
     }
   }
 }
