@@ -3,8 +3,6 @@
   command = 'yarn build'
 [context.production]
   environment = {NODE_ENV = 'production', REACT_APP_BASE_URL = 'https://api.backtalk.io'}
-[context.develop]
-  environment = {NODE_ENV = 'production', REACT_APP_BASE_URL = 'https://develop.api.backtalk.io'}
 # The following redirect is intended for use with most SPAs that handle
 # routing internally.
 [[redirects]]

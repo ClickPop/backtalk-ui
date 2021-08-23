@@ -3,7 +3,8 @@ import ReactMapGL, { Marker } from 'react-map-gl';
 const apiKey = process.env.REACT_APP_MAPBOX_KEY;
 
 export const ResponseMap = ({ responses }) => {
-  const [latitude, longitude] = responses.filter((r) => r.geo)[0]?.geo?.ll;
+  const [latitude, longitude] =
+    responses.filter((r) => r.geo)[0]?.geo?.ll ?? [];
   const [viewport, setViewport] = useState({
     width: '100%',
     height: 200,
